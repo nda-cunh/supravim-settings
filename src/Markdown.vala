@@ -58,7 +58,7 @@ public class MarkDown : Gtk.DrawingArea{
 			x = 15;
 			// IMAGE  ![]() 
 			if (/^!\[.*\][(](?P<url>.*)[)]/.match (line, 0, out match_info)) {
-				var name = "/nfs/homes/nda-cunh/Desktop/supravim-gui2/SupraVim.wiki/" + match_info.fetch_named ("url");
+				var name = Environment.get_home_dir() + "/.local/share/supravim-gui/" + match_info.fetch_named ("url");
 				var image = new Cairo.ImageSurface.from_png (name);
 				if (image == null)
 					continue;

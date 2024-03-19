@@ -4,7 +4,11 @@ public class MainWindow : Adw.ApplicationWindow {
 	public MainWindow(Gtk.Application app) throws Error {
 		Object(application: app);
 		base.set_cursor_from_name ("default");
-		wiki_box.append(new WikiPage("./SupraVim.wiki"));
+		try {
+			wiki_box.append(new WikiPage(Environment.get_home_dir() + "/.local/share/supravim-gui/"));
+		} catch (Error e) {
+			printerr("Cant load the wiki\n");
+		}
 		plugins = new Plugins(plugins_group);
 		options = new Options(options_group);
 

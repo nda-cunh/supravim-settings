@@ -1,0 +1,28 @@
+[GtkTemplate (ui = "/ui/window.ui")]
+public class MainWindow : Adw.ApplicationWindow {
+
+	public MainWindow(Gtk.Application app) throws Error {
+		Object(application: app);
+		base.set_cursor_from_name ("default");
+		wiki_box.append(new WikiPage("./SupraVim.wiki"));
+		plugins = new Plugins(plugins_group);
+		options = new Options(options_group);
+
+		theme_group.add (new ThemeGroups());
+	}
+
+	/* Private Variable */
+	Plugins plugins;
+	Options options;
+	public string text;
+
+	/* BluePrint Variable */
+	[GtkChild]
+	public unowned Adw.PreferencesGroup theme_group;
+	[GtkChild]
+	public unowned Adw.PreferencesGroup plugins_group;
+	[GtkChild]
+	public unowned Adw.PreferencesGroup options_group;
+	[GtkChild]
+	unowned Gtk.Box wiki_box; 
+}

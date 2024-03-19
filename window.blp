@@ -1,0 +1,75 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $MainWindow: Adw.ApplicationWindow {
+	default-width: 800;
+	default-height: 800;
+	title: "supravim-gui";
+
+
+	content: Box {
+		orientation: vertical;
+
+		Adw.HeaderBar { }
+
+		Adw.ViewStack viewstack {
+			hexpand:true;
+			vexpand:true;
+
+			Adw.ViewStackPage {
+				name: 'general';
+				icon-name: 'emblem-system-symbolic';
+				title: 'General';
+				child: ScrolledWindow {
+					Viewport {
+						Box {
+							orientation: vertical;
+							spacing: 5;
+							Adw.PreferencesGroup options_group {
+								styles ['PreferencesGroup']
+								title: 'Options';
+								description: 'Enable and disable some options !';
+							}
+							Adw.PreferencesGroup theme_group {
+								styles ['PreferencesGroup']
+								description: 'Change your theme';
+								title: 'Themes';
+							}
+						}
+					}
+				};
+			}
+			
+			Adw.ViewStackPage {
+				name: 'plugins';
+				title: 'Plugins';
+				icon-name: 'insert-object-symbolic';
+				child: ScrolledWindow {
+					Viewport {
+						Adw.PreferencesGroup plugins_group {
+							styles ['PreferencesGroup']
+							title: 'Plugins';
+							description: 'You can install some plugins for supravim :)';
+						}
+					}
+				};
+			}
+			
+			Adw.ViewStackPage wiki_page{
+				name: 'wiki';
+				title: 'Wiki';
+				icon-name: 'emblem-important-symbolic';
+				child: Box wiki_box{
+					hexpand:true;
+					vexpand:true;
+
+				};
+			}
+		}
+
+		Adw.ViewSwitcherBar {
+			stack: viewstack;
+			reveal: true;
+		}
+	};
+}

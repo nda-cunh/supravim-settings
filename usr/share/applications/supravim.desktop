@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Supravim-Gui-Settings
+Comment=Flash card based learning tool
+Exec=supravim-gui
+Icon=supravim
+Terminal=false
+Keywords=vim;code;dev;supravim;terminal;editor;text;vi;
+Categories=Education;Languages;Utility;Development;

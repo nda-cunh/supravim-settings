@@ -1,4 +1,4 @@
-_SRC= main.vala window.vala Markdown.vala WikiPage.vala Plugins.vala Themes.vala Options.vala
+_SRC= main.vala window.vala Color.vala Markdown.vala WikiPage.vala Plugins.vala Themes.vala Options.vala
 SRC= $(addprefix src/,$(_SRC))
 CFLAGS= -Ofast -flto -w
 PKG=gtk4 libadwaita-1

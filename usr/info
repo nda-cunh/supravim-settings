@@ -1,0 +1,10 @@
+name: supravim-gui
+version: 1.01
+author: nda-cunh
+binary: supravim-gui
+description: more settings for supravim-ide
+dependency: 
+exclude_package: 
+optional_dependency: 
+size_tar: 
+size_installed: 1323411

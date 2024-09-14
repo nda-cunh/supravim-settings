@@ -1,7 +1,7 @@
 class Application : Adw.Application {
 
 	public Application() {
-		Object(application_id: "org.supravim.gui");
+		Object(application_id: "org.supravim.gui2");
 	}
 
 	public override void activate() {

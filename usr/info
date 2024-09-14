@@ -1,5 +1,5 @@
 name: supravim-gui
-version: 1.01
+version: 1.02
 author: nda-cunh
 binary: supravim-gui
 description: more settings for supravim-ide

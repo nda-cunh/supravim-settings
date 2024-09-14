@@ -1,20 +1,10 @@
 # Github Copilot
 
-URl du plugin officiel de Microsoft https://github.com/github/copilot.vim
+Installer avec la commande ou via l'interface graphique de supravim dans la partie plugin 
 
-## Installation:
-
-cree le dossier pack/download/opt `mkdir -p $HOME/.vim/pack/downloads/opt`
-
-ensuite cloner dans ce dossier l'url du plugin
-
-`git clone https://github.com/github/copilot.vim ~/.vim/pack/download/opt/copilot`
-
-et ajouter dans votre YOUR-CONFIG dans votre <span dir="">\~</span>/.vimrc
-
-`packadd! copilot`
-
-![image.png](uploads/09767e704e4ec08e967f2481e78f0b0a/image.png)
+```
+suprapack add plugin-github-copilot
+```
 
 Vous n'avez plus qu'a suivre les instruction de configuration en tapant la commande sur vim
 
@@ -23,8 +13,6 @@ Vous n'avez plus qu'a suivre les instruction de configuration en tapant la comma
 # vim-ia
 
 l'url est ici : https://github.com/madox2/vim-ai
-
-## Installation:
 
 Cree le dossier pack/download/opt `mkdir -p $HOME/.vim/pack/downloads/opt`
 

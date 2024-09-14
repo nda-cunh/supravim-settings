@@ -14,7 +14,7 @@
 - ### [Github/Gitlab Copilot | vim-IA](copilot)
 - ### [Astuce](Astuce)
 
-# Beta suprabrain GPT-3.1
+# Beta suprabrain GPT-3.1 >> Edit Projet abandonné
 
 Suprabrain une IA pour supravim , demandez lui de l'aide pour supravim !
 

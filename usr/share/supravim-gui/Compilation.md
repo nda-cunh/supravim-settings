@@ -7,10 +7,9 @@
 > **F6** executera `supramake run2`
 >
 > **F7** `supramake run3`
->
-> **F8** `supramake run4`
 
-Ce qui veut dire que vous pouvez également utiliser supramake en dehors de supravim il a d'ailleurs l'alias **`smake`**
+
+Ce qui veut dire que vous pouvez également utiliser **supramake** en dehors de supravim il a d'ailleurs l'alias **`smake`**
 
 si aucun makefile est trouvé il essaiera d'executer votre projet par lui meme et executera le a.out crée
 
@@ -60,3 +59,11 @@ all:
 supramake --args Samantha
 
 output: `coucou Samantha`
+
+
+
+
+# meson.build
+
+supramake prend en charge les fichiers meson.build
+un simple supramake suffit pour compiler/executer le meson.build

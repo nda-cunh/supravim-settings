@@ -7,7 +7,7 @@ Vim ne possede pas de fonction MultiCursor par default car il est possible d'uti
 - Editer vos modification et entrer <Echap> ou sauvegarder avec ctrl+S
 
 ```vim
-<C-V><S-I>coucou<Esc>
+(<Ctrl>+V)(Shift>+I)coucou(<Esc>)
 ```
 
 ![multi_visua](uploads/4df760d37be8c79a8bd569e823633e59/multi_visua.gif)

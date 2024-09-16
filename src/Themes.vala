@@ -35,7 +35,7 @@ class ThemeGrid : Gtk.Grid {
 
 	public ThemeGrid () {
 		string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				"molokai", "onehalf", "pablo"};
+				"molokai", "one", "pablo", "one-light", "iceberg-light"};
 		tab_button = {};
 
 		actual_theme = get_actual_theme ();
@@ -65,13 +65,24 @@ class ThemeGrid : Gtk.Grid {
 
 	string get_actual_theme () {
 		try {
-			string output;
-			Process.spawn_command_line_sync (@"head -n 13 $(Environment.get_home_dir())/.vimrc", out output);
-			string search = "g:sp_theme = '";
-			unowned string begin = output.offset(output.index_of(search)+search.length);
-			return begin[0:begin.index_of_char('\'')];
+			unowned var HOME = Environment.get_home_dir ();
+			const string search = "g:sp_theme = '";
+			string result;
+			int index;
+			string vimrc;
+
+			FileUtils.get_contents (@"$HOME/.vimrc", out vimrc);
+			index = vimrc.index_of(search);
+			if (index == -1)
+				throw new FileError.FAILED("");
+			result = vimrc[index + search.length: vimrc.index_of_char('\'', index + search.length)];
+			if (vimrc.index_of("""set background=light""") != -1)
+				result = result + "-light";
+
+			return result;
 		} catch (Error e) {
-			return "onehalf";
+			warning (e.message);
+			return "one";
 		}
 	}
 
@@ -88,6 +99,32 @@ class ThemeGrid : Gtk.Grid {
 
 }
 
+
+private enum Colors {
+	Dark,
+	Light;
+
+	unowned string to_string() {
+		switch (this) {
+			default:
+			case Dark:
+				return "dark";
+			case Light:
+				return "light";
+		}
+	}
+
+	public static void change_theme (Colors color) throws Error {
+		unowned var HOME = Environment.get_home_dir ();
+		string vimrc;
+
+		FileUtils.get_contents (@"$HOME/.vimrc", out vimrc);
+		var regex = new Regex (@"set background[=].*", RegexCompileFlags.MULTILINE);
+		vimrc = regex.replace (vimrc, -1, 0, @"set background=$color");
+		FileUtils.set_contents (@"$HOME/.vimrc", vimrc);
+	}
+}
+
 public class ThemeGroups : Gtk.Box{
 	public ThemeGroups () {
 		Object();
@@ -95,7 +132,14 @@ public class ThemeGroups : Gtk.Box{
 		var theme = new ThemeGrid();
 		theme.onThemeChange.connect ((theme)=> {
 			try {
-				Process.spawn_command_line_sync (@"supravim --theme $theme");
+				if (theme.index_of_char ('-') == -1){
+					Process.spawn_command_line_sync (@"supravim --theme $theme");
+					Colors.change_theme (Dark);
+				}
+				else {
+					Process.spawn_command_line_sync (@"supravim --theme $(theme[0:theme.index_of_char('-')])");
+					Colors.change_theme (Light);
+				}
 			}catch (Error e) {
 				printerr(e.message);
 			}
@@ -104,10 +148,6 @@ public class ThemeGroups : Gtk.Box{
 		base.append(theme);
 	}
 }
-
-
-
-
 
 
 /*********************************************************/
@@ -160,6 +200,21 @@ private void init_themes() {
 			format = {0.64, 0.67, 0.47},
 			text = {0.49, 0.65, 0.68},
 			integer = {0.45, 0.42, 0.55}
+		};
+		
+		tab_themes["iceberg-light"] = new Color() {
+			background_color = {0.91, 0.91, 0.92},
+			include = {0.17, 0.32, 0.62},
+			stdio = {0.24, 0.51, 0.65},
+			typedef = {0.17, 0.32, 0.62},
+			struct = {0.17, 0.32, 0.62},
+			type_s = {0.20, 0.21, 0.30},
+			scope = {0.20, 0.21, 0.30},
+			float = {0.28, 0.41, 0.66},
+			function = {0.20, 0.21, 0.30},
+			format = {0.43, 0.58, 0.28},
+			text = {0.24, 0.51, 0.65},
+			integer = {0.46, 0.34, 0.70}
 		};
 		
 		tab_themes["onehalf"] = new Color() {
@@ -224,6 +279,36 @@ private void init_themes() {
 			format = {0.99, 0.50, 0.09},
 			text = {0.72, 0.73, 0.14},
 			integer = {0.82, 0.52, 0.60}
+		};
+
+		tab_themes["one"] = new Color() {
+			background_color = {0.15, 0.17, 0.20},
+			include = {0.38, 0.68, 0.93},
+			stdio = {0.56, 0.76, 0.47},
+			typedef = {0.89, 0.75, 0.48},
+			struct = {0.89, 0.75, 0.48},
+			type_s = {0.67, 0.69, 0.75},
+			scope = {0.80, 0.80, 0.80},
+			float = {0.89, 0.75, 0.48},
+			function = {0.67, 0.69, 0.75},
+			format = {0.82, 0.60, 0.40},
+			text = {0.56, 0.76, 0.47},
+			integer = {0.82, 0.60, 0.40},
+		};
+
+		tab_themes["one-light"] = new Color() {
+			background_color = {0.98, 0.98, 0.98},
+			include = {0.65, 0.14, 0.65},
+			stdio = {0.31, 0.63, 0.31},
+			typedef = {0.75, 0.51, 0.04},
+			struct = {0.65, 0.14, 0.65},
+			type_s = {0.28, 0.29, 0.32},
+			scope = {0.28, 0.29, 0.32},
+			float = {0.65, 0.14, 0.65},
+			function = {0.28, 0.29, 0.32},
+			format = {0.04, 0.52, 0.74},
+			text = {0.32, 0.63, 0.31},
+			integer = {0.60, 0.40, 0.60}
 		};
 
 }

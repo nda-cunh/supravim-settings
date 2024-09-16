@@ -108,19 +108,18 @@ public class Color : Gtk.DrawingArea{
 		}
 	}
 
-	public void check_mark(Cairo.Context cr, int width, int height) {
+	public void check_mark(Cairo.Context cr, int width, int height, int x) {
         // Fond bleu
         cr.set_source_rgb(0.31, 0.63, 1);
-        cr.arc(width / 2, height / 2, width / 2 - 5, 0, 2 * Math.PI);
+        cr.arc(x + width / 2, height / 2, width / 2 - 5, 0, 2 * Math.PI);
         cr.fill();
 
         // Coche blanche
         cr.set_source_rgb(1, 1, 1);
 		cr.set_line_width(width * 0.05); // Adjust line width if needed
-		cr.move_to(width * 0.30, height * 0.5);
-		cr.line_to(width * 0.45, height * 0.7);
-		cr.line_to(width * 0.7, height * 0.4);
-		// cr.close_path();
+		cr.move_to(x + width * 0.30, height * 0.55 - 2);
+		cr.line_to(x + width * 0.45, height * 0.7 - 2);
+		cr.line_to(x + width * 0.7, height * 0.45  - 2);
 		cr.stroke();
     }
 
@@ -162,7 +161,7 @@ public class Color : Gtk.DrawingArea{
 		draw_rect (ctx, integer, padding_w + 128, padding_h + (size_h*4) + 16, 12);
 		// draw_rect (ctx, scope, padding_w + 137, padding_h + (size_h*4) + 16, 2);
 		if (active)
-			check_mark(ctx, 34, 34);
+			check_mark(ctx, 33, 33, 142);
 
 
 	}

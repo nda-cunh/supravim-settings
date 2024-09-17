@@ -35,7 +35,7 @@ class ThemeGrid : Gtk.Grid {
 
 	public ThemeGrid () {
 		string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				"molokai", "one", "pablo", "one-light", "iceberg-light"};
+				"molokai", "onehalf", "pablo", "one-light", "iceberg-light"};
 		tab_button = {};
 
 		actual_theme = get_actual_theme ();
@@ -82,7 +82,7 @@ class ThemeGrid : Gtk.Grid {
 			return result;
 		} catch (Error e) {
 			warning (e.message);
-			return "one";
+			return "onehalf";
 		}
 	}
 

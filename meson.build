@@ -17,4 +17,15 @@ asresources = gnome.compile_resources(
     c_name: 'as'
 )
 
+
+# Suprapack
+conf_data = configuration_data()
+conf_data.set('version', meson.project_version())
+info_file = configure_file(input : 'data/info.in', output : 'info', configuration : conf_data)
+
+install_data(info_file, install_dir: '.')
+install_data(files('data/supravim.desktop'), install_dir: get_option('datadir') / 'applications')
+install_data(files('data/supravim.svg'), install_dir: get_option('datadir') / 'pixmaps')
+meson.add_install_script('suprapack_build.sh')
+
 subdir('src')

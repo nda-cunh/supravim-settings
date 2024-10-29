@@ -10,6 +10,10 @@ class ThemeButton : Gtk.ToggleButton {
 			color.queue_draw ();
 		});
 
+		base.clicked.connect (()=> {
+			if (active == false)
+				active = true;
+		});
 	}
 
 	public ThemeButton (string name_theme) {
@@ -161,7 +165,7 @@ public class ThemeGroups : Gtk.Box{
 
 private void init_themes() {
 	tab_themes = new HashTable<string, Color> (str_hash, str_equal);
-		tab_themes["pablo"] = new Color() {
+		tab_themes["pablo"] = new Color("pablo") {
 			background_color = {0.0, 0.0, 0.0},
 			include = {0.0, 0.74, 0.0},
 			stdio = {0.0, 0.94, 0.94},
@@ -176,7 +180,7 @@ private void init_themes() {
 			integer = {0.0, 0.94, 0.94},
 		};
 
-		tab_themes["dracula"] = new Color() {
+		tab_themes["dracula"] = new Color("dracula") {
 			background_color = {0.11, 0.11, 0.11},
 			include = {0.86, 0.42, 0.67},
 			stdio = {0.94, 0.98, 0.54},
@@ -191,7 +195,7 @@ private void init_themes() {
 			integer = {0.73, 0.57, 0.97}
 		};
 		
-		tab_themes["iceberg"] = new Color() {
+		tab_themes["iceberg"] = new Color("iceberg") {
 			background_color = {0.08, 0.09, 0.12},
 			include = {0.51, 0.62, 0.77},
 			stdio = {0.49, 0.65, 0.68},
@@ -206,7 +210,7 @@ private void init_themes() {
 			integer = {0.45, 0.42, 0.55}
 		};
 		
-		tab_themes["iceberg-light"] = new Color() {
+		tab_themes["iceberg-light"] = new Color("iceberg-light") {
 			background_color = {0.91, 0.91, 0.92},
 			include = {0.17, 0.32, 0.62},
 			stdio = {0.24, 0.51, 0.65},
@@ -221,7 +225,7 @@ private void init_themes() {
 			integer = {0.46, 0.34, 0.70}
 		};
 		
-		tab_themes["onehalf"] = new Color() {
+		tab_themes["onehalf"] = new Color("onehalf") {
 			background_color = {0.15, 0.17, 0.20},
 			include = {0.38, 0.68, 0.93},
 			stdio = {0.56, 0.76, 0.47},
@@ -238,7 +242,7 @@ private void init_themes() {
 
 		//atom
 
-		tab_themes["atom"] = new Color() {
+		tab_themes["atom"] = new Color("atom") {
 			background_color = {0.11, 0.12, 0.13},
 			include = {0.85, 0.81, 0.52},
 			stdio = {0.65, 1.0, 0.37},
@@ -255,7 +259,7 @@ private void init_themes() {
 	
 		//molokai
 
-		tab_themes["molokai"] = new Color() {
+		tab_themes["molokai"] = new Color("molokai") {
 			background_color = {0.10, 0.11, 0.12},
 			include = {0.65, 0.88, 0.18},
 			stdio = {0.90, 0.85, 0.45},
@@ -270,7 +274,7 @@ private void init_themes() {
 			integer = {0.68, 0.50, 1.0}
 		};
 
-		tab_themes["gruvbox"] = new Color() {
+		tab_themes["gruvbox"] = new Color("gruvbox") {
 			background_color = {0.15, 0.15, 0.15},
 			include = {0.55, 0.75, 0.48},
 			stdio = {0.72, 0.73, 0.14},
@@ -285,7 +289,7 @@ private void init_themes() {
 			integer = {0.82, 0.52, 0.60}
 		};
 
-		tab_themes["one"] = new Color() {
+		tab_themes["one"] = new Color("onehalf") {
 			background_color = {0.15, 0.17, 0.20},
 			include = {0.38, 0.68, 0.93},
 			stdio = {0.56, 0.76, 0.47},
@@ -300,7 +304,7 @@ private void init_themes() {
 			integer = {0.82, 0.60, 0.40},
 		};
 
-		tab_themes["one-light"] = new Color() {
+		tab_themes["one-light"] = new Color("one-light") {
 			background_color = {0.98, 0.98, 0.98},
 			include = {0.65, 0.14, 0.65},
 			stdio = {0.31, 0.63, 0.31},

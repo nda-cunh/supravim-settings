@@ -4,26 +4,46 @@ public struct DataColor {
 	double blue;
 }
 
-public class Color : Gtk.DrawingArea{
+public class Color : Gtk.Box {
+
+	private Gtk.DrawingArea drawing_area;
+	construct {
+		orientation = VERTICAL;
+		drawing_area = new Gtk.DrawingArea ();
+		append(drawing_area);
+	}
+
+	new void append (Gtk.Widget child)
+	{
+		base.append(child);
+	}
+
+
+	public new void queue_draw () {
+		base.queue_draw();
+		drawing_area.queue_draw();
+	}
+
 
 	bool hover = false;
 	public bool active = false;
 	// public Gtk.DrawingArea drawing_area;
-	public Color () {
-		base.set_draw_func (this.drawing);
-		base.set_size_request (180, 76);
-		// base.child = drawing_area;
+	public Color (string name = "default") {
+		drawing_area.set_draw_func (this.drawing);
+		drawing_area.set_size_request (180, 76);
+		// drawing_area.child = drawing_area;
 		var motion = new Gtk.EventControllerMotion();
 		motion.enter.connect (()=> {
 			hover = true;
-			base.queue_draw();
+			drawing_area.queue_draw();
 		});
 		
 		motion.leave.connect (()=> {
 			hover = false;
-			base.queue_draw();
+			drawing_area.queue_draw();
 		});
-		base.add_controller(motion);
+		drawing_area.add_controller(motion);
+		prepend(new Gtk.Label(name));
 	}
 
 	const double size_h = 8.0;

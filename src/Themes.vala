@@ -119,7 +119,7 @@ private enum Colors {
 		string vimrc;
 
 		FileUtils.get_contents (@"$HOME/.vimrc", out vimrc);
-		var regex = new Regex (@"set background[=].*", RegexCompileFlags.MULTILINE);
+		var regex = new Regex (@"^set background[=].*", RegexCompileFlags.MULTILINE);
 		vimrc = regex.replace (vimrc, -1, 0, @"set background=$color");
 		FileUtils.set_contents (@"$HOME/.vimrc", vimrc);
 	}
@@ -135,10 +135,14 @@ public class ThemeGroups : Gtk.Box{
 				if (theme.index_of_char ('-') == -1){
 					Process.spawn_command_line_sync (@"supravim --theme $theme");
 					Colors.change_theme (Dark);
+					print ("change_theme: [%s] <dark>\n", theme);
 				}
 				else {
-					Process.spawn_command_line_sync (@"supravim --theme $(theme[0:theme.index_of_char('-')])");
+					var named_theme = theme[0:theme.index_of_char('-')];
+					Process.spawn_command_line_sync (@"supravim --theme $(named_theme)");
 					Colors.change_theme (Light);
+					print ("change_theme: [%s] <light>\n", named_theme);
+
 				}
 			}catch (Error e) {
 				printerr(e.message);

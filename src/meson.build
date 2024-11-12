@@ -1,23 +1,23 @@
 
 srcs = [
-  files('Color.vala'),
-  files('main.vala'),
-  files('Markdown.vala'),
-  files('Options.vala'),
-  files('Plugins.vala'),
-  files('Themes.vala'),
-  files('WikiPage.vala'),
-  files('window.vala'),
+  files('Color.vala',
+  'main.vala',
+  'Options.vala',
+  'Plugins.vala',
+  'Themes.vala',
+  'WikiPage.vala',
+  'window.vala'),
 ]
 
 deps = [
   dependency('gtk4'),
   dependency('libadwaita-1'),
+  dependency('gtk4-markdown')
 ]
 
 executable('supravim-gui',
   srcs,
   asresources,
   c_args: '-w',
-  dependencies : deps,
+  dependencies : [deps],
   install : true)

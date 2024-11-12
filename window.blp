@@ -16,6 +16,17 @@ template $MainWindow: Adw.ApplicationWindow {
 		Adw.ViewStack viewstack {
 			hexpand:true;
 			vexpand:true;
+			
+			Adw.ViewStackPage wiki_page{
+				name: 'wiki';
+				title: 'Wiki';
+				icon-name: 'emblem-important-symbolic';
+				child: Box wiki_box{
+					hexpand:true;
+					vexpand:true;
+
+				};
+			}
 
 			Adw.ViewStackPage {
 				name: 'general';
@@ -54,17 +65,6 @@ template $MainWindow: Adw.ApplicationWindow {
 							description: 'You can install some plugins for supravim :)';
 						}
 					}
-				};
-			}
-			
-			Adw.ViewStackPage wiki_page{
-				name: 'wiki';
-				title: 'Wiki';
-				icon-name: 'emblem-important-symbolic';
-				child: Box wiki_box{
-					hexpand:true;
-					vexpand:true;
-
 				};
 			}
 		}

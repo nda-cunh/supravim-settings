@@ -1,62 +1,108 @@
-public class WikiPage : Gtk.Box {
-	public WikiPage(string basename) throws Error {
-		Object (orientation: Gtk.Orientation.HORIZONTAL, hexpand:true, vexpand:true);
-		markdown = new MarkDown ( """# SupraWiki""");
-		box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-		box_name = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-		name_page = new Gtk.Label("SupraWiki"){
-			name = "box_named_page",
-			halign = Gtk.Align.END
+using Gtk;
+
+[GtkTemplate (ui = "/ui/wiki.ui")]
+public class Wiki : Gtk.Box {
+
+	private string basename;
+	private MarkDown markdown;
+	List<string> list = new List<string> ();
+	int index_list = -1;
+
+	construct {
+		box_revealer.add_controller (motion);
+	}
+	/** 
+	* Constructor for the Wiki class
+	* 
+	* @param basename The base name of the wiki file
+	*/
+	public Wiki (string basename) {
+		this.basename = basename;
+
+		markdown = new MarkDown() {
+			hexpand = true,
+			vexpand = true,
+			margin_start = 10,
+			margin_end = 10,
+			margin_top = 10,
 		};
-
-		markdown.onClickLink.connect((url) => {
-			try {
-				markdown.load_from_file (@"$basename/$(url).md");
-			} catch (Error e) {
-				printerr(e.message);
-			}
-		});
-		var scrolled = new Gtk.ScrolledWindow ();
-		
-		scrolled.set_child(new Gtk.Viewport (null, null){child=markdown});
-		box_name.append(name_page);
-		box_name.append(new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
-		box_name.append(scrolled);
-
-		refresh_list(basename);
-		base.append (box);
-		base.append(new Gtk.Separator (Gtk.Orientation.VERTICAL));
-		base.append (box_name);
+		markdown.activate_link.connect (click_link);
+		markdown_box.append(markdown);
+		markdown.path_dir = basename;
+		load_sidebar();
 	}
 
-	void refresh_list (string basename) throws Error {
+	private void change_page (string uri) {
+		markdown.clear();
+		markdown.load_file (uri);
+		pagename.label = uri.offset(uri.last_index_of ("/") + 1);
+	}
 
-		MatchInfo match_info;
-		string all_md;
-		FileUtils.get_contents (@"$basename/_sidebar.md", out all_md);
-		foreach (var line in all_md.split("\n")) {
-			if (/\[(?P<name>.+?)\]\((?P<url>.+?)\)/.match(line, 0, out match_info)) {
-				var name = match_info.fetch_named ("name");
-				var url = match_info.fetch_named ("url");
-
-				var btn = new Gtk.Button.with_label (name) {has_frame=false};
-				btn.clicked.connect (()=> {
-					try {
-						markdown.load_from_file (@"$basename/$(url).md");
-						name_page.label = btn.label;
-					} catch(Error e) {
-						printerr(e.message);
-					}
-				});
-				box.append (btn);
-			}
+	private bool click_link (string uri) {
+		print ("Clicked on link: %s\n", uri);
+		if (uri.has_prefix ("http")) {
+			return false;
 		}
-		markdown.load_from_file (@"$basename/home.md");
+		var tmp = @"$basename/$uri.md";
+		change_page (tmp);
+		if (index_list < list.length() - 1) {
+			var tmp_lst = new List<string>();
+			for (int i = 0; i <= index_list; i++) {
+				tmp_lst.append (list.nth_data(i));
+			}
+			list = (owned)tmp_lst;
+		}
+		list.append (tmp);
+		index_list++;
+		return false;
 	}
 
-	Gtk.Label name_page;
-	Gtk.Box box_name;
-	Gtk.Box box;
-	MarkDown markdown;
-}
+	private void load_sidebar () {
+		MatchInfo info;
+		string contents;
+		FileUtils.get_contents (basename + "_sidebar.md", out contents);
+		contents = contents.replace ("\r", "");
+		var regex = new Regex("""\[(?P<name>.+?)\]\((?P<url>.+?)\)""");
+		string? first_link = null;
 
+		if  (regex.match (contents, 0, out info)) {
+			do {
+				var name = info.fetch_named("name");
+				var url = info.fetch_named("url");
+				if (first_link == null)
+					first_link = url;
+				var button = new Button.with_label (name) {
+					has_frame = false,
+				};
+				button.clicked.connect (() => click_link (url));
+				sidebar.append(button);
+			} while (info.next());
+		}
+		click_link (first_link);
+	}
+	[GtkCallback]
+	private void sig_previous () {
+		if (index_list > 0) {
+			index_list--;
+			change_page (list.nth_data(index_list));
+		}
+	}
+	[GtkCallback]
+	private void sig_next () {
+		if (index_list < list.length()  - 1) {
+			index_list++;
+			change_page (list.nth_data(index_list));
+		}
+	}
+
+	[GtkChild]
+	unowned EventControllerMotion motion;
+	[GtkChild]
+	unowned Box box_revealer;
+	[GtkChild]
+	unowned Label pagename;
+	[GtkChild]
+	unowned Box markdown_box;
+	[GtkChild]
+	unowned Box sidebar;
+}

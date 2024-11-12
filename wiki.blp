@@ -1,0 +1,84 @@
+using Gtk 4.0;
+
+template $Wiki: Gtk.Box{
+	hexpand: true;
+	vexpand: true;
+	Box {
+		orientation: vertical;
+		Box {
+			Button previous {
+				has-frame: false;
+				margin-start: 5;
+				margin-end: 5;
+				icon-name: "go-previous-symbolic";
+				clicked => $sig_previous();
+			}
+			Button next {
+				has-frame: false;
+				margin-start: 5;
+				margin-end: 5;
+				icon-name: "go-next-symbolic";
+				clicked => $sig_next();
+			}
+			Label pagename {
+				justify: center;
+				margin-end: 20;
+				margin-top: 10;
+				margin-bottom: 10;
+				halign: end;
+				valign: end;
+				hexpand: true;
+
+				label: "Welcome to the SupraWiki";
+			}
+		}
+		Separator {
+			orientation: horizontal;
+		}
+		Box {
+			Box box_revealer {
+				orientation: vertical;
+
+				Box {
+					orientation: horizontal;
+					EventControllerMotion motion {
+
+					}
+					Revealer revealer {
+						reveal-child: bind motion.contains-pointer;
+						transition-type: slide_right; 
+						child: Box sidebar {
+							orientation: vertical;
+						};
+					}
+					Separator {
+						orientation: vertical;
+					}
+					Image {
+						margin-start: 5;
+						margin-end: 5;
+						icon-name: "go-next-symbolic";
+						vexpand : true;
+					}
+				}
+			}
+			Separator {
+				orientation: vertical;
+			}
+			Box {
+				orientation: vertical;
+				ScrolledWindow {
+					Viewport {
+						child: Box {
+							orientation: vertical;
+
+							Box markdown_box {
+
+							}
+						};
+					}
+				}
+			}
+		}
+	}
+}

@@ -2,6 +2,7 @@
 <gresources>
 	<gresource prefix="/">
 		<file preprocess="xml-stripblanks">ui/window.ui</file>
+		<file preprocess="xml-stripblanks">ui/wiki.ui</file>
 		<file>ui/style.css</file>
 	</gresource>
 </gresources>

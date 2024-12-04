@@ -1,5 +1,5 @@
 project('supravim-gui', ['c', 'vala'],
-  version : '1.06',
+  version : '1.07',
   default_options : ['warning_level=3', 'optimization=2'])
 
 gnome = import('gnome')

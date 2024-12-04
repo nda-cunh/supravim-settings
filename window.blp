@@ -17,17 +17,6 @@ template $MainWindow: Adw.ApplicationWindow {
 			hexpand:true;
 			vexpand:true;
 			
-			Adw.ViewStackPage wiki_page{
-				name: 'wiki';
-				title: 'Wiki';
-				icon-name: 'emblem-important-symbolic';
-				child: Box wiki_box{
-					hexpand:true;
-					vexpand:true;
-
-				};
-			}
-
 			Adw.ViewStackPage {
 				name: 'general';
 				icon-name: 'emblem-system-symbolic';
@@ -67,6 +56,18 @@ template $MainWindow: Adw.ApplicationWindow {
 					}
 				};
 			}
+			
+			Adw.ViewStackPage wiki_page{
+				name: 'wiki';
+				title: 'Wiki';
+				icon-name: 'emblem-important-symbolic';
+				child: Box wiki_box{
+					hexpand:true;
+					vexpand:true;
+
+				};
+			}
+
 		}
 
 		Adw.ViewSwitcherBar {

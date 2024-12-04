@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://gitlab.com/nda-cunh/Markdown-gtk4.git
+revision = HEAD
+depth = 1
+
+[provide]
+dependency_names = gtk4-markdown 
+program_names = markdown 

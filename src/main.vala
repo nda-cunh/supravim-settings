@@ -17,6 +17,13 @@ class Application : Adw.Application {
 	}
 
 	public static void main(string []args) {
+		try {
+			unowned string HOME = Environment.get_home_dir();
+			Process.spawn_command_line_async(@"git pull $HOME/.local/share/supravim-gui");
+		}
+		catch (Error e) {
+			printerr(e.message);
+		}
 		var app = new Application();
 		app.run(null);
 	}

@@ -32,7 +32,7 @@ public class Wiki : Gtk.Box {
 		load_sidebar();
 	}
 
-	private void change_page (string uri) {
+	private void change_page (string uri) throws Error {
 		markdown.clear();
 		markdown.load_file (uri);
 		pagename.label = uri.offset(uri.last_index_of ("/") + 1);
@@ -57,7 +57,7 @@ public class Wiki : Gtk.Box {
 		return false;
 	}
 
-	private void load_sidebar () {
+	private void load_sidebar () throws Error {
 		MatchInfo info;
 		string contents;
 		FileUtils.get_contents (basename + "_sidebar.md", out contents);
@@ -84,14 +84,24 @@ public class Wiki : Gtk.Box {
 	private void sig_previous () {
 		if (index_list > 0) {
 			index_list--;
-			change_page (list.nth_data(index_list));
+			try {
+				change_page (list.nth_data(index_list));
+			}
+			catch (Error e) {
+				printerr ("Error: %s\n", e.message);
+			}
 		}
 	}
 	[GtkCallback]
 	private void sig_next () {
 		if (index_list < list.length()  - 1) {
 			index_list++;
-			change_page (list.nth_data(index_list));
+			try {
+				change_page (list.nth_data(index_list));
+			}
+			catch (Error e) {
+				printerr ("Error: %s\n", e.message);
+			}
 		}
 	}
 

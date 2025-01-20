@@ -53,13 +53,13 @@ class RowPlugin : Adw.ActionRow {
 		try {
 
 			if (_installed == true) {
-				Process.spawn_command_line_sync (@"suprapack --force uninstall plugin-$(_name)", null, null, out status);
+				Process.spawn_command_line_sync (@"suprapack uninstall plugin-$(_name)", null, null, out status);
 				if (status == 0) {
 					_installed = false;
 				}
 			}
 			else {
-				Process.spawn_command_line_sync (@"suprapack --force install plugin-$(_name)", null, null, out status);
+				Process.spawn_command_line_sync (@"suprapack install plugin-$(_name)", null, null, out status);
 				if (status == 0) {
 					_installed = true;
 				}

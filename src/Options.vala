@@ -1,19 +1,49 @@
 class RowOptions : Adw.ActionRow {
+	
+	
+	uint source_id = 0;
+
 	public RowOptions (string name, string lore, string value) {
 		base.title = name;
 		base.subtitle = lore;
 
-		_switch = new Gtk.Switch () {
-			halign = Gtk.Align.CENTER,
-			valign = Gtk.Align.CENTER,
-		};
-		if (value == "on")
-			_switch.state = true;
-		base.add_suffix (_switch);
-		init_event ();
+		if (value.has_prefix ("'")) {
+			_entry = new Gtk.Entry () {
+				halign = Gtk.Align.CENTER,
+				valign = Gtk.Align.CENTER,
+			};
+			_entry.text = value[1:value.length - 1];
+			base.add_suffix (_entry);
+			_entry.changed.connect((v)=> {
+				try {
+					if (source_id != 0) {
+						Source.remove (source_id);
+					}
+					source_id = GLib.Timeout.add (200, () => {
+						var text = v.text.replace("'", "\\'");
+						print (@"supravim -S $title=\"$(text)\"");
+						Process.spawn_command_line_sync (@"supravim -S $title=\"$(text)\"");
+						source_id = 0;
+						return false;
+					});
+				} catch (Error e) {
+					printerr(e.message);
+				}
+			});
+		}
+		else {
+			_switch = new Gtk.Switch () {
+				halign = Gtk.Align.CENTER,
+				valign = Gtk.Align.CENTER,
+			};
+			if (value == "on")
+				_switch.state = true;
+			base.add_suffix (_switch);
+			init_event_switch ();
+		}
 	}
 
-	void init_event () {
+	void init_event_switch () {
 		_switch.state_set.connect((v)=> {
 			try {
 				if (v == true)
@@ -29,6 +59,7 @@ class RowOptions : Adw.ActionRow {
 	}
 
 	private Gtk.Switch _switch;
+	private Gtk.Entry	_entry;
 }
 
 public class Options {
@@ -41,10 +72,11 @@ public class Options {
 		MatchInfo match_info;
 		string output;
 		Process.spawn_command_line_sync ("supravim -s", out output);
+		var regex = new Regex("""\033\[[0-9;]*m""");
 
 		var regex_opts = /(?P<name>[^\s]+)\s*(?P<value>[^\s]+)(\s*[(](?P<lore>[^]]+)[)])?/;
-		foreach (var line in output.split ("\n")) {
-			line = new Regex("""\033\[[0-9;]*m""").replace(line, -1, 0, "");
+		foreach (unowned var line in output.split ("\n")) {
+			line = regex.replace(line, -1, 0, "");
 			if (line == "" || line[0] == '-')
 				continue; 
 			if (regex_opts.match(line, 0, out match_info)) {

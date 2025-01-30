@@ -47,9 +47,15 @@ class RowOptions : Adw.ActionRow {
 		_switch.state_set.connect((v)=> {
 			try {
 				if (v == true)
+				{
 					Process.spawn_command_line_sync (@"supravim -e $title");
+					print("onChangeOption: [%s] <true>\n", title);
+				}
 				else
+				{
+					print("onChangeOption: [%s] <false>\n", title);
 					Process.spawn_command_line_sync (@"supravim -d $title");
+				}
 				_switch.state = v;
 				} catch (Error e) {
 					printerr(e.message);

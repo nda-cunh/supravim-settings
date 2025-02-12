@@ -39,7 +39,7 @@ class ThemeGrid : Gtk.Grid {
 
 	public ThemeGrid () {
 		string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				"molokai", "onehalf", "pablo", "one-light", "iceberg-light"};
+				"molokai", "onehalf", "pablo", "one-light", "iceberg-light", "kyotonight", "tokyonight", "tokyostorm"};
 		tab_button = {};
 
 		actual_theme = get_actual_theme ();
@@ -319,5 +319,49 @@ private void init_themes() {
 			integer = {0.60, 0.40, 0.60}
 		};
 
+		tab_themes["kyotonight"] = new Color("kyotonight") {
+			background_color = {0.10, 0.10, 0.14},
+			include = {0.42, 0.69, 0.85},
+			stdio = {0.45, 0.85, 0.79},
+			typedef = {0.72, 0.59, 0.94},
+			struct = {0.72, 0.59, 0.94},
+			type_s = {0.39, 0.72, 0.68},
+			scope = {0.28, 0.29, 0.32},
+			float = {1.0, 0.62, 0.39},
+			function = {0.28, 0.29, 0.32},
+			format = {0.80, 0.63, 0.38},
+			text = {0.62, 0.80, 0.41},
+			integer = {1.0, 0.62, 0.39}
+		};
+
+		tab_themes["tokyonight"] = new Color("tokyonight") {
+			background_color = {0.13, 0.13, 0.19},
+			include = {0.93, 0.44, 0.53},
+			stdio = {0.74, 0.58, 0.36},
+			typedef = {0.47, 0.63, 0.96},
+			struct = {0.47, 0.63, 0.96},
+			type_s = {0.44, 0.59, 0.90},
+			scope = {0.66, 0.69, 0.83},
+			float = {0.67, 0.55, 0.90},
+			function = {0.66, 0.69, 0.83},
+			format = {0.62, 0.51, 0.83},
+			text = {0.84, 0.66, 0.39},
+			integer = {0.67, 0.55, 0.90}
+		};
+
+		tab_themes["tokyostorm"] = new Color("tokyostorm") {
+			background_color = {0.14, 0.15, 0.23},
+			include = {0.89, 0.43, 0.52},
+			stdio = {0.87, 0.68, 0.40},
+			typedef = {0.47, 0.63, 0.96},
+			struct = {0.47, 0.62, 0.96},
+			type_s = {0.44, 0.59, 0.90},
+			scope = {0.66, 0.69, 0.83},
+			float = {0.67, 0.55, 0.90},
+			function = {0.66, 0.69, 0.83},
+			format = {0.67, 0.55, 0.90},
+			text = {0.87, 0.68, 0.40},
+			integer = {0.67, 0.55, 0.90}
+		};
 }
 

@@ -6,7 +6,8 @@ srcs = [
   'Plugins.vala',
   'Themes.vala',
   'WikiPage.vala',
-  'window.vala'),
+  'window.vala',
+  'Utils.vala'),
 ]
 
 deps = [

@@ -15,20 +15,19 @@ class RowOptions : Adw.ActionRow {
 			_entry.text = value[1:value.length - 1];
 			base.add_suffix (_entry);
 			_entry.changed.connect((v)=> {
-				try {
-					if (source_id != 0) {
-						Source.remove (source_id);
-					}
-					source_id = GLib.Timeout.add (200, () => {
-						var text = v.text.replace("'", "\\'");
-						print (@"supravim -S $title=\"$(text)\"");
-						Process.spawn_command_line_sync (@"supravim -S $title=\"$(text)\"");
-						source_id = 0;
-						return false;
-					});
-				} catch (Error e) {
-					printerr(e.message);
+
+				if (source_id != 0) {
+					Source.remove (source_id);
 				}
+
+				source_id = GLib.Timeout.add (200, () => {
+					var text = v.text.replace("'", "\\'");
+					print (@"supravim -S $title=\"$(text)\"\n");
+					Utils.command_line(@"supravim -S $title=\"$(text)\"");
+					source_id = 0;
+					return false;
+				});
+
 			});
 		}
 		else {
@@ -45,21 +44,11 @@ class RowOptions : Adw.ActionRow {
 
 	void init_event_switch () {
 		_switch.state_set.connect((v)=> {
-			try {
-				if (v == true)
-				{
-					Process.spawn_command_line_sync (@"supravim -e $title");
-					print("onChangeOption: [%s] <true>\n", title);
-				}
-				else
-				{
-					print("onChangeOption: [%s] <false>\n", title);
-					Process.spawn_command_line_sync (@"supravim -d $title");
-				}
-				_switch.state = v;
-				} catch (Error e) {
-					printerr(e.message);
-				}
+			if (v == true)
+				Utils.command_line(@"supravim -e $title");
+			else
+				Utils.command_line(@"supravim -d $title");
+			_switch.state = v;
 			return v;
 		});
 	}

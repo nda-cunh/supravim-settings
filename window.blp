@@ -1,6 +1,12 @@
 using Gtk 4.0;
 using Adw 1;
 
+
+Image my_icon {
+	resource: '/image.png';
+	pixel-size: 400;
+}
+
 template $MainWindow: Adw.ApplicationWindow {
 	default-width: 800;
 	default-height: 800;
@@ -14,13 +20,95 @@ template $MainWindow: Adw.ApplicationWindow {
 		Adw.HeaderBar { }
 
 		Adw.ViewStack viewstack {
-			hexpand:true;
+			hexpand:false;
 			vexpand:true;
 			
 			Adw.ViewStackPage {
 				name: 'general';
-				icon-name: 'emblem-system-symbolic';
+				icon-name: 'go-home-symbolic';
 				title: 'General';
+				child: ScrolledWindow {
+					Viewport {
+						vexpand: false;
+						hexpand: false;
+						Box {
+							orientation: vertical;
+							spacing: 5;
+							hexpand: false;
+							vexpand: false;
+
+							Picture {
+								paintable: bind my_icon.paintable;
+								keep-aspect-ratio : true;
+								width-request: 590;
+								halign: center;
+								valign: center;
+								height-request: 100;
+								hexpand: false;
+								vexpand: false;
+							}
+
+							Adw.PreferencesGroup home_group {
+								margin-bottom: 20;
+								styles ['PreferencesGroup']
+								hexpand: false;
+								vexpand: false;
+
+								halign: center;
+								// Adw.ActionRow {
+									// title: 'Version';
+									// title-selectable: false;
+									// width-request: 590;
+									// Label {
+										// label: '5.50';
+									// }
+									// halign: center;
+								// }
+
+								Button {
+									label: 'Clear cache';
+									name: 'cache_supravim';
+									halign: center;
+									width-request: 590;
+								}
+
+								Box {
+
+								Button {
+									label: 'Update';
+									name: 'update_supravim';
+									halign: center;
+									width-request: 590;
+								}
+
+								Button uninstall_supravim {
+									name: 'uninstall_supravim';
+									label: 'U';
+									halign: center;
+									// width-request: 590;
+								}
+								}
+							}
+							
+							Adw.PreferencesGroup theme_group {
+								hexpand: false;
+								vexpand: false;
+								halign: center;
+								valign: center;
+								margin-bottom: 20;
+								styles ['PreferencesGroup']
+								description: 'Change your theme';
+								title: 'Themes';
+							}
+						}
+					}
+				};
+			}
+			
+			Adw.ViewStackPage {
+				name: 'options';
+				icon-name: 'emblem-system-symbolic';
+				title: 'Options';
 				child: ScrolledWindow {
 					Viewport {
 						Box {
@@ -30,12 +118,6 @@ template $MainWindow: Adw.ApplicationWindow {
 								styles ['PreferencesGroup']
 								title: 'Options';
 								description: 'Enable and disable some options !';
-							}
-							Adw.PreferencesGroup theme_group {
-								margin-bottom: 20;
-								styles ['PreferencesGroup']
-								description: 'Change your theme';
-								title: 'Themes';
 							}
 						}
 					}

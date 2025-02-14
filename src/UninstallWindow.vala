@@ -9,12 +9,13 @@ public class UninstallWindow : Adw.Window {
 		base.set_transient_for(mainWindow);
 
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0) {
-			margin_top = 10,
+			margin_top = 20,
 			margin_bottom = 10,
 			margin_start = 20,
 			margin_end = 20,
 			spacing = 20,
 		};
+
 		box.append(new Gtk.Label("<b>Are you sure you want to uninstall Supravim?</b>") {
 			use_markup = true,
 		});

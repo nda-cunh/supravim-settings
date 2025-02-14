@@ -10,6 +10,10 @@
 	background-color: #5d4446;
 }
 
+.have_update {
+	background-color: #deb005;
+}
+
 #box_named_page {
 	margin: 10px;
 	color:white;

@@ -60,7 +60,7 @@ template $MainWindow: Adw.ApplicationWindow {
 										hexpand: false;
 										vexpand: false;
 									}
-									Button {
+									Button update_button {
 										label: 'Update';
 										name: 'update_supravim';
 										clicked => $update();
@@ -111,8 +111,12 @@ template $MainWindow: Adw.ApplicationWindow {
 							spacing: 5;
 							Adw.PreferencesGroup options_group {
 								styles ['PreferencesGroup']
-								title: 'Options';
-								description: 'Enable and disable some options !';
+								title: 'General Options';
+								description: 'Enable and disable some general options !';
+							}
+							Adw.PreferencesGroup options_group_pl {
+								styles ['PreferencesGroup']
+								title: 'Plugin Options';
 							}
 						}
 					}

@@ -27,7 +27,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		base.set_cursor_from_name ("default");
 		wiki_box.append(new Wiki(Environment.get_home_dir() + "/.local/share/supravim-gui/"));
 		plugins = new Plugins(plugins_group);
-		options = new Options(options_group);
+		options = new Options(options_group, options_group_pl);
 		theme_group.add (new ThemeGroups());
 
 		test_if_update_available();
@@ -68,6 +68,8 @@ public class MainWindow : Adw.ApplicationWindow {
 	public unowned Adw.PreferencesGroup plugins_group;
 	[GtkChild]
 	public unowned Adw.PreferencesGroup options_group;
+	[GtkChild]
+	public unowned Adw.PreferencesGroup options_group_pl;
 	[GtkChild]
 	unowned Gtk.Box wiki_box; 
 }

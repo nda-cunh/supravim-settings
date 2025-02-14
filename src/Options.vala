@@ -58,8 +58,9 @@ class RowOptions : Adw.ActionRow {
 }
 
 public class Options {
-	public Options(Adw.PreferencesGroup options_group) throws Error {
+	public Options(Adw.PreferencesGroup options_group, Adw.PreferencesGroup options_group_pl) throws Error {
 		this.options_group = options_group;
+		this.options_group_pl = options_group_pl;
 		foreach_status();
 	}
 
@@ -67,24 +68,33 @@ public class Options {
 		MatchInfo match_info;
 		string output;
 		Process.spawn_command_line_sync ("supravim -s", out output);
-		var regex = new Regex("""\033\[[0-9;]*m""");
+		var regex_color = new Regex("""\033\[[0-9;]*m""");
 
+		bool is_plugin_mode = false;
 		var regex_opts = /(?P<name>[^\s]+)\s*(?P<value>[^\s]+)(\s*[(](?P<lore>[^]]+)[)])?/;
 		foreach (unowned var line in output.split ("\n")) {
-			line = regex.replace(line, -1, 0, "");
+			line = regex_color.replace(line, -1, 0, "");
 			if (line == "" || line[0] == '-')
+			{
+				if (line == "-- PLUGINS --")
+					is_plugin_mode = true;
 				continue; 
+			}
 			if (regex_opts.match(line, 0, out match_info)) {
 				var name = match_info.fetch_named ("name");
 				if (name == "theme")
 					continue;
 				var @value = match_info.fetch_named ("value");
 				var lore = match_info.fetch_named ("lore");
-				options_group.add (new RowOptions(name, lore ?? "No lore", value));
+				if (is_plugin_mode)
+					options_group_pl.add (new RowOptions(name, lore ?? "No lore", @value));
+				else
+					options_group.add (new RowOptions(name, lore ?? "No lore", @value));
 			}
 		}
 
 	}
 	unowned Adw.PreferencesGroup options_group;
+	unowned Adw.PreferencesGroup options_group_pl;
 }
 

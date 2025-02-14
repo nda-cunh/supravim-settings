@@ -3,7 +3,6 @@
 }
 
 #box_named_page {
-
 	margin: 10px;
 	color:white;
 	font-size:15px;
@@ -13,11 +12,12 @@
 	color:grey;
 	margin-bottom:5px;
 	margin-top:5px;
+	border-bottom-right-radius: 0px;
+	border-top-right-radius	: 0px;
 }
 
 #update_supravim {
 	color:white;
-	background-color: #eebb00;
 	margin-bottom:5px;
 	margin-top:5px;
 }
@@ -27,6 +27,8 @@
 	background-color: #990000;
 	margin-bottom:5px;
 	margin-top:5px;
+	border-bottom-left-radius: 0px;
+	border-top-left-radius	: 0px;
 }
 
 .PreferencesGroup {

@@ -7,6 +7,7 @@ srcs = [
   'Themes.vala',
   'WikiPage.vala',
   'window.vala',
+  'UpdateWindow.vala',
   'Utils.vala'),
 ]
 

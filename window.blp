@@ -8,11 +8,10 @@ Image my_icon {
 }
 
 template $MainWindow: Adw.ApplicationWindow {
-	default-width: 800;
-	default-height: 800;
+	default-width: -1;
+	default-height: 850;
 	width-request: 700;
-	title: "supravim-gui";
-
+	title: "──  SupraVim  ──";
 
 	content: Box {
 		orientation: vertical;
@@ -37,56 +36,52 @@ template $MainWindow: Adw.ApplicationWindow {
 							hexpand: false;
 							vexpand: false;
 
-							Picture {
-								paintable: bind my_icon.paintable;
-								keep-aspect-ratio : true;
-								width-request: 590;
-								halign: center;
-								valign: center;
-								height-request: 100;
-								hexpand: false;
-								vexpand: false;
-							}
 
 							Adw.PreferencesGroup home_group {
-								margin-bottom: 20;
 								styles ['PreferencesGroup']
 								hexpand: false;
 								vexpand: false;
+								margin-bottom: 0;
 
 								halign: center;
-								// Adw.ActionRow {
-									// title: 'Version';
-									// title-selectable: false;
-									// width-request: 590;
-									// Label {
-										// label: '5.50';
-									// }
-									// halign: center;
-								// }
-
-								Button {
-									label: 'Clear cache';
-									name: 'cache_supravim';
-									halign: center;
-									width-request: 590;
-								}
 
 								Box {
-
-								Button {
-									label: 'Update';
-									name: 'update_supravim';
-									halign: center;
+									hexpand: false;
+									vexpand: false;
 									width-request: 590;
-								}
+									orientation: vertical;
 
-								Button uninstall_supravim {
-									name: 'uninstall_supravim';
-									label: 'U';
-									halign: center;
-									// width-request: 590;
-								}
+									Picture {
+										paintable: bind my_icon.paintable;
+										keep-aspect-ratio : true;
+										valign: start;
+										halign: center;
+										height-request: 100;
+										hexpand: false;
+										vexpand: false;
+									}
+									Button {
+										label: 'Update';
+										name: 'update_supravim';
+										clicked => $update();
+									}
+
+									Box {
+										Button {
+											label: 'Clear cache';
+											name: 'cache_supravim';
+											hexpand: true;
+											clicked => $clear_cache();
+										}
+
+										Button uninstall_supravim {
+											name: 'uninstall_supravim';
+											Image {
+												icon-name: 'edit-delete-symbolic';
+											}
+											clicked => $uninstall();
+										}
+									}
 								}
 							}
 							

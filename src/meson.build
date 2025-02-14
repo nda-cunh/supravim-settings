@@ -8,6 +8,8 @@ srcs = [
   'WikiPage.vala',
   'window.vala',
   'UpdateWindow.vala',
+  'ClearCacheWindow.vala',
+  'UninstallWindow.vala',
   'Utils.vala'),
 ]
 

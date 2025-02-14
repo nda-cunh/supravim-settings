@@ -1,6 +1,14 @@
 .link * {
 	text-decoration:none;
 }
+.button_popup {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.destructive-action {
+	color: #ff938c;
+	background-color: #5d4446;
+}
 
 #box_named_page {
 	margin: 10px;

@@ -47,7 +47,6 @@ public class UpdateWindow : Adw.Window {
 		int state = 0;
 
 		while ((line = reader.read_line(null)) != null) {
-			print ("%s\n", line);
 			if (line.has_prefix("download: [")) {
 				line.scanf("download: [%d]", out progress);
 				progress_bar.set_fraction(progress / 100.0);

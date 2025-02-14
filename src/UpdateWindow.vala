@@ -38,7 +38,7 @@ public class UpdateWindow : Adw.Window {
 	}
 
 	private async void update() throws GLib.Error {
-		var process = new Subprocess.newv({"suprapack", "add", "supravim", "--simple-print"}, SubprocessFlags.SEARCH_PATH_FROM_ENVP + SubprocessFlags.STDOUT_PIPE);
+		var process = new Subprocess.newv({"suprapack", "update", "--yes", "--simple-print"}, SubprocessFlags.SEARCH_PATH_FROM_ENVP + SubprocessFlags.STDOUT_PIPE);
 
 		var stdout = process.get_stdout_pipe();
 		var reader = new DataInputStream(stdout);

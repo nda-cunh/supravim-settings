@@ -70,40 +70,45 @@ public class UninstallWindow : Adw.Window {
 	}
 
 	private async void uninstall () {
-		var process = new Subprocess.newv({"suprapack", "remove", "supravim", "--simple-print"}, SubprocessFlags.SEARCH_PATH_FROM_ENVP + SubprocessFlags.STDOUT_PIPE);
+		try {
+			var process = new Subprocess.newv({"suprapack", "remove", "supravim", "--simple-print"}, SubprocessFlags.SEARCH_PATH_FROM_ENVP + SubprocessFlags.STDOUT_PIPE);
 
-		var stdout = process.get_stdout_pipe();
-		var reader = new DataInputStream(stdout);
-		int progress;
-		string line;
-		int state = 0;
+			var stdout = process.get_stdout_pipe();
+			var reader = new DataInputStream(stdout);
+			int progress;
+			string line;
+			int state = 0;
 
-		while ((line = reader.read_line(null)) != null) {
-			print ("%s\n", line);
-			if (line.has_prefix("download: [")) {
-				line.scanf("download: [%d]", out progress);
-				progress_bar.set_fraction(progress / 100.0);
-				if (state != 1)
-					label_update.set_text("Download");
-				state = 1;
+			while ((line = reader.read_line(null)) != null) {
+				print ("%s\n", line);
+				if (line.has_prefix("download: [")) {
+					line.scanf("download: [%d]", out progress);
+					progress_bar.set_fraction(progress / 100.0);
+					if (state != 1)
+						label_update.set_text("Download");
+					state = 1;
+				}
+				else if (line.has_prefix("install: [")) {
+					line.scanf("install: [%d]", out progress);
+					progress_bar.set_fraction(progress / 100.0);
+					if (state != 2)
+						label_update.set_text("Install");
+					state = 2;
+				}
+				else if (line.has_prefix("remove: [")) {
+					line.scanf("remove: [%d]", out progress);
+					progress_bar.set_fraction(progress / 100.0);
+					if (state != 3)
+						label_update.set_text("Removing");
+					state = 3;
+				}
+				Idle.add(uninstall.callback);
+				yield;
 			}
-			else if (line.has_prefix("install: [")) {
-				line.scanf("install: [%d]", out progress);
-				progress_bar.set_fraction(progress / 100.0);
-				if (state != 2)
-					label_update.set_text("Install");
-				state = 2;
-			}
-			else if (line.has_prefix("remove: [")) {
-				line.scanf("remove: [%d]", out progress);
-				progress_bar.set_fraction(progress / 100.0);
-				if (state != 3)
-					label_update.set_text("Removing");
-				state = 3;
-			}
-			Idle.add(uninstall.callback);
-			yield;
+			label_update.set_text("Done");
 		}
-		label_update.set_text("Done");
+		catch (Error e) {
+			printerr ("Error: %s\n", e.message);
+		}
 	}
 }

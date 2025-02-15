@@ -29,7 +29,12 @@ public class Wiki : Gtk.Box {
 		markdown.activate_link.connect (click_link);
 		markdown_box.append(markdown);
 		markdown.path_dir = basename;
-		load_sidebar();
+		try {
+			load_sidebar();
+		}
+		catch (Error e) {
+			printerr ("Error: %s\n", e.message);
+		}
 	}
 
 	private void change_page (string uri) throws Error {
@@ -44,16 +49,21 @@ public class Wiki : Gtk.Box {
 			return false;
 		}
 		var tmp = @"$basename/$uri.md";
-		change_page (tmp);
-		if (index_list < list.length() - 1) {
-			var tmp_lst = new List<string>();
-			for (int i = 0; i <= index_list; i++) {
-				tmp_lst.append (list.nth_data(i));
+		try {
+			change_page (tmp);
+			if (index_list < list.length() - 1) {
+				var tmp_lst = new List<string>();
+				for (int i = 0; i <= index_list; i++) {
+					tmp_lst.append (list.nth_data(i));
+				}
+				list = (owned)tmp_lst;
 			}
-			list = (owned)tmp_lst;
+			list.append (tmp);
+			index_list++;
 		}
-		list.append (tmp);
-		index_list++;
+		catch (Error e) {
+			printerr ("Error: %s\n", e.message);
+		}
 		return false;
 	}
 

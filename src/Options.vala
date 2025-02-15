@@ -1,5 +1,4 @@
-class RowOptions : Adw.ActionRow {
-	
+private class RowOptions : Adw.ActionRow {
 	
 	uint source_id = 0;
 
@@ -58,7 +57,7 @@ class RowOptions : Adw.ActionRow {
 }
 
 public class Options {
-	public Options(Adw.PreferencesGroup options_group, Adw.PreferencesGroup options_group_pl) throws Error {
+	public Options (Adw.PreferencesGroup options_group, Adw.PreferencesGroup options_group_pl) throws Error {
 		this.options_group = options_group;
 		this.options_group_pl = options_group_pl;
 		foreach_status();
@@ -71,11 +70,10 @@ public class Options {
 		var regex_color = new Regex("""\033\[[0-9;]*m""");
 
 		bool is_plugin_mode = false;
+		output = regex_color.replace(output, -1, 0, "");
 		var regex_opts = /(?P<name>[^\s]+)\s*(?P<value>[^\s]+)(\s*[(](?P<lore>[^]]+)[)])?/;
 		foreach (unowned var line in output.split ("\n")) {
-			line = regex_color.replace(line, -1, 0, "");
-			if (line == "" || line[0] == '-')
-			{
+			if (line == "" || line[0] == '-') {
 				if (line == "-- PLUGINS --")
 					is_plugin_mode = true;
 				continue; 
@@ -94,7 +92,7 @@ public class Options {
 		}
 
 	}
-	unowned Adw.PreferencesGroup options_group;
-	unowned Adw.PreferencesGroup options_group_pl;
-}
 
+	private unowned Adw.PreferencesGroup options_group;
+	private unowned Adw.PreferencesGroup options_group_pl;
+}

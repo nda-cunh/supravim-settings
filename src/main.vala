@@ -17,13 +17,16 @@ class Application : Adw.Application {
 	}
 
 	public static void main(string []args) {
-		try {
-			unowned string HOME = Environment.get_home_dir();
-			Process.spawn_async(@"$HOME/.local/share/supravim-gui", {"git", "pull"}, null, GLib.SpawnFlags.SEARCH_PATH, null, null);
-		}
-		catch (Error e) {
-			printerr(e.message);
-		}
+		new Thread<void>(null, ()=> {
+			try {
+				unowned string HOME = Environment.get_home_dir();
+				string path = HOME + "/.local/share/supravim-gui";
+				Process.spawn_async(path, {"git", "pull"}, null, SEARCH_PATH, null, null);
+			}
+			catch (Error e) {
+				printerr(e.message);
+			}
+		});
 		var app = new Application();
 		app.run(null);
 	}

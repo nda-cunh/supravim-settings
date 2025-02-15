@@ -1,7 +1,9 @@
 namespace Utils {
 	public void command_line (string command) {
 		try {
-			Process.spawn_command_line_sync (command);
+			string output;
+			string error;
+			Process.spawn_command_line_sync (command, out output, out error);
 		} catch (Error e) {
 			warning (e.message);
 		}

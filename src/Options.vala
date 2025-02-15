@@ -21,8 +21,8 @@ private class RowOptions : Adw.ActionRow {
 
 				source_id = GLib.Timeout.add (200, () => {
 					var text = v.text.replace("'", "\\'");
-					print (@"supravim -S $title=\"$(text)\"\n");
 					Utils.command_line(@"supravim -S $title=\"$(text)\"");
+					print("onChangeOption: [%s] <%s>\n", title, text);
 					source_id = 0;
 					return false;
 				});
@@ -43,10 +43,14 @@ private class RowOptions : Adw.ActionRow {
 
 	void init_event_switch () {
 		_switch.state_set.connect((v)=> {
-			if (v == true)
+			if (v == true) {
 				Utils.command_line(@"supravim -e $title");
-			else
+				print("onChangeOption: [%s] <true>\n", title);
+			}
+			else {
 				Utils.command_line(@"supravim -d $title");
+				print("onChangeOption: [%s] <false>\n", title);
+			}
 			_switch.state = v;
 			return v;
 		});

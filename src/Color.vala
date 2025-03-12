@@ -2,6 +2,17 @@ public struct DataColor {
 	double red;
 	double green;
 	double blue;
+
+	public static DataColor rgb (int r, int g, int b) {
+		DataColor color = {
+			(double)r / 255.0, 
+			(double)g / 255.0,
+			(double)b / 255.0
+		};
+		return color;
+	}
+	public const DataColor black = {0.0, 0.0, 0.0};
+	public const DataColor white = {1.0, 1.0, 1.0};
 }
 
 public class Color : Gtk.Box {
@@ -167,7 +178,7 @@ public class Color : Gtk.Box {
 		// 3 lines
 		draw_rect (ctx, float, padding_w + 20, padding_h + (size_h*2) + 8, 38);
 		draw_rect (ctx, type_s, padding_w + 62, padding_h + (size_h*2) + 8, 28);
-		draw_rect (ctx, scope, padding_w + 93, padding_h + (size_h * 2) + 8, 1);
+		draw_rect (ctx, scope, padding_w + 94, padding_h + (size_h * 2) + 8, 3);
 
 		// scope and type 4 lines
 		draw_rect (ctx, scope, padding_w, padding_h + (size_h*3) + 12, 5);

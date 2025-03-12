@@ -39,7 +39,7 @@ class ThemeGrid : Gtk.Grid {
 
 	public ThemeGrid () {
 		string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				"molokai", "onehalf", "pablo", "kyotonight", "tokyonight", "tokyostorm", "one-light", "iceberg-light"};
+				"molokai", "onehalf", "pablo", "rosepine", "rosepine_moon", "kyotonight", "tokyonight", "tokyostorm", "rosepine_dawn-light", "one-light", "iceberg-light"};
 		tab_button = {};
 
 		actual_theme = get_actual_theme ();
@@ -363,5 +363,52 @@ private void init_themes() {
 			text = {0.87, 0.68, 0.40},
 			integer = {0.67, 0.55, 0.90}
 		};
+
+		tab_themes["rosepine_moon"] = new Color("rosepine_moon") {
+			background_color = {0.13, 0.12, 0.21}, // Base
+			include = {0.72, 0.61, 0.85}, // Iris
+			stdio = {0.96, 0.75, 0.56}, // Gold
+			typedef = {0.61, 0.81, 0.84}, // Pine
+			struct = {0.61, 0.81, 0.84}, // Pine
+			type_s = {0.61, 0.81, 0.84}, // Pine
+			scope = {1.0, 1.0, 1.0}, // White
+			float = {0.61, 0.81, 0.84}, // Pine
+			function = {1.0, 1.0, 1.0}, // White
+			format = {0.91, 0.60, 0.59}, // Rose
+			text = {0.96, 0.75, 0.56}, // Gold
+			integer = {0.61, 0.81, 0.84}, // Pine
+		};
+		
+		tab_themes["rosepine"] = new Color("rosepine") {
+			background_color = {0.10, 0.09, 0.14}, // Base
+			include = DataColor.rgb(196, 167, 231), // Iris
+			stdio = DataColor.rgb(246, 193, 119), // Gold
+			typedef = DataColor.rgb(156, 207, 216), // Foam
+			struct = DataColor.rgb(156, 207, 216), // Foam
+			type_s = DataColor.rgb(156, 207, 216), // Foam
+			scope = DataColor.white,
+			float = DataColor.rgb(156, 207, 216), // Foam
+			function = DataColor.white, 
+			format = DataColor.rgb(235, 188, 186), // Rose
+			text = DataColor.rgb(246, 193, 119), // Gold 
+			integer = DataColor.rgb(156, 207, 216), // Foam 
+		};
+		
+		tab_themes["rosepine_dawn-light"] = new Color("rosepine_dawn-light") {
+			background_color = DataColor.rgb(250, 244, 237), 
+			include = DataColor.rgb(144, 122, 169),
+			stdio = DataColor.rgb(234, 157, 52),
+			typedef = DataColor.rgb(86, 148, 159),
+			struct = DataColor.rgb(86, 148, 159),
+			type_s = DataColor.rgb(86, 148, 159),
+			scope = DataColor.rgb(87, 82, 121),
+			float = DataColor.rgb(86, 148, 159),
+			function = DataColor.rgb(121, 117, 147),
+			format = DataColor.rgb(180, 99, 122),
+			text = DataColor.rgb(234, 157, 52),
+			integer = DataColor.rgb(86, 148, 159),
+		};
+
+
 }
 

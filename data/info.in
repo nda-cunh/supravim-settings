@@ -3,7 +3,7 @@ version: @version@
 author: nda-cunh
 binary: supravim-gui
 description: more settings for supravim-ide
-dependency: 
+dependency: supravim 
 exclude_package: 
 optional_dependency: 
 size_tar: 

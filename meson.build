@@ -1,5 +1,5 @@
 project('supravim-gui', ['c', 'vala'],
-  version : '1.13',
+  version : '1.14',
   default_options : ['warning_level=0', 'optimization=2'])
 
 add_project_arguments('--enable-experimental', language: 'vala')

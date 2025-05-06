@@ -51,7 +51,7 @@ class RowPlugin : Adw.ActionRow {
 		var window = base.get_root() as MainWindow;
 		var popup = new DownloadWindow(window);
 		if (_installed == true) {
-			popup.execute.begin(@"suprapack uninstall 'plugin-$(_name)' --simple-print", (obj, res) => {
+			popup.execute.begin(@"suprapack uninstall 'plugin-$(_name)' --yes --simple-print", (obj, res) => {
 				popup.close();
 				if (popup.execute.end(res) == 0)
 					_installed = false;
@@ -59,7 +59,7 @@ class RowPlugin : Adw.ActionRow {
 			});
 		}
 		else {
-			popup.execute.begin(@"suprapack install 'plugin-$(_name)' --simple-print", (obj, res) => {
+			popup.execute.begin(@"suprapack install 'plugin-$(_name)' --yes --simple-print", (obj, res) => {
 				popup.close();
 				if (popup.execute.end(res) == 0)
 					_installed = true;

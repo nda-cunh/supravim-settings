@@ -35,7 +35,7 @@ private class RowOptions : Adw.ActionRow {
 				valign = Gtk.Align.CENTER,
 			};
 			if (value == "on")
-				_switch.state = true;
+				_switch.active = true;
 			base.add_suffix (_switch);
 			init_event_switch ();
 		}
@@ -51,6 +51,7 @@ private class RowOptions : Adw.ActionRow {
 				Utils.command_line(@"supravim -d $title");
 				print("onChangeOption: [%s] <false>\n", title);
 			}
+			_switch.active = v;
 			_switch.state = v;
 			return v;
 		});

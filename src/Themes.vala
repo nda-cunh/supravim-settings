@@ -39,11 +39,11 @@ class ThemeGrid : Gtk.Grid {
 
 	public ThemeGrid () {
 		string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				"molokai", "onehalf", "pablo", "rosepine", "rosepine_moon", "kyotonight", "tokyonight", "tokyostorm", "rosepine_dawn-light", "one-light", "iceberg-light"};
+				"molokai", "onedark", "pablo", "rosepine", "rosepine_moon", "kyotonight", "tokyonight", "tokyostorm", "rosepine_dawn-light", "one-light", "iceberg-light"};
 		tab_button = {};
 
 		actual_theme = get_actual_theme ();
-		foreach (var i in tab_theme) {
+		foreach (unowned var i in tab_theme) {
 			var tmp = new ThemeButton (i);
 			if (i == actual_theme)
 				tmp.active = true;
@@ -54,7 +54,7 @@ class ThemeGrid : Gtk.Grid {
 					return;
 				print("%s\n", tmp.name);
 				onThemeChange(tmp.name);
-				foreach (var d in tab_button) {
+				foreach (unowned var d in tab_button) {
 					if (tmp.name != d.name) {
 						d.set_active (false);
 					}
@@ -70,7 +70,7 @@ class ThemeGrid : Gtk.Grid {
 	string get_actual_theme () {
 		try {
 			unowned var HOME = Environment.get_home_dir ();
-			const string search = "g:sp_theme = '";
+			const string search = "g:sp_theme = \"";
 			string result;
 			int index;
 			string vimrc;
@@ -79,14 +79,14 @@ class ThemeGrid : Gtk.Grid {
 			index = vimrc.index_of(search);
 			if (index == -1)
 				throw new FileError.FAILED("");
-			result = vimrc[index + search.length: vimrc.index_of_char('\'', index + search.length)];
+			result = vimrc[index + search.length: vimrc.index_of_char('"', index + search.length)];
 			if (vimrc.index_of("""set background=light""") != -1)
 				result = result + "-light";
 
 			return result;
 		} catch (Error e) {
 			warning (e.message);
-			return "onehalf";
+			return "onedark";
 		}
 	}
 
@@ -225,7 +225,7 @@ private void init_themes() {
 			integer = {0.46, 0.34, 0.70}
 		};
 		
-		tab_themes["onehalf"] = new Color("onehalf") {
+		tab_themes["onedark"] = new Color("onedark") {
 			background_color = {0.15, 0.17, 0.20},
 			include = {0.38, 0.68, 0.93},
 			stdio = {0.56, 0.76, 0.47},
@@ -289,7 +289,7 @@ private void init_themes() {
 			integer = {0.82, 0.52, 0.60}
 		};
 
-		tab_themes["one"] = new Color("onehalf") {
+		tab_themes["one"] = new Color("onedark") {
 			background_color = {0.15, 0.17, 0.20},
 			include = {0.38, 0.68, 0.93},
 			stdio = {0.56, 0.76, 0.47},

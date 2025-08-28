@@ -6,14 +6,27 @@ private class RowOptions : Adw.ActionRow {
 		base.title = name;
 		base.subtitle = lore;
 
-		if (value.has_prefix ("'")) {
+		print("RowOptions: [%s] <%s> <%s>\n", name, lore, value);
+		if (/^[0-9]+/.match(value)) {
+			_spin = new Gtk.SpinButton.with_range (0, 100, 1) {
+				halign = Gtk.Align.CENTER,
+				valign = Gtk.Align.CENTER,
+			};
+			_spin.value = int.parse(value);
+			base.add_suffix (_spin);
+			_spin.value_changed.connect((v) => {
+				Utils.command_line(@"supravim -S $title=$(int.parse(v.text))");
+				print("onChangeOption: [%s] <%d>\n", title, int.parse(v.text));
+			});
+		}
+		else if (value.has_prefix ("'")) {
 			_entry = new Gtk.Entry () {
 				halign = Gtk.Align.CENTER,
 				valign = Gtk.Align.CENTER,
 			};
 			_entry.text = value[1:value.length - 1];
 			base.add_suffix (_entry);
-			_entry.changed.connect((v)=> {
+			_entry.changed.connect((v) => {
 
 				if (source_id != 0) {
 					Source.remove (source_id);
@@ -57,7 +70,11 @@ private class RowOptions : Adw.ActionRow {
 		});
 	}
 
+	// For number
+	private Gtk.SpinButton _spin;
+	// for boolean
 	private Gtk.Switch _switch;
+	// for string
 	private Gtk.Entry	_entry;
 }
 

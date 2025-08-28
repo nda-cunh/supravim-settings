@@ -38,10 +38,25 @@ class ThemeGrid : Gtk.Grid {
 	}
 
 	public ThemeGrid () {
-		string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				"molokai", "onedark", "pablo", "rosepine", "rosepine_moon", "kyotonight", "tokyonight", "tokyostorm", "rosepine_dawn-light", "one-light", "iceberg-light"};
+		// string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
+				// "molokai", "onedark", "pablo", "rosepine", "rosepine_moon", "kyotonight", "tokyonight", "tokyostorm",
+		// "rosepine_dawn-light", "one-light", "iceberg-light"};
 		tab_button = {};
 
+string [] tab_theme = {"atom",
+"dracula",
+"gruvbox",
+"iceberg",
+"pablo",
+"kyotonight",
+"molokai",
+"onedark",
+"tokyonight",
+"tokyostorm",
+"rosepine",
+"rosepine_moon",
+"rosepine_dawn-light",
+"iceberg-light"};
 		actual_theme = get_actual_theme ();
 		foreach (unowned var i in tab_theme) {
 			var tmp = new ThemeButton (i);

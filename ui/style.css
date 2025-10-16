@@ -16,7 +16,7 @@
 
 #box_named_page {
 	margin: 10px;
-	color:white;
+	color: @theme_fg_color;
 	font-size:15px;
 }
 
@@ -29,13 +29,13 @@
 }
 
 #update_supravim {
-	color:white;
+	color: @theme_fg_color;
 	margin-bottom:5px;
 	margin-top:5px;
 }
 
 #uninstall_supravim {
-	color:white;
+	color: @theme_fg_color;
 	background-color: #990000;
 	margin-bottom:5px;
 	margin-top:5px;

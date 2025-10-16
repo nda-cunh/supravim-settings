@@ -1,5 +1,5 @@
 project('supravim-gui', ['c', 'vala'],
-  version : '1.17',
+  version : '1.18',
   default_options : ['warning_level=0', 'optimization=2'])
 
 add_project_arguments('--enable-experimental', language: 'vala')
@@ -27,7 +27,7 @@ info_file = configure_file(input : 'data/info.in', output : 'info', configuratio
 
 install_data(info_file, install_dir: '.')
 install_data(files('data/supravim.desktop'), install_dir: get_option('datadir') / 'applications')
-install_data(files('data/supravim.svg'), install_dir: get_option('datadir') / 'pixmaps')
+install_data(files('data/supravim.png'), install_dir: get_option('datadir') / 'pixmaps')
 meson.add_install_script('suprapack_build.sh')
 
 subdir('src')

@@ -38,12 +38,9 @@ class ThemeGrid : Gtk.Grid {
 	}
 
 	public ThemeGrid () {
-		// string []tab_theme = { "dracula", "atom", "gruvbox", "iceberg",
-				// "molokai", "onedark", "pablo", "rosepine", "rosepine_moon", "kyotonight", "tokyonight", "tokyostorm",
-		// "rosepine_dawn-light", "one-light", "iceberg-light"};
 		tab_button = {};
-
-string [] tab_theme = {"atom",
+		const string [] tab_theme = {
+"atom",
 "dracula",
 "gruvbox",
 "iceberg",
@@ -55,8 +52,13 @@ string [] tab_theme = {"atom",
 "tokyostorm",
 "rosepine",
 "rosepine_moon",
+"catppuccin_frappe",
+"catppuccin_macchiato",
+"catppuccin_mocha",
 "rosepine_dawn-light",
-"iceberg-light"};
+"iceberg-light",
+"catppuccin_latte"
+};
 		actual_theme = get_actual_theme ();
 		foreach (unowned var i in tab_theme) {
 			var tmp = new ThemeButton (i);
@@ -424,6 +426,69 @@ private void init_themes() {
 			integer = DataColor.rgb(86, 148, 159),
 		};
 
+		// Catppuccin Latte
+		tab_themes["catppuccin_latte"] = new Color("catppuccin_latte") {
+			background_color = {239.0/255.0, 241.0/255.0, 245.0/255.0},  // #eff1f5
+			include = {220.0/255.0, 138.0/255.0, 120.0/255.0},  // rosewater
+			stdio = {234.0/255.0, 118.0/255.0, 203.0/255.0},    // pink
+			typedef = {136.0/255.0, 57.0/255.0, 239.0/255.0},    // mauve
+			struct = {30.0/255.0, 102.0/255.0, 245.0/255.0},     // blue
+			type_s = {32.0/255.0, 159.0/255.0, 181.0/255.0},     // sapphire
+			scope = {76.0/255.0, 79.0/255.0, 105.0/255.0},       // text (gris)
+			float = {4.0/255.0, 165.0/255.0, 229.0/255.0},       // sky
+			function = {114.0/255.0, 135.0/255.0, 253.0/255.0},  // lavender
+			format = {223.0/255.0, 142.0/255.0, 29.0/255.0},     // yellow
+			text = {92.0/255.0, 95.0/255.0, 119.0/255.0},        // subtext1
+			integer = {64.0/255.0, 160.0/255.0, 43.0/255.0}       // green
+		};
+
+		// Catppuccin Frappé
+		tab_themes["catppuccin_frappe"] = new Color("catppuccin_frappe") {
+			background_color = {48.0/255.0, 52.0/255.0, 70.0/255.0},  // #303446
+			include = {242.0/255.0, 213.0/255.0, 207.0/255.0},        // rosewater frappé
+			stdio = {244.0/255.0, 184.0/255.0, 228.0/255.0},          // pink frappé
+			typedef = {202.0/255.0, 158.0/255.0, 230.0/255.0},         // mauve frappé
+			struct = {140.0/255.0, 170.0/255.0, 238.0/255.0},          // blue frappé
+			type_s = {129.0/255.0, 200.0/255.0, 190.0/255.0},          // teal frappé
+			scope = {148.0/255.0, 156.0/255.0, 187.0/255.0},           // overlay2 frappé
+			float = {153.0/255.0, 209.0/255.0, 219.0/255.0},           // sky frappé
+			function = {186.0/255.0, 187.0/255.0, 241.0/255.0},         // lavender frappé
+			format = {229.0/255.0, 200.0/255.0, 144.0/255.0},           // yellow frappé
+			text = {198.0/255.0, 208.0/255.0, 245.0/255.0},            // text frappé
+			integer = {166.0/255.0, 209.0/255.0, 137.0/255.0}           // green frappé
+		};
+
+		// Catppuccin Macchiato
+		tab_themes["catppuccin_macchiato"] = new Color("catppuccin_macchiato") {
+			background_color = {36.0/255.0, 39.0/255.0, 58.0/255.0},  // #24273a
+			include = {244.0/255.0, 219.0/255.0, 214.0/255.0},        // rosewater macchiato
+			stdio = {245.0/255.0, 189.0/255.0, 230.0/255.0},          // pink macchiato
+			typedef = {198.0/255.0, 160.0/255.0, 246.0/255.0},         // mauve macchiato
+			struct = {145.0/255.0, 215.0/255.0, 227.0/255.0},          // sky macchiato
+			type_s = {139.0/255.0, 213.0/255.0, 202.0/255.0},          // teal macchiato
+			scope = {110.0/255.0, 115.0/255.0, 141.0/255.0},           // overlay0 macchiato
+			float = {73.0/255.0, 77.0/255.0, 100.0/255.0},              // surface1 macchiato
+			function = {91.0/255.0, 96.0/255.0, 120.0/255.0},           // surface2 macchiato
+			format = {238.0/255.0, 212.0/255.0, 159.0/255.0},           // yellow macchiato
+			text = {128.0/255.0, 135.0/255.0, 162.0/255.0},             // overlay1 macchiato
+			integer = {166.0/255.0, 218.0/255.0, 149.0/255.0}           // green macchiato
+		};
+
+		// Catppuccin Mocha
+		tab_themes["catppuccin_mocha"] = new Color("catppuccin_mocha") {
+			background_color = {30.0/255.0, 30.0/255.0, 46.0/255.0},   // #1e1e2e
+			include = {245.0/255.0, 224.0/255.0, 220.0/255.0},         // rosewater mocha
+			stdio = {245.0/255.0, 194.0/255.0, 231.0/255.0},           // pink mocha
+			typedef = {203.0/255.0, 166.0/255.0, 247.0/255.0},          // mauve mocha
+			struct = {243.0/255.0, 139.0/255.0, 168.0/255.0},           // red / accent mocha
+			type_s = {186.0/255.0, 194.0/255.0, 222.0/255.0},           // subtext1 mocha
+			scope = {205.0/255.0, 214.0/255.0, 244.0/255.0},            // text mocha
+			float = {147.0/255.0, 153.0/255.0, 178.0/255.0},             // overlay2 mocha
+			function = {127.0/255.0, 132.0/255.0, 156.0/255.0},          // overlay1 mocha
+			format = {108.0/255.0, 112.0/255.0, 134.0/255.0},            // overlay0 mocha
+			text = {186.0/255.0, 194.0/255.0, 222.0/255.0},              // subtext1 / text
+			integer = {166.0/255.0, 218.0/255.0, 149.0/255.0}             // green
+		};
 
 }
 

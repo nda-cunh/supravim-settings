@@ -57,7 +57,7 @@ public class OptionsNode {
 		if (new_child_name.contains ("_")) {
 			unowned uint8 []data_child = new_child.name.data;
 			foreach (unowned var child in children) {
-				if (!child.name.contains ("_"))
+				if (!child.name.contains ("_") && child.children.length == 0)
 					continue;
 				var tmp_pos = get_prefix_length (data_child, child.name.data);
 				if (tmp_pos > 0 && tmp_pos < pos)

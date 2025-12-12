@@ -1,6 +1,6 @@
 [wrap-git]
 url = https://gitlab.com/nda-cunh/Markdown-gtk4.git
-revision = HEAD
+revision = prototype
 depth = 1
 
 [provide]

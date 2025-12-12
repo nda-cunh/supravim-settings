@@ -1,120 +1,80 @@
-private class RowOptions : Adw.ActionRow {
-	
-	uint source_id = 0;
+/**
+ * Options supravim settings
+ */
+[GtkTemplate (ui = "/ui/options.ui")]
+public class OptionsPage :  Gtk.Box { 
+	// BluePrint Variable
+	[GtkChild]
+	private unowned Adw.PreferencesGroup options_group;
+	[GtkChild]
+	private unowned Adw.PreferencesGroup options_group_pl;
 
-	public RowOptions (string name, string lore, string value) {
-		base.title = name;
-		base.subtitle = lore;
+	public OptionsNode nodes_general = new OptionsNode();
+	public OptionsNode nodes_plugin = new OptionsNode();
 
-		print("RowOptions: [%s] <%s> <%s>\n", name, lore, value);
-		if (/^[0-9]+/.match(value)) {
-			_spin = new Gtk.SpinButton.with_range (0, 100, 1) {
-				halign = Gtk.Align.CENTER,
-				valign = Gtk.Align.CENTER,
-			};
-			_spin.value = int.parse(value);
-			base.add_suffix (_spin);
-			_spin.value_changed.connect((v) => {
-				Utils.command_line(@"supravim -S $title=$(int.parse(v.text))");
-				print("onChangeOption: [%s] <%d>\n", title, int.parse(v.text));
-			});
-		}
-		else if (value.has_prefix ("'")) {
-			_entry = new Gtk.Entry () {
-				halign = Gtk.Align.CENTER,
-				valign = Gtk.Align.CENTER,
-			};
-			_entry.text = value[1:value.length - 1];
-			base.add_suffix (_entry);
-			_entry.changed.connect((v) => {
-
-				if (source_id != 0) {
-					Source.remove (source_id);
-				}
-
-				source_id = GLib.Timeout.add (200, () => {
-					var text = v.text.replace("'", "\\'");
-					Utils.command_line(@"supravim -S $title=\"$(text)\"");
-					print("onChangeOption: [%s] <%s>\n", title, text);
-					source_id = 0;
-					return false;
-				});
-
-			});
-		}
-		else {
-			_switch = new Gtk.Switch () {
-				halign = Gtk.Align.CENTER,
-				valign = Gtk.Align.CENTER,
-			};
-			if (value == "on")
-				_switch.active = true;
-			base.add_suffix (_switch);
-			init_event_switch ();
-		}
+	construct {
+		parse_status();
+		add_options_to_group(nodes_general, options_group);
+		add_options_to_group(nodes_plugin, options_group_pl);
 	}
 
-	void init_event_switch () {
-		_switch.state_set.connect((v)=> {
-			if (v == true) {
-				Utils.command_line(@"supravim -e $title");
-				print("onChangeOption: [%s] <true>\n", title);
+	/**
+	  * recursively add options to the group
+	  */
+	private void add_options_to_group(OptionsNode node, Gtk.Widget row_base) {
+		foreach (unowned var child in node) {
+			if (child.children.length > 0) {
+				var row = new Adw.ExpanderRow () {title = child.name};
+				add_options_to_group(child, row);
+				if (row_base is Adw.ExpanderRow)
+					row_base.add_row (row);
+				else if (row_base is Adw.PreferencesGroup)
+					row_base.add (row);
 			}
 			else {
-				Utils.command_line(@"supravim -d $title");
-				print("onChangeOption: [%s] <false>\n", title);
-			}
-			_switch.active = v;
-			_switch.state = v;
-			return v;
-		});
-	}
-
-	// For number
-	private Gtk.SpinButton _spin;
-	// for boolean
-	private Gtk.Switch _switch;
-	// for string
-	private Gtk.Entry	_entry;
-}
-
-public class Options {
-	public Options (Adw.PreferencesGroup options_group, Adw.PreferencesGroup options_group_pl) throws Error {
-		this.options_group = options_group;
-		this.options_group_pl = options_group_pl;
-		foreach_status();
-	}
-
-	void foreach_status () throws Error {
-		MatchInfo match_info;
-		string output;
-		Process.spawn_command_line_sync ("supravim -s", out output);
-		var regex_color = new Regex("""\033\[[0-9;]*m""");
-
-		bool is_plugin_mode = false;
-		output = regex_color.replace(output, -1, 0, "");
-		var regex_opts = /(?P<name>[^\s]+)\s*(?P<value>[^\s]+)(\s*[(](?P<lore>[^]]+)[)])?/;
-		foreach (unowned var line in output.split ("\n")) {
-			if (line == "" || line[0] == '-') {
-				if (line == "-- PLUGINS --")
-					is_plugin_mode = true;
-				continue; 
-			}
-			if (regex_opts.match(line, 0, out match_info)) {
-				var name = match_info.fetch_named ("name");
-				if (name == "theme")
-					continue;
-				var @value = match_info.fetch_named ("value");
-				var lore = match_info.fetch_named ("lore");
-				if (is_plugin_mode)
-					options_group_pl.add (new RowOptions(name, lore ?? "No lore", @value));
-				else
-					options_group.add (new RowOptions(name, lore ?? "No lore", @value));
+				if (row_base is Adw.ExpanderRow)
+					row_base.add_row (new RowOptions(child.name, child.lore, child.value));
+				else if (row_base is Adw.PreferencesGroup)
+					row_base.add (new RowOptions(child.name, child.lore, child.value));
 			}
 		}
-
 	}
 
-	private unowned Adw.PreferencesGroup options_group;
-	private unowned Adw.PreferencesGroup options_group_pl;
+	/**
+	  * parse the supravim --status output
+	  * and fill the options nodes (general and plugin)
+	  */
+	private void parse_status () {
+		try {
+			MatchInfo match_info;
+			string output;
+			Process.spawn_command_line_sync ("supravim -s", out output);
+			var regex_color = new Regex("""\033\[[0-9;]*m""");
+
+			bool is_plugin_mode = false;
+			output = regex_color.replace(output, -1, 0, "");
+			var regex_opts = /(?P<name>[^\s]+)\s*(?P<value>[^\s]+)(\s*[(](?P<lore>[^]]+)[)])?/;
+			foreach (unowned var line in output.split ("\n")) {
+				if (line == "" || line[0] == '-') {
+					if (line == "-- PLUGINS --")
+						is_plugin_mode = true;
+					continue; 
+				}
+				if (regex_opts.match(line, 0, out match_info)) {
+					var name = match_info.fetch_named ("name");
+					if (name == "theme")
+						continue;
+					var @value = match_info.fetch_named ("value");
+					var lore = match_info.fetch_named ("lore");
+					if (!is_plugin_mode)
+						nodes_general.append (name, lore ?? "No lore", @value);
+					else
+						nodes_plugin.append (name, lore ?? "No lore", @value);
+				}
+			}
+		}
+		catch (Error e) {
+			warning (e.message);
+		}
+	}
 }

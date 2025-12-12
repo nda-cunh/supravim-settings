@@ -3,6 +3,7 @@
 	<gresource prefix="/">
 		<file preprocess="xml-stripblanks">ui/window.ui</file>
 		<file preprocess="xml-stripblanks">ui/wiki.ui</file>
+		<file preprocess="xml-stripblanks">ui/options.ui</file>
 		<file>image.png</file>
 		<file>ui/style.css</file>
 	</gresource>

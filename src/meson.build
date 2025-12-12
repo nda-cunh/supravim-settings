@@ -1,8 +1,10 @@
 
 srcs = [
-  files('Color.vala',
-  'main.vala',
+  files('main.vala',
+  'Color.vala',
   'Options.vala',
+  'OptionsRow.vala',
+  'OptionsNode.vala',
   'Plugins.vala',
   'Themes.vala',
   'WikiPage.vala',

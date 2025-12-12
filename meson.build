@@ -7,8 +7,8 @@ add_project_arguments('--enable-experimental', language: 'vala')
 gnome = import('gnome')
 
 blueprints = custom_target('blueprints',
-  input: files('window.blp', 'wiki.blp','options.blp'),
-  output: 'ui',
+  input: files('ui/window.blp', 'ui/wiki.blp','ui/options.blp', 'ui/plugins.blp', 'ui/theme.blp'),
+  output: '.',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
 )
 

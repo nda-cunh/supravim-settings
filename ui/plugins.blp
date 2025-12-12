@@ -1,0 +1,13 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $PluginsPage: Gtk.Box {
+	orientation: vertical;
+	spacing: 5;
+
+	Adw.PreferencesGroup plugins_group {
+		styles ['PreferencesGroup']
+		title: 'Plugins';
+		description: 'You can install some plugins for supravim :)';
+	}
+}

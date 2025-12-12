@@ -1,0 +1,313 @@
+/**
+ * Initialize themes colors
+ */
+private void init_themes() {
+	tab_themes = new HashTable<string, Color> (str_hash, str_equal);
+	tab_themes["pablo"] = new Color("pablo") {
+		background_color = {0.0, 0.0, 0.0},
+		include = {0.0, 0.74, 0.0},
+		stdio = {0.0, 0.94, 0.94},
+		typedef = {0.0, 0.44, 0.0},
+		struct = {0.0, 0.44, 0.0},
+		type_s = {1.0, 1.0, 1.0},
+		scope = {1.0, 1.0, 1.0},
+		float = {0.0, 0.44, 0.0},
+		function = {1.0, 1.0, 1.0},
+		format = {0.0, 0.0, 0.90},
+		text = {0.0, 0.94, 0.94},
+		integer = {0.0, 0.94, 0.94},
+	};
+
+	tab_themes["dracula"] = new Color("dracula") {
+		background_color = {0.11, 0.11, 0.11},
+		include = {0.86, 0.42, 0.67},
+		stdio = {0.94, 0.98, 0.54},
+		typedef = {0.86, 0.42, 0.67},
+		struct = {0.86, 0.42, 0.67},
+		type_s = {1.0, 1.0, 1.0},
+		scope = {1.0, 1.0, 1.0},
+		float = {0.50, 0.84, 0.91},
+		function = {1.0, 1.0, 1.0},
+		format = {0.86, 0.42, 0.67},
+		text = {0.94, 0.98, 0.54},
+		integer = {0.73, 0.57, 0.97}
+	};
+	
+	tab_themes["iceberg"] = new Color("iceberg") {
+		background_color = {0.08, 0.09, 0.12},
+		include = {0.51, 0.62, 0.77},
+		stdio = {0.49, 0.65, 0.68},
+		typedef= {0.51, 0.62, 0.77},
+		struct = {0.51, 0.62, 0.77},
+		type_s = {0.80, 0.80, 0.80},
+		scope = {0.80, 0.80, 0.80},
+		float = {0.50, 0.84, 0.91},
+		function = {1.0, 1.0, 1.0},
+		format = {0.64, 0.67, 0.47},
+		text = {0.49, 0.65, 0.68},
+		integer = {0.45, 0.42, 0.55}
+	};
+	
+	tab_themes["iceberg-light"] = new Color("iceberg-light") {
+		background_color = {0.91, 0.91, 0.92},
+		include = {0.17, 0.32, 0.62},
+		stdio = {0.24, 0.51, 0.65},
+		typedef = {0.17, 0.32, 0.62},
+		struct = {0.17, 0.32, 0.62},
+		type_s = {0.20, 0.21, 0.30},
+		scope = {0.20, 0.21, 0.30},
+		float = {0.28, 0.41, 0.66},
+		function = {0.20, 0.21, 0.30},
+		format = {0.43, 0.58, 0.28},
+		text = {0.24, 0.51, 0.65},
+		integer = {0.46, 0.34, 0.70}
+	};
+	
+	tab_themes["onedark"] = new Color("onedark") {
+		background_color = {0.15, 0.17, 0.20},
+		include = {0.38, 0.68, 0.93},
+		stdio = {0.56, 0.76, 0.47},
+		typedef = {0.89, 0.75, 0.48},
+		struct = {0.89, 0.75, 0.48},
+		type_s = {0.67, 0.69, 0.75},
+		scope = {0.80, 0.80, 0.80},
+		float = {0.89, 0.75, 0.48},
+		function = {0.67, 0.69, 0.75},
+		format = {0.82, 0.60, 0.40},
+		text = {0.56, 0.76, 0.47},
+		integer = {0.82, 0.60, 0.40},
+	};
+
+	//atom
+
+	tab_themes["atom"] = new Color("atom") {
+		background_color = {0.11, 0.12, 0.13},
+		include = {0.85, 0.81, 0.52},
+		stdio = {0.65, 1.0, 0.37},
+		typedef = {0.40, 0.82, 0.93},
+		struct= {0.40, 0.82, 0.93},
+		type_s = {1.0, 1.0, 1.0},
+		scope = {1.0, 1.0, 1.0},
+		float = {0.40, 0.82, 0.93},
+		function = {1.0, 1.0, 1.0},
+		format = {0.57, 0.77, 0.96},
+		text = {0.65, 1.0, 0.37},
+		integer = {0.60, 0.80, 0.60},
+	};
+
+	//molokai
+
+	tab_themes["molokai"] = new Color("molokai") {
+		background_color = {0.10, 0.11, 0.12},
+		include = {0.65, 0.88, 0.18},
+		stdio = {0.90, 0.85, 0.45},
+		typedef = {0.40, 0.85, 0.93},
+		struct = {0.40, 0.85, 0.93},
+		type_s = {1.0, 1.0, 1.0},
+		scope = {1.0, 1.0, 1.0},
+		float = {0.40, 0.85, 0.93},
+		function = {1.0, 1.0, 1.0},
+		format = {0.97, 0.14, 0.44},
+		text = {0.90, 0.85, 0.45},
+		integer = {0.68, 0.50, 1.0}
+	};
+
+	tab_themes["gruvbox"] = new Color("gruvbox") {
+		background_color = {0.15, 0.15, 0.15},
+		include = {0.55, 0.75, 0.48},
+		stdio = {0.72, 0.73, 0.14},
+		typedef = {0.99, 0.50, 0.09},
+		struct = {0.86, 0.42, 0.67},
+		type_s = {0.92, 0.85, 0.70},
+		scope = {0.92, 0.85, 0.70},
+		float = {0.50, 0.84, 0.91},
+		function = {0.92, 0.85, 0.70},
+		format = {0.99, 0.50, 0.09},
+		text = {0.72, 0.73, 0.14},
+		integer = {0.82, 0.52, 0.60}
+	};
+
+	tab_themes["one"] = new Color("onedark") {
+		background_color = {0.15, 0.17, 0.20},
+		include = {0.38, 0.68, 0.93},
+		stdio = {0.56, 0.76, 0.47},
+		typedef = {0.89, 0.75, 0.48},
+		struct = {0.89, 0.75, 0.48},
+		type_s = {0.67, 0.69, 0.75},
+		scope = {0.80, 0.80, 0.80},
+		float = {0.89, 0.75, 0.48},
+		function = {0.67, 0.69, 0.75},
+		format = {0.82, 0.60, 0.40},
+		text = {0.56, 0.76, 0.47},
+		integer = {0.82, 0.60, 0.40},
+	};
+
+	tab_themes["one-light"] = new Color("one-light") {
+		background_color = {0.98, 0.98, 0.98},
+		include = {0.65, 0.14, 0.65},
+		stdio = {0.31, 0.63, 0.31},
+		typedef = {0.75, 0.51, 0.04},
+		struct = {0.65, 0.14, 0.65},
+		type_s = {0.28, 0.29, 0.32},
+		scope = {0.28, 0.29, 0.32},
+		float = {0.65, 0.14, 0.65},
+		function = {0.28, 0.29, 0.32},
+		format = {0.04, 0.52, 0.74},
+		text = {0.32, 0.63, 0.31},
+		integer = {0.60, 0.40, 0.60}
+	};
+
+	tab_themes["kyotonight"] = new Color("kyotonight") {
+		background_color = {0.10, 0.10, 0.14},
+		include = {0.42, 0.69, 0.85},
+		stdio = {0.45, 0.85, 0.79},
+		typedef = {0.72, 0.59, 0.94},
+		struct = {0.72, 0.59, 0.94},
+		type_s = {0.39, 0.72, 0.68},
+		scope = {0.28, 0.29, 0.32},
+		float = {1.0, 0.62, 0.39},
+		function = {0.28, 0.29, 0.32},
+		format = {0.80, 0.63, 0.38},
+		text = {0.62, 0.80, 0.41},
+		integer = {1.0, 0.62, 0.39}
+	};
+
+	tab_themes["tokyonight"] = new Color("tokyonight") {
+		background_color = {0.13, 0.13, 0.19},
+		include = {0.93, 0.44, 0.53},
+		stdio = {0.74, 0.58, 0.36},
+		typedef = {0.47, 0.63, 0.96},
+		struct = {0.47, 0.63, 0.96},
+		type_s = {0.44, 0.59, 0.90},
+		scope = {0.66, 0.69, 0.83},
+		float = {0.67, 0.55, 0.90},
+		function = {0.66, 0.69, 0.83},
+		format = {0.62, 0.51, 0.83},
+		text = {0.84, 0.66, 0.39},
+		integer = {0.67, 0.55, 0.90}
+	};
+
+	tab_themes["tokyostorm"] = new Color("tokyostorm") {
+		background_color = {0.14, 0.15, 0.23},
+		include = {0.89, 0.43, 0.52},
+		stdio = {0.87, 0.68, 0.40},
+		typedef = {0.47, 0.63, 0.96},
+		struct = {0.47, 0.62, 0.96},
+		type_s = {0.44, 0.59, 0.90},
+		scope = {0.66, 0.69, 0.83},
+		float = {0.67, 0.55, 0.90},
+		function = {0.66, 0.69, 0.83},
+		format = {0.67, 0.55, 0.90},
+		text = {0.87, 0.68, 0.40},
+		integer = {0.67, 0.55, 0.90}
+	};
+
+	tab_themes["rosepine_moon"] = new Color("rosepine_moon") {
+		background_color = {0.13, 0.12, 0.21}, // Base
+		include = {0.72, 0.61, 0.85}, // Iris
+		stdio = {0.96, 0.75, 0.56}, // Gold
+		typedef = {0.61, 0.81, 0.84}, // Pine
+		struct = {0.61, 0.81, 0.84}, // Pine
+		type_s = {0.61, 0.81, 0.84}, // Pine
+		scope = {1.0, 1.0, 1.0}, // White
+		float = {0.61, 0.81, 0.84}, // Pine
+		function = {1.0, 1.0, 1.0}, // White
+		format = {0.91, 0.60, 0.59}, // Rose
+		text = {0.96, 0.75, 0.56}, // Gold
+		integer = {0.61, 0.81, 0.84}, // Pine
+	};
+	
+	tab_themes["rosepine"] = new Color("rosepine") {
+		background_color = {0.10, 0.09, 0.14}, // Base
+		include = DataColor.rgb(196, 167, 231), // Iris
+		stdio = DataColor.rgb(246, 193, 119), // Gold
+		typedef = DataColor.rgb(156, 207, 216), // Foam
+		struct = DataColor.rgb(156, 207, 216), // Foam
+		type_s = DataColor.rgb(156, 207, 216), // Foam
+		scope = DataColor.white,
+		float = DataColor.rgb(156, 207, 216), // Foam
+		function = DataColor.white, 
+		format = DataColor.rgb(235, 188, 186), // Rose
+		text = DataColor.rgb(246, 193, 119), // Gold 
+		integer = DataColor.rgb(156, 207, 216), // Foam 
+	};
+	
+	tab_themes["rosepine_dawn-light"] = new Color("rosepine_dawn-light") {
+		background_color = DataColor.rgb(250, 244, 237), 
+		include = DataColor.rgb(144, 122, 169),
+		stdio = DataColor.rgb(234, 157, 52),
+		typedef = DataColor.rgb(86, 148, 159),
+		struct = DataColor.rgb(86, 148, 159),
+		type_s = DataColor.rgb(86, 148, 159),
+		scope = DataColor.rgb(87, 82, 121),
+		float = DataColor.rgb(86, 148, 159),
+		function = DataColor.rgb(121, 117, 147),
+		format = DataColor.rgb(180, 99, 122),
+		text = DataColor.rgb(234, 157, 52),
+		integer = DataColor.rgb(86, 148, 159),
+	};
+
+	// Catppuccin Latte
+	tab_themes["catppuccin_latte"] = new Color("catppuccin_latte") {
+		background_color = {239.0/255.0, 241.0/255.0, 245.0/255.0},  // #eff1f5
+		include = {220.0/255.0, 138.0/255.0, 120.0/255.0},  // rosewater
+		stdio = {234.0/255.0, 118.0/255.0, 203.0/255.0},    // pink
+		typedef = {136.0/255.0, 57.0/255.0, 239.0/255.0},    // mauve
+		struct = {30.0/255.0, 102.0/255.0, 245.0/255.0},     // blue
+		type_s = {32.0/255.0, 159.0/255.0, 181.0/255.0},     // sapphire
+		scope = {76.0/255.0, 79.0/255.0, 105.0/255.0},       // text (gris)
+		float = {4.0/255.0, 165.0/255.0, 229.0/255.0},       // sky
+		function = {114.0/255.0, 135.0/255.0, 253.0/255.0},  // lavender
+		format = {223.0/255.0, 142.0/255.0, 29.0/255.0},     // yellow
+		text = {92.0/255.0, 95.0/255.0, 119.0/255.0},        // subtext1
+		integer = {64.0/255.0, 160.0/255.0, 43.0/255.0}       // green
+	};
+
+	// Catppuccin Frappé
+	tab_themes["catppuccin_frappe"] = new Color("catppuccin_frappe") {
+		background_color = {48.0/255.0, 52.0/255.0, 70.0/255.0},  // #303446
+		include = {242.0/255.0, 213.0/255.0, 207.0/255.0},        // rosewater frappé
+		stdio = {244.0/255.0, 184.0/255.0, 228.0/255.0},          // pink frappé
+		typedef = {202.0/255.0, 158.0/255.0, 230.0/255.0},         // mauve frappé
+		struct = {140.0/255.0, 170.0/255.0, 238.0/255.0},          // blue frappé
+		type_s = {129.0/255.0, 200.0/255.0, 190.0/255.0},          // teal frappé
+		scope = {148.0/255.0, 156.0/255.0, 187.0/255.0},           // overlay2 frappé
+		float = {153.0/255.0, 209.0/255.0, 219.0/255.0},           // sky frappé
+		function = {186.0/255.0, 187.0/255.0, 241.0/255.0},         // lavender frappé
+		format = {229.0/255.0, 200.0/255.0, 144.0/255.0},           // yellow frappé
+		text = {198.0/255.0, 208.0/255.0, 245.0/255.0},            // text frappé
+		integer = {166.0/255.0, 209.0/255.0, 137.0/255.0}           // green frappé
+	};
+
+	// Catppuccin Macchiato
+	tab_themes["catppuccin_macchiato"] = new Color("catppuccin_macchiato") {
+		background_color = {36.0/255.0, 39.0/255.0, 58.0/255.0},  // #24273a
+		include = {244.0/255.0, 219.0/255.0, 214.0/255.0},        // rosewater macchiato
+		stdio = {245.0/255.0, 189.0/255.0, 230.0/255.0},          // pink macchiato
+		typedef = {198.0/255.0, 160.0/255.0, 246.0/255.0},         // mauve macchiato
+		struct = {145.0/255.0, 215.0/255.0, 227.0/255.0},          // sky macchiato
+		type_s = {139.0/255.0, 213.0/255.0, 202.0/255.0},          // teal macchiato
+		scope = {110.0/255.0, 115.0/255.0, 141.0/255.0},           // overlay0 macchiato
+		float = {73.0/255.0, 77.0/255.0, 100.0/255.0},              // surface1 macchiato
+		function = {91.0/255.0, 96.0/255.0, 120.0/255.0},           // surface2 macchiato
+		format = {238.0/255.0, 212.0/255.0, 159.0/255.0},           // yellow macchiato
+		text = {128.0/255.0, 135.0/255.0, 162.0/255.0},             // overlay1 macchiato
+		integer = {166.0/255.0, 218.0/255.0, 149.0/255.0}           // green macchiato
+	};
+
+	// Catppuccin Mocha
+	tab_themes["catppuccin_mocha"] = new Color("catppuccin_mocha") {
+		background_color = {30.0/255.0, 30.0/255.0, 46.0/255.0},   // #1e1e2e
+		include = {245.0/255.0, 224.0/255.0, 220.0/255.0},         // rosewater mocha
+		stdio = {245.0/255.0, 194.0/255.0, 231.0/255.0},           // pink mocha
+		typedef = {203.0/255.0, 166.0/255.0, 247.0/255.0},          // mauve mocha
+		struct = {243.0/255.0, 139.0/255.0, 168.0/255.0},           // red / accent mocha
+		type_s = {186.0/255.0, 194.0/255.0, 222.0/255.0},           // subtext1 mocha
+		scope = {205.0/255.0, 214.0/255.0, 244.0/255.0},            // text mocha
+		float = {147.0/255.0, 153.0/255.0, 178.0/255.0},             // overlay2 mocha
+		function = {127.0/255.0, 132.0/255.0, 156.0/255.0},          // overlay1 mocha
+		format = {108.0/255.0, 112.0/255.0, 134.0/255.0},            // overlay0 mocha
+		text = {186.0/255.0, 194.0/255.0, 222.0/255.0},              // subtext1 / text
+		integer = {166.0/255.0, 218.0/255.0, 149.0/255.0}             // green
+	};
+}

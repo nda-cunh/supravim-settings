@@ -1,0 +1,18 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $ThemePage: Adw.PreferencesGroup {
+	Adw.PreferencesGroup theme_group {
+		hexpand: false;
+		vexpand: false;
+		halign: center;
+		valign: center;
+		margin-bottom: 20;
+		styles ['PreferencesGroup']
+		description: 'Change your theme';
+		title: 'Themes';
+		Box box {
+
+		}
+	}
+}

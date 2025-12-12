@@ -84,17 +84,7 @@ template $MainWindow: Adw.ApplicationWindow {
 									}
 								}
 							}
-							
-							Adw.PreferencesGroup theme_group {
-								hexpand: false;
-								vexpand: false;
-								halign: center;
-								valign: center;
-								margin-bottom: 20;
-								styles ['PreferencesGroup']
-								description: 'Change your theme';
-								title: 'Themes';
-							}
+							$ThemePage theme_page { }
 						}
 					}
 				};
@@ -108,9 +98,7 @@ template $MainWindow: Adw.ApplicationWindow {
 				title: 'Options';
 				child: ScrolledWindow {
 					Viewport {
-						$OptionsPage options_page {
-							name: 'options_page';
-						}
+						$OptionsPage options_page { }
 					}
 				};
 			}
@@ -124,11 +112,7 @@ template $MainWindow: Adw.ApplicationWindow {
 				icon-name: 'insert-object-symbolic';
 				child: ScrolledWindow {
 					Viewport {
-						Adw.PreferencesGroup plugins_group {
-							styles ['PreferencesGroup']
-							title: 'Plugins';
-							description: 'You can install some plugins for supravim :)';
-						}
+						$PluginsPage plugins_page { }
 					}
 				};
 			}

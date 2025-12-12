@@ -4,9 +4,9 @@
  */
 public class OptionsNode {
 	// Attributes
-	public static StringChunk				chunk = new StringChunk(256);
-	public GenericArray<OptionsNode>		children = new GenericArray<OptionsNode>();
+	private static StringChunk				chunk = new StringChunk(256);
 	private unowned OptionsNode?			parent;
+	public GenericArray<OptionsNode>		children = new GenericArray<OptionsNode>();
 
 	public unowned string real_name { get; private set; default = null; }
 	public unowned string name { get; private set; }
@@ -119,5 +119,4 @@ public class OptionsNode {
 		foreach (unowned var child in this.children)
 			child.display_tree (depth + 1);
 	}
-
 }

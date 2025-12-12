@@ -1,10 +1,10 @@
 
-public class UpdateWindow : Adw.Window {
+public class WindowUpdate : Adw.Window {
 
 	private Gtk.ProgressBar progress_bar;
 	private Gtk.Label label_update = new Gtk.Label("");
 
-	public UpdateWindow (Gtk.Window mainWindow) {
+	public WindowUpdate (Gtk.Window mainWindow) {
 		base.set_title("Update");
 		base.set_default_size(400, 40);
 		base.set_modal(true);

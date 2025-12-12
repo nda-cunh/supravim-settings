@@ -1,7 +1,7 @@
-public class ClearCacheWindow : Adw.Window {
+public class WindowClearCache : Adw.Window {
 
 
-	public ClearCacheWindow (Gtk.Window mainWindow) {
+	public WindowClearCache (Gtk.Window mainWindow) {
 		base.set_title("ClearCache");
 		base.set_default_size(400, 40);
 		base.set_modal(true);

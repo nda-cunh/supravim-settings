@@ -1,71 +1,66 @@
-public struct DataColor {
-	double red;
-	double green;
-	double blue;
-
-	public static DataColor rgb (int r, int g, int b) {
-		DataColor color = {
-			(double)r / 255.0, 
-			(double)g / 255.0,
-			(double)b / 255.0
-		};
-		return color;
-	}
-	public const DataColor black = {0.0, 0.0, 0.0};
-	public const DataColor white = {1.0, 1.0, 1.0};
-}
-
+/**
+ * Color Scheme Preview Widget
+ *
+ * This widget displays a preview of a color scheme for syntax highlighting.
+ * It shows various code elements like includes, typedefs, structs, types,
+ * functions, formats, text, and integers in their respective colors.
+ */
 public class Color : Gtk.Box {
 
+	private const double size_h = 8.0;
 	private Gtk.DrawingArea drawing_area;
+	private bool hover = false;
+	public bool active = false;
+
 	construct {
 		orientation = VERTICAL;
 		drawing_area = new Gtk.DrawingArea ();
 		append(drawing_area);
 	}
 
-	new void append (Gtk.Widget child)
-	{
-		base.append(child);
-	}
-
-
-	public new void queue_draw () {
-		base.queue_draw();
-		drawing_area.queue_draw();
-	}
-
-
-	bool hover = false;
-	public bool active = false;
-	// public Gtk.DrawingArea drawing_area;
+	/**
+	 * Constructor
+	 * @param name Name of the color scheme
+	 */
 	public Color (string name = "default") {
 		drawing_area.set_draw_func (this.drawing);
 		drawing_area.set_size_request (180, 76);
 		// drawing_area.child = drawing_area;
 		var motion = new Gtk.EventControllerMotion();
+
 		motion.enter.connect (()=> {
 			hover = true;
 			drawing_area.queue_draw();
 		});
-		
+
 		motion.leave.connect (()=> {
 			hover = false;
 			drawing_area.queue_draw();
 		});
+
 		drawing_area.add_controller(motion);
 		prepend(new Gtk.Label(name));
 	}
 
-	const double size_h = 8.0;
-	public void draw_rect(Cairo.Context ctx, DataColor color, double x, double y, double width) {
+	/**
+	 * Queue a redraw of the widget
+	 * it's necessary to clear the mark when the themes is changed
+	 */
+	public new void queue_draw () {
+		base.queue_draw();
+		drawing_area.queue_draw();
+	}
+
+	/**
+	 * Draw a rectangle
+	 */
+	private void draw_rect(Cairo.Context ctx, DataColor color, double x, double y, double width) {
 		ctx.set_source_rgb (color.red, color.green, color.blue);
 		ctx.rectangle (x, y, width, size_h);
 		ctx.fill();
 	}
 
-	private void rounded_rectangle(Cairo.Context ctx, int x, int y, int width, int height, int radius)
-	{
+	private void rounded_rectangle(Cairo.Context ctx, int x, int y, int width, int height, int radius) {
 		ctx.new_path();
 		ctx.move_to(x + radius, y);
 		ctx.line_to(x + width - radius, y);
@@ -80,7 +75,7 @@ public class Color : Gtk.Box {
 		ctx.fill();
 
 
-		// ici dessin du retcangle sur le cote gauche 
+		// ici dessin du retcangle sur le cote gauche
 		ctx.new_path();
 		ctx.move_to(x + radius, y);
 		ctx.line_to(x + 10 + radius, y);
@@ -95,15 +90,15 @@ public class Color : Gtk.Box {
 
 
 		ctx.new_path();
-		ctx.move_to(x + width, y + radius); 
-		ctx.line_to(x + width, y); 
+		ctx.move_to(x + width, y + radius);
+		ctx.line_to(x + width, y);
 		ctx.line_to(x + width, y + height);
 		ctx.line_to(x + width, y + height);
 		ctx.arc(x + width - radius, y + height - radius, radius, 0 * Math.PI / 180, 90 * Math.PI / 180); // Bottom right corner
 		ctx.line_to(x + width - radius, y + radius);
 		ctx.arc(x + width - radius, y + radius, radius, 135 * Math.PI / 90, 30 * Math.PI / 180); // Top right corner
 		ctx.close_path();
-		ctx.set_source_rgb(background_color.green -0.05, background_color.red -0.05, background_color.blue -0.05); 
+		ctx.set_source_rgb(background_color.green -0.05, background_color.red -0.05, background_color.blue -0.05);
 		ctx.fill();
 
 
@@ -139,7 +134,7 @@ public class Color : Gtk.Box {
 		}
 	}
 
-	public void check_mark(Cairo.Context cr, int width, int height, int x) {
+	private void check_mark(Cairo.Context cr, int width, int height, int x) {
         // Fond bleu
         cr.set_source_rgb(0.31, 0.63, 1);
         cr.arc(x + width / 2, height / 2, width / 2 - 5, 0, 2 * Math.PI);
@@ -154,18 +149,17 @@ public class Color : Gtk.Box {
 		cr.stroke();
     }
 
-	private void drawing (Gtk.DrawingArea drawing_area, Cairo.Context ctx, int width, int height)
-	{
+	private void drawing (Gtk.DrawingArea drawing_area, Cairo.Context ctx, int width, int height) {
 		const double padding_w = 25.0;
 		const double padding_h = 9.0;
 
 		ctx.set_source_rgb (background_color.red - 0.02, background_color.green - 0.02, background_color.blue - 0.02);
 		rounded_rectangle (ctx, 0, 0, width, height, 8);
 		ctx.fill();
-		
+
 		// ctx.rectangle (160.0, 0.0, 20, 80);
 
-		// 1 lines 
+		// 1 lines
 		draw_rect (ctx, include, padding_w, padding_h, 44);
 		draw_rect (ctx, stdio, padding_w + 48, padding_h, 28);
 
@@ -210,5 +204,3 @@ public class Color : Gtk.Box {
 	public DataColor text {get;set;}
 	public DataColor integer {get;set;}
 }
-
-

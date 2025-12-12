@@ -114,14 +114,30 @@ template $MainWindow: Adw.ApplicationWindow {
 								title: 'General Options';
 								description: 'Enable and disable some general options !';
 							}
-							Adw.PreferencesGroup options_group_pl {
+						}
+					}
+				};
+			}
+
+			Adw.ViewStackPage {
+				name: 'Theme Editor';
+				icon-name: 'document-edit-symbolic';
+				title: 'Theme Editor';
+				child: ScrolledWindow {
+					Viewport {
+						Box {
+							orientation: vertical;
+							spacing: 5;
+							Adw.PreferencesGroup editor {
 								styles ['PreferencesGroup']
-								title: 'Plugin Options';
+								title: 'Emphasis Theme Editor';
+								description: 'Edit bold, italic and underline options for the Emphasis theme !';
 							}
 						}
 					}
 				};
 			}
+
 			
 			Adw.ViewStackPage {
 				name: 'plugins';

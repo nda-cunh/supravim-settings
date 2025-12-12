@@ -2,11 +2,6 @@ using Gtk 4.0;
 using Adw 1;
 
 
-Image my_icon {
-	resource: '/data/logo.png';
-	pixel-size: 400;
-}
-
 template $MainWindow: Adw.ApplicationWindow {
 	default-width: -1;
 	default-height: 950;
@@ -22,6 +17,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			hexpand:false;
 			vexpand:true;
 			
+			// Home Page
 			Adw.ViewStackPage {
 				name: 'general';
 				icon-name: 'go-home-symbolic';
@@ -30,68 +26,14 @@ template $MainWindow: Adw.ApplicationWindow {
 					Viewport {
 						vexpand: false;
 						hexpand: false;
-						Box {
-							orientation: vertical;
-							spacing: 5;
-							hexpand: false;
-							vexpand: false;
-
-
-							Adw.PreferencesGroup home_group {
-								styles ['PreferencesGroup']
-								hexpand: false;
-								vexpand: false;
-								margin-bottom: 0;
-
-								halign: center;
-
-								Box {
-									hexpand: false;
-									vexpand: false;
-									width-request: 590;
-									orientation: vertical;
-
-									Picture {
-										paintable: bind my_icon.paintable;
-										keep-aspect-ratio : true;
-										valign: start;
-										halign: center;
-										height-request: 100;
-										hexpand: false;
-										vexpand: false;
-									}
-									Button update_button {
-										label: 'Update';
-										name: 'update_supravim';
-										clicked => $update();
-									}
-
-									Box {
-										Button {
-											label: 'Clear cache';
-											name: 'cache_supravim';
-											hexpand: true;
-											clicked => $clear_cache();
-										}
-
-										Button uninstall_supravim {
-											name: 'uninstall_supravim';
-											Image {
-												icon-name: 'edit-delete-symbolic';
-											}
-											clicked => $uninstall();
-										}
-									}
-								}
-							}
-							$ThemePage theme_page { }
+						$HomePage home_page {
 						}
 					}
 				};
 			}
-			
 
 
+			// Options Page
 			Adw.ViewStackPage {
 				name: 'options';
 				icon-name: 'emblem-system-symbolic';
@@ -103,9 +45,8 @@ template $MainWindow: Adw.ApplicationWindow {
 				};
 			}
 
-
-
 			
+			// Plugins Page
 			Adw.ViewStackPage {
 				name: 'plugins';
 				title: 'Plugins';
@@ -117,6 +58,8 @@ template $MainWindow: Adw.ApplicationWindow {
 				};
 			}
 			
+
+			// Wiki Page
 			Adw.ViewStackPage wiki_page{
 				name: 'wiki';
 				title: 'Wiki';
@@ -127,7 +70,6 @@ template $MainWindow: Adw.ApplicationWindow {
 
 				};
 			}
-
 		}
 
 		Adw.ViewSwitcherBar {

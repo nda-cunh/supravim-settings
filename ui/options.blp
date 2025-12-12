@@ -4,13 +4,16 @@ using Adw 1;
 template $OptionsPage: Gtk.Box {
 	orientation: vertical;
 	spacing: 5;
-	Adw.PreferencesGroup options_group {
-		styles ['PreferencesGroup']
-		title: 'General Options';
-		description: 'Enable and disable some general options !';
-	}
-	Adw.PreferencesGroup options_group_pl {
-		styles ['PreferencesGroup']
-		title: 'Plugin Options';
+
+	Adw.PreferencesPage  {
+		Adw.PreferencesGroup options_group {
+			styles ['PreferencesGroup']
+			title: 'General Options';
+			description: 'Enable and disable some general options !';
+		}
+		Adw.PreferencesGroup options_group_pl {
+			styles ['PreferencesGroup']
+			title: 'Plugin Options';
+		}
 	}
 }

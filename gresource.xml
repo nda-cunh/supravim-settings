@@ -6,7 +6,7 @@
 		<file preprocess="xml-stripblanks">ui/theme.ui</file>
 		<file preprocess="xml-stripblanks">ui/options.ui</file>
 		<file preprocess="xml-stripblanks">ui/plugins.ui</file>
-		<file>image.png</file>
+		<file>data/logo.png</file>
 		<file>ui/style.css</file>
 	</gresource>
 </gresources>

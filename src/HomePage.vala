@@ -7,7 +7,7 @@
 public class HomePage : Gtk.Box {
 
 	construct {
-		test_if_update_available();
+		test_if_update_available.begin();
 	}
 
 	public unowned Adw.ApplicationWindow parent_window;
@@ -24,7 +24,10 @@ public class HomePage : Gtk.Box {
 	[GtkCallback]
 	public void update() {
 		var tmp = new WindowUpdate(parent_window);
-		tmp.close_request.connect(test_if_update_available);
+		tmp.close_request.connect(() =>  {
+			test_if_update_available.begin();
+			return false;
+		});
 	}
 
 	[GtkCallback]
@@ -42,26 +45,19 @@ public class HomePage : Gtk.Box {
 	 * Check if an update is available for Supravim using suprapack.
 	 * If an update is available, the update button is enabled and its label is updated.
 	 */
-	private bool test_if_update_available () {
-		try {
-			string contents;
-			Process.spawn_command_line_sync("suprapack have_update supravim", out contents);
+	private async void test_if_update_available () {
+		string contents;
+		yield Utils.run_async_command("suprapack have_update supravim", out contents);
 
-			if (contents._strip() == "") {
-				update_button.set_label("Update (no update available)");
-				update_button.remove_css_class("have_update");
-				return false;
-			}
-			else {
-				update_button.set_label(contents);
-				update_button.add_css_class("have_update");
-				update_button.set_sensitive(true);
-			}
+		if (contents._strip() == "") {
+			update_button.set_label("Update (no update available)");
+			update_button.remove_css_class("have_update");
 		}
-		catch (Error e) {
-			print(e.message);
+		else {
+			update_button.set_label(contents);
+			update_button.add_css_class("have_update");
+			update_button.set_sensitive(true);
 		}
-		return false;
 	}
 
 }

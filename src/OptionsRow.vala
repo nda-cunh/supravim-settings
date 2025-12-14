@@ -21,10 +21,11 @@ public class RowOptions : Adw.ActionRow {
 	 * @param value The option value
 	 */
 	public RowOptions (string name, string lore, string value) {
-		base.title = name;
-		base.subtitle = lore;
+		base.title = Markup.escape_text (name);
 
-		print("RowOptions: [%s] <%s> <%s>\n", name, lore, value);
+		base.subtitle = Markup.escape_text (lore);
+		// base.set_use
+
 		if (/^[0-9]+/.match(value)) {
 			_spin = new Gtk.SpinButton.with_range (0, 100, 1) {
 				halign = Gtk.Align.CENTER,

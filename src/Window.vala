@@ -10,9 +10,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		home_page.parent_window = this;
 		base.set_cursor_from_name ("default");
 		wiki_box.append(new Wiki(Environment.get_home_dir() + "/.local/share/supravim-gui/"));
-		// theme_group.add (new ThemePage());
 	}
-
 
 	/* BluePrint Variable */
 	[GtkChild]

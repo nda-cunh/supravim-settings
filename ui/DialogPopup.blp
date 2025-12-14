@@ -1,0 +1,59 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $DialogPopup: Adw.Window {
+	modal: true;
+	decorated: false;
+
+	Box {
+		margin-start: 10;
+		margin-end: 10;
+		margin-top: 10;
+		margin-bottom: 10;
+		orientation: vertical;
+
+		// title label in bold
+		Label label_title {
+			styles ["dialog_title"]
+			label: "This is a dialog popup example.";
+			halign: center;
+			valign: center;
+			visible: false;
+		}
+
+		Label label_subtitle {
+			styles ["dialog_subtitle"]
+			label: "This dialog demonstrates a popup with title, subtitle, buttons, and a progress bar.";
+			halign: center;
+			valign: center;
+			margin-top: 5;
+			visible: false;
+		}
+
+		Box box_buttons {
+			styles ["dialog_button"]
+			margin-start: 10;
+			margin-end: 10;
+			margin-top: 10;
+			margin-bottom: 10;
+			homogeneous: true;
+			hexpand: true;
+			spacing: 40;
+
+		}
+
+		Gtk.ProgressBar progress_bar {
+			hexpand: true;
+			valign: center;
+			visible: false;
+		}
+
+		Gtk.Label label_footer {
+			styles ["dialog_footer"]
+			halign: center;
+			valign: center;
+			margin-top: 10;
+			visible: false;
+		}
+	}
+}

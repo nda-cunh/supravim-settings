@@ -6,8 +6,23 @@ add_project_arguments('--enable-experimental', language: 'vala')
 
 gnome = import('gnome')
 
+
+# Blueprints
+srcs_blueprint = files(
+  'ui/window.blp',
+  'ui/wiki.blp',
+  'ui/options.blp',
+  'ui/plugins.blp',
+  'ui/theme.blp',
+  'ui/homepage.blp',
+  'ui/DialogPopup.blp',
+  'ui/plugins/addexternalrow.blp',
+  'ui/plugins/externalrow.blp',
+)
+
+
 blueprints = custom_target('blueprints',
-  input: files('ui/window.blp', 'ui/wiki.blp','ui/options.blp', 'ui/plugins.blp', 'ui/theme.blp', 'ui/homepage.blp'),
+  input: srcs_blueprint,
   output: '.',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
 )

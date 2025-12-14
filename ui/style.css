@@ -1,6 +1,23 @@
 .link * {
 	text-decoration:none;
 }
+
+.dialog_title {
+  font-weight: bold;
+  font-size: 20px;
+  padding: 5px;
+}
+
+.dialog_subtitle {
+  font-size: 14px;
+  padding: 10px;
+}
+
+.dialog_button button {
+	border-radius:12px;
+}
+
+
 .button_popup {
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -51,19 +68,20 @@
 
 .uninstall {
 	background-color: #aa1111;
+	# background-color: rgba(170,17,17,0.6);
 	color:white;
+}
+
+.install {
+	# background-color: #11aa11;
+	# background-color: rgba(17,170,17,0.6);
+	# color:white;
 }
 
 .uninstall:hover {
 	background-color: #711;
 	color:white;
 }
-
-.install {
-	background-color: #11aa11;
-	color:white;
-}
-
 .install:hover {
 	background-color: #171;
 	color:white;

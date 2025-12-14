@@ -1,41 +1,9 @@
-public class WindowUninstall : Adw.Window {
-
-	Gtk.ProgressBar progress_bar = new Gtk.ProgressBar();
-	Gtk.Label label_update = new Gtk.Label("Preparing to uninstall...");
+public class WindowUninstall: DialogPopup {
 
 	public WindowUninstall (Gtk.Window mainWindow) {
-		base.set_default_size(-1, -1);
-		base.set_modal(true);
-		base.set_transient_for(mainWindow);
+		base (mainWindow, "Uninstall", "Are you sure you want to uninstall Supravim?");
 
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0) {
-			margin_top = 20,
-			margin_bottom = 10,
-			margin_start = 20,
-			margin_end = 20,
-			spacing = 20,
-		};
-
-		box.append(new Gtk.Label("<b>Are you sure you want to uninstall Supravim?</b>") {
-			use_markup = true,
-		});
-
-		var box_buttons = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
-			margin_top = 10,
-			margin_bottom = 10,
-			margin_start = 10,
-			margin_end = 10,
-			homogeneous = true,
-			hexpand = true,
-			spacing = 40,
-		};
-
-		var cancel_button = new Gtk.Button.with_label("Cancel") {
-			css_classes = {"button_popup"},
-		};
-		cancel_button.clicked.connect (() => {
-			base.close();
-		});
+		base.add_cancel_button();
 
 		var uninstall_button = new Gtk.Button.with_label("Uninstall") {
 			css_classes = {"destructive-action", "button_popup"},
@@ -44,7 +12,7 @@ public class WindowUninstall : Adw.Window {
 		uninstall_button.clicked.connect (() => {
 			box_buttons.visible = false;
 			progress_bar.visible = true;
-			label_update.visible = true;
+			label_footer.visible = true;
 			uninstall.begin (() => {
 				Timeout.add(1000, () => {
 					base.close();
@@ -54,18 +22,10 @@ public class WindowUninstall : Adw.Window {
 			});
 		});
 
-		box_buttons.append(cancel_button);
 		box_buttons.append(uninstall_button);
 
-		box.append(label_update);
-		box.append(progress_bar);
-		label_update.visible = false;
 		progress_bar.visible = false;
 
-		box.append(box_buttons);
-
-
-		content = box;
 		base.present ();
 	}
 
@@ -85,27 +45,27 @@ public class WindowUninstall : Adw.Window {
 					line.scanf("download: [%d]", out progress);
 					progress_bar.set_fraction(progress / 100.0);
 					if (state != 1)
-						label_update.set_text("Download");
+						label_footer.set_text("Download");
 					state = 1;
 				}
 				else if (line.has_prefix("install: [")) {
 					line.scanf("install: [%d]", out progress);
 					progress_bar.set_fraction(progress / 100.0);
 					if (state != 2)
-						label_update.set_text("Install");
+						label_footer.set_text("Install");
 					state = 2;
 				}
 				else if (line.has_prefix("remove: [")) {
 					line.scanf("remove: [%d]", out progress);
 					progress_bar.set_fraction(progress / 100.0);
 					if (state != 3)
-						label_update.set_text("Removing");
+						label_footer.set_text("Removing");
 					state = 3;
 				}
 				Idle.add(uninstall.callback);
 				yield;
 			}
-			label_update.set_text("Done");
+			label_footer.set_text("Done");
 		}
 		catch (Error e) {
 			printerr ("Error: %s\n", e.message);

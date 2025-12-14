@@ -7,6 +7,9 @@
 		<file preprocess="xml-stripblanks">ui/options.ui</file>
 		<file preprocess="xml-stripblanks">ui/homepage.ui</file>
 		<file preprocess="xml-stripblanks">ui/plugins.ui</file>
+		<file preprocess="xml-stripblanks">ui/DialogPopup.ui</file>
+		<file preprocess="xml-stripblanks">ui/plugins/addexternalrow.ui</file>
+		<file preprocess="xml-stripblanks">ui/plugins/externalrow.ui</file>
 		<file>data/logo.png</file>
 		<file>ui/style.css</file>
 	</gresource>

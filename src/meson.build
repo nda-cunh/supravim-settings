@@ -18,6 +18,7 @@ srcs = [
   'ThemeButton.vala',
   'ThemeInit.vala',
   'HomePage.vala',
+  'DialogPopup.vala',
   'DataColor.vala',
   'Utils.vala'),
 ]

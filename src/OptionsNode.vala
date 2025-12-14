@@ -114,9 +114,9 @@ public class OptionsNode {
 		children.add(node);
 	}
 
-	public void display_tree(int depth = 0) {
-		stdout.printf("%-*s%s [%s][%s]\n", (depth * 2), " ", this.name, this.real_name, this.lore);
-		foreach (unowned var child in this.children)
-			child.display_tree (depth + 1);
-	}
+	// public void display_tree(int depth = 0) {
+		// stdout.printf("%-*s%s [%s][%s]\n", (depth * 2), " ", this.name, this.real_name, this.lore);
+		// foreach (unowned var child in this.children)
+			// child.display_tree (depth + 1);
+	// }
 }

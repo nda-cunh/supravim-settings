@@ -1,0 +1,50 @@
+using Gtk 4.0;
+using Adw 1;
+
+
+Adw.Window uninstall_window {
+	title: "Uninstall Plugins";
+	default-width: 400;
+	default-height: 600;
+
+	Box main_box {
+		orientation: vertical;
+		spacing: 10;
+
+		ScrolledWindow scrolled_window {
+			hexpand: true;
+			vexpand: true;
+
+			ListBox plugin_list {
+				selection-mode: none;
+			}
+		}
+
+		Button close_button {
+			label: "Close";
+			halign: end;
+		}
+	}
+}
+
+template $RowPluginExternal: Adw.ActionRow {
+	[suffix]
+	Box {
+		Switch status { 
+			valign: center;
+			margin-end: 10;
+			state-set => $toggle_plugin_status();
+		}
+
+		Button {
+			styles ['uninstall']
+			Image {
+				icon-name: 'user-trash-symbolic';
+			}
+			// open the uninstall_window on click
+			clicked => $show_uninstall_window();
+		}
+		valign: center;
+		margin-end: 10;
+	}
+}

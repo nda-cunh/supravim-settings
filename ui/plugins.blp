@@ -6,9 +6,15 @@ template $PluginsPage: Gtk.Box {
 	spacing: 5;
 
 	Adw.PreferencesPage  {
+		Adw.PreferencesGroup external_group {
+			styles ['PreferencesGroup']
+			title: 'External Plugins';
+			description: 'Install external plugins for supravim from git repositories';
+		}
+
 		Adw.PreferencesGroup plugins_group {
 			styles ['PreferencesGroup']
-			title: 'Plugins';
+			title: 'Suprapack Plugins';
 			description: 'You can install some plugins for supravim :)';
 		}
 	}	

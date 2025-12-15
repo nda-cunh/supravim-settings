@@ -10,6 +10,7 @@ srcs = [
   'OptionsNode.vala',
   'PluginsPage.vala',
   'PluginsRow.vala',
+  'PluginExternalRow.vala',
   'PluginsDownloadWindow.vala',
   'Color.vala',
   'WikiPage.vala',

@@ -14,6 +14,7 @@ public class OptionsPage :  Gtk.Box {
 
 	construct {
 		parse_status();
+		nodes_plugin.display_tree ();
 		add_options_to_group(nodes_general, options_group);
 		add_options_to_group(nodes_plugin, options_group_pl);
 	}

@@ -26,7 +26,10 @@ public class OptionsNode {
 			this.value = chunk.insert(@value);
 		this.name = chunk.insert(name);
 		this.parent = parent;
-		real_name = chunk.insert(name);
+		if (parent != null && parent.real_name[0] != '\0')
+			real_name = chunk.insert("%s_%s".printf(parent.real_name, name));
+		else
+			real_name = chunk.insert(name);
 	}
 
 	~OptionsNode () {
@@ -69,13 +72,13 @@ public class OptionsNode {
 			uint	sub_node_idx;
 
 			// Set sub_node based on name
-			if (this.children.find_with_equal_func (new OptionsNode(new_child_name[:pos]), 
+			if (children.find_with_equal_func (new OptionsNode(new_child_name[:pos]), 
 						(a, b) => a.name == b.name, out sub_node_idx))
 				sub_node = this.children[sub_node_idx];
 			else
 				sub_node = this.create_subnode(new_child_name[:pos]);
 			new_child.name = chunk.insert(new_child.name.offset(pos + 1));
-			sub_node.append_node(new_child);
+			sub_node.append(new_child_name[pos + 1:], lore, value);
 			return ;
 		} else
 			children.add(new_child);

@@ -1,12 +1,14 @@
 namespace Utils {
 
-	public void command_line (string command) {
+	public int command_line (string command, out string output = null, out string errput = null) {
+		int wait_status = -1;
 		try {
-			string output, error;
-			Process.spawn_command_line_sync (command, out output, out error);
+			Process.spawn_command_line_sync (command, out output, out errput, out wait_status);
 		} catch (Error e) {
-			warning (e.message);
+			errput = e.message;
+			warning (errput);
 		}
+		return wait_status;
 	}
 
 	public async int run_async_command (string command, out string output = null, out string errput = null) {

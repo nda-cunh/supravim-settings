@@ -44,7 +44,7 @@ public class PluginRow : Adw.ActionRow {
 		if (_installed == true)
 			button.set_css_classes ({"uninstall"});
 		else 
-			button.set_css_classes ({"install"});
+			button.set_css_classes ({""});
 		if (_installed)
 			image.icon_name = "user-trash-symbolic";
 		else

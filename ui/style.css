@@ -73,9 +73,9 @@
 }
 
 .install {
-	# background-color: #11aa11;
-	# background-color: rgba(17,170,17,0.6);
-	# color:white;
+	background-color: #11aa11;
+	background-color: rgba(17,170,17,0.6);
+	color:white;
 }
 
 .uninstall:hover {

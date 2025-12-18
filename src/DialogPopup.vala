@@ -29,8 +29,17 @@ public class DialogPopup : Adw.Window {
 		box_buttons.append(cancel_button);
 	}
 
+	[GtkCallback]
+	public void close_popup () {
+		base.close();
+	}
+
+	[GtkChild]
+	public unowned Gtk.Button closing_btn; 
 	[GtkChild]
 	public unowned Gtk.ProgressBar progress_bar;
+	[GtkChild]
+	public unowned Box box_main;
 	[GtkChild]
 	public unowned Box box_buttons;
 	[GtkChild]

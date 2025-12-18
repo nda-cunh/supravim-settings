@@ -3,6 +3,7 @@ public class WindowUpdate : DialogPopup {
 
 	public WindowUpdate (Gtk.Window mainWindow) {
 		base (mainWindow, "Update", "            Updating Supravim...            ");
+		base.closing_btn.visible = false;
 
 		progress_bar.set_fraction(0.01);
 		progress_bar.visible = true;

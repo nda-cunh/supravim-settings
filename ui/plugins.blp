@@ -1,6 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
+
 template $PluginsPage: Gtk.Box {
 	orientation: vertical;
 	spacing: 5;
@@ -9,7 +10,12 @@ template $PluginsPage: Gtk.Box {
 		Adw.PreferencesGroup external_group {
 			styles ['PreferencesGroup']
 			title: 'External Plugins';
-			description: 'Install external plugins for supravim from git repositories';
+			description: 'Install external plugins from git repositories';
+			header-suffix: Gtk.Button btn_add_plugin {
+				icon-name: 'list-add-symbolic';
+				width-request: 42;
+				height-request: 42;
+			};
 		}
 
 		Adw.PreferencesGroup plugins_group {

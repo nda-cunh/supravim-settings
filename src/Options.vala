@@ -33,9 +33,9 @@ public class OptionsPage :  Gtk.Box {
 			}
 			else {
 				if (row_base is Adw.ExpanderRow)
-					row_base.add_row (new RowOptions(child.name, child.lore, child.value));
+					row_base.add_row (new RowOptions(child));
 				else if (row_base is Adw.PreferencesGroup)
-					row_base.add (new RowOptions(child.name, child.lore, child.value));
+					row_base.add (new RowOptions(child));
 			}
 		}
 	}

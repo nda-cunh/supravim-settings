@@ -16,7 +16,6 @@ srcs_blueprint = files(
   'ui/theme.blp',
   'ui/homepage.blp',
   'ui/DialogPopup.blp',
-  'ui/plugins/addexternalrow.blp',
   'ui/plugins/externalrow.blp',
 )
 

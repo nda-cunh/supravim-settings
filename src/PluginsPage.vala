@@ -11,6 +11,12 @@ public class PluginsPage : Gtk.Box {
 		btn_add_plugin.clicked.connect(() => {
 			var parent = this.get_root() as Gtk.Window;
 			var dialog = new WindowAddPlugin(parent);
+			dialog.refresh.connect(() => {
+				print ("Refresh plugins after adding\n");
+				load_plugins.begin();
+				load_external.begin();
+			});
+			print ("Opening Add Plugin Dialog\n");
 			dialog.present ();
 		});
 	}
@@ -78,6 +84,7 @@ public class PluginsPage : Gtk.Box {
 	  */
 	public class WindowAddPlugin : DialogPopup {
 
+		public signal void refresh();
 		/**
 		  * Attributes
 		  */
@@ -121,10 +128,7 @@ public class PluginsPage : Gtk.Box {
 				}
 				else {
 					this.close();
-					// Refresh the external plugins list
-					var parent = this.get_root() as Gtk.Window;
-					var plugins_page = parent.get_child() as PluginsPage;
-					plugins_page.load_external.begin();
+					this.refresh();
 				}
 			}
 		}

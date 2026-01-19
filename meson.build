@@ -4,6 +4,11 @@ project('supravim-gui', ['c', 'vala'],
 
 add_project_arguments('--enable-experimental', language: 'vala')
 
+
+vapi_dir = meson.current_source_dir() / 'vapi'
+
+add_project_arguments(['--vapidir', vapi_dir], language: 'vala')
+
 gnome = import('gnome')
 
 

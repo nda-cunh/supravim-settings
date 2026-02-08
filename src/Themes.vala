@@ -11,15 +11,19 @@ public class ThemePage : Adw.PreferencesGroup {
 		theme.onThemeChange.connect ((theme)=> {
 			try {
 				if (theme.index_of_char ('-') == -1){
-					Process.spawn_command_line_sync (@"supravim --theme $theme");
-					Colors.change_theme (Dark);
-					print ("change_theme: [%s] <dark>\n", theme);
+					// Process.spawn_command_line_sync (@"supravim --theme $theme");
+					// Colors.change_theme (Dark);
+					// print ("change_theme: [%s] <dark>\n", theme);
+					// Utils.command_line(@"supravim -S $(node.real_name)=$(int.parse(v.text))");
+					print("onChangeOption: [theme] <%s>\n", theme);
+
 				}
 				else {
 					var named_theme = theme[0:theme.index_of_char('-')];
-					Process.spawn_command_line_sync (@"supravim --theme $(named_theme)");
-					Colors.change_theme (Light);
-					print ("change_theme: [%s] <light>\n", named_theme);
+					// Process.spawn_command_line_sync (@"supravim --theme $(named_theme)");
+					// Colors.change_theme (Light);
+					// print ("change_theme: [%s] <light>\n", named_theme);
+					print("onChangeOption: [theme] <%s>\n", theme);
 
 				}
 			}catch (Error e) {

@@ -35,6 +35,10 @@ class Application : Adw.Application {
 	}
 
 	public static void main(string []args) {
+		set_print_handler((msg) => {
+			stdout.puts(msg);
+			stdout.flush();
+		});
 		pull_updates();
 		new Application().run(args);
 	}

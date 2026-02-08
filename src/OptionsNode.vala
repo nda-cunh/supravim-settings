@@ -1,125 +1,122 @@
-/**
- * A simple tree structure to hold options with hierarchical names
- * Ex
- */
-public class OptionsNode {
-	// Attributes
-	private static StringChunk				chunk = new StringChunk(256);
-	private unowned OptionsNode?			parent;
-	public GenericArray<OptionsNode>		children = new GenericArray<OptionsNode>();
+public abstract class ONode { }
 
-	public unowned string real_name { get; private set; default = null; }
-	public unowned string name { get; private set; }
-	public unowned string? lore { get; private set; default = null; }
-	public unowned string? value { get; private set; default = null; }
+public class OptionsONode : ONode {
+	private SupravimOption option;
 
-	private static int count = 0;
-
-	/**
-	 * Constructor
-	 */
-	public OptionsNode (string name = "", OptionsNode ?parent = null, string? lore = null, string? @value = null) {
-		++count;
-		if (lore != null)
-			this.lore = chunk.insert(lore);
-		if (value != null)
-			this.value = chunk.insert(@value);
-		this.name = chunk.insert(name);
-		this.parent = parent;
-		if (parent != null && parent.real_name[0] != '\0')
-			real_name = chunk.insert("%s_%s".printf(parent.real_name, name));
-		else
-			real_name = chunk.insert(name);
+	public OptionsONode (SupravimOption option) {
+		this.option = option;
 	}
 
-	~OptionsNode () {
-		if (--count == 0)
-			chunk = null;
+	// Getters
+	public unowned string type_value {
+		get {
+			return option.type;
+		}
+	}
+	public unowned string name {
+		get {
+			return option.id;
+		}
+	}
+	public unowned string lore {
+		get {
+			return option.lore;
+		}
+	}
+	public unowned string value {
+		get {
+			return option.value;
+		}
+	}
+	public unowned string default_value {
+		get {
+			return option.default_value;
+		}
+	}
+}
+
+public class GroupONode : ONode {
+	private string parent_name = "";
+	public string name_of_group {get; private set; }
+	public string lore_of_group {get; private set; }
+
+	public GenericArray<ONode> children = new GenericArray<ONode>();
+
+	public GroupONode (string name, string parent_name = "") {
+		this.parent_name = parent_name;
+		this.name_of_group = name;
+
+		if (parent_name in SupraParser.group_lores) {
+			this.lore_of_group = SupraParser.group_lores[parent_name].lore;
+		} else {
+			this.lore_of_group = "???";
+		}
 	}
 
+	private void add (string name_options, SupravimOption option) {
+		uint8 buffer[256];
+		uint index;
+		int idx = name_options.index_of_char('/');
+		if (idx == -1) {
+			children.add (new OptionsONode(option));
+			return;
+		}
+
+		unowned string ptr = name_options.offset(idx + 1);
+		Memory.copy (buffer, name_options.data, idx);
+		buffer[idx] = 0;
+
+		bool found = children.find_custom<string> ((string)buffer, (node, needle) => {
+			if (node is GroupONode) {
+				return node.name_of_group == needle;
+			}
+			return false;
+		}, out index);
+
+		if (found) {
+			var? group_node = children.data[index] as GroupONode;
+			group_node?.add(ptr, option);
+		} else {
+			string prefix;
+			 if (parent_name == "") {
+				prefix = name_options[0:idx];
+			} else {
+				prefix = parent_name + "/" + name_options[0:idx];
+			}
+			var new_group = new GroupONode(name_options[0:idx], prefix);
+			children.add(new_group);
+			new_group.add(ptr, option);
+		}
+
+	}
+
+	public void add_element (SupravimOption option) {
+		add(option.id, option);
+	}
+
+	
 	/**
-	 * ForEach support
-	 */
+	  * Foreach support 
+	  */
 	public uint size {
 		get {
 			return children.length;
 		}
 	}
 
-	public unowned OptionsNode get (uint index) {
+	public unowned ONode get (uint index) {
 		return children.data[index];
 	}
 
-	/**
-	 * Append an option to the tree
-	 */
-	public void append (string new_child_name, string lore, string value) {
-		OptionsNode	new_child = new OptionsNode(new_child_name, this, lore, value);
-		int		pos = int.MAX;
-
-		if (new_child_name.contains ("_")) {
-			unowned uint8 []data_child = new_child.name.data;
-			foreach (unowned var child in children) {
-				if (!child.name.contains ("_") && child.children.length == 0)
-					continue;
-				var tmp_pos = get_prefix_length (data_child, child.name.data);
-				if (tmp_pos > 0 && tmp_pos < pos)
-					pos = tmp_pos;
-			}
-		}
-		if (pos != int.MAX) {
-			OptionsNode	sub_node;
-			uint	sub_node_idx;
-
-			// Set sub_node based on name
-			if (children.find_with_equal_func (new OptionsNode(new_child_name[:pos]), 
-						(a, b) => a.name == b.name, out sub_node_idx))
-				sub_node = this.children[sub_node_idx];
-			else
-				sub_node = this.create_subnode(new_child_name[:pos]);
-			new_child.name = chunk.insert(new_child.name.offset(pos + 1));
-			sub_node.append(new_child_name[pos + 1:], lore, value);
-			return ;
-		} else
-			children.add(new_child);
-	}
-
-	private static int	get_prefix_length(uint8[] s1, uint8[] s2) {
-		int len1 = s1.length;
-		int len2 = s2.length;
-		int	i = 0;
-
-		while (i < len1 && i < len2 && s1[i] == s2[i])
-			++i;
-		while (i > 0 && s1[i] != '_')
-			--i;
-		return i;
-	}
-
-	private OptionsNode	create_subnode (string node_name) {
-		int		name_len = node_name.length;
-		OptionsNode	sub_node = new OptionsNode(node_name, this);
-
-		foreach (unowned var child in children) {
-			if (!child.name.has_prefix (node_name))
-				continue;
-			child.name = child.name.offset(name_len + 1);
-			sub_node.append_node (child);
-			this.children.remove (child);
-		}
-		if (!children.find(sub_node))
-			this.append_node (sub_node);
-		return sub_node;
-	}
-
-	private void append_node (OptionsNode node) {
-		node.parent = this;
-		children.add(node);
-	}
-
-	// public void display_tree(int depth = 0) {
-		// stdout.printf("%-*s%s [%s][%s]\n", (depth * 2), " ", this.name, this.real_name, this.lore);
-		// foreach (unowned var child in this.children)
-			// child.display_tree (depth + 1);
+	// NOTE Printing the tree for debug purposes
+	// public void print_me (int depth = 0) {
+		// print (string.nfill (depth + 0, ' ') + "\033[96;1mGroup: %s\033[0m\n", name_of_group);
+		// foreach (var child in children) {
+			// if (child is GroupONode) {
+				// (child as GroupONode)?.print_me(depth + 2);
+			// } else if (child is OptionsONode) {
+				// print (string.nfill (depth + 2, ' ') + "\033[92mOption: %s\033[0m\n", (child as OptionsONode)?.option.id);
+			// }
+		// }
 	// }
-}
+} 

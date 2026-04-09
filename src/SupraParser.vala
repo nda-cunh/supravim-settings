@@ -1,3 +1,5 @@
+
+
 public struct SupravimOption {
 	public string id;
 	public string lore;
@@ -10,6 +12,7 @@ public struct SupravimOption {
 			id = "", lore = "", value = "", type = "", default_value = ""
 		};
 	}
+
 }
 
 public struct SupravimGroup {
@@ -17,20 +20,74 @@ public struct SupravimGroup {
 	public string lore;
 }
 
+public class ListSupraOptions {
+	private List<SupravimOption?> options;
+
+	public ListSupraOptions () {
+		options = new List<SupravimOption>();
+	}
+
+	public void append (SupravimOption opt) {
+		options.append(opt);
+	}
+
+	public void sort (CompareFunc<SupravimOption?> cmp) {
+		options.sort(cmp);
+	}
+
+	public SupravimOption? get (uint index) {
+		return options.nth_data(index);
+	} 
+
+	public SupravimOption? get_from_name(string name) {
+		foreach (var opt in options) {
+			if (opt != null && opt.id == name) {
+				return opt;
+			}
+		}
+		return null;
+	}
+
+	public uint size {
+		get {
+			return options.length();
+		}
+	}
+}
+
+
 public class SupraParser {
 	public static HashTable<string, SupravimGroup?> group_lores;
 
-	public static List<SupravimOption?> get_from_vim() throws Error {
+	public static ListSupraOptions get_from_vim() throws Error {
 		string output;
 		string errput;
-		Process.spawn_command_line_sync("vim -es -u ~/.vimrc -c 'redir! > a | call supraconfig#PrintRegister() | redir END' -c 'q'", out output, out errput);
-		FileUtils.get_contents("a", out output);
+		string name_used;
+		FileUtils.open_tmp("tmp_vim_redir_XXXXXXXX", out name_used);
+		Process.spawn_command_line_sync(@"vim -es -u ~/.vimrc -c 'redir! > $name_used | call supraconfig#PrintRegister() | redir END' -c 'q'", out output, out errput);
+		FileUtils.get_contents(name_used, out output);
+		FileUtils.remove(name_used);
 		return parse_full_package(output);
 	}
 
-	public static List<SupravimOption?> parse_full_package(string json) {
+	public static async ListSupraOptions async_get_from_vim() throws Error {
+		string output;
+		string name_used;
+		FileUtils.open_tmp("tmp_vim_redir_XXXXXXXX", out name_used);
+		string []argvp;
+		Shell.parse_argv(@"vim -es -u ~/.vimrc -c 'redir! > $name_used | call supraconfig#PrintRegister() | redir END' -c 'q'", out argvp);
+		var subprocess = new Subprocess.newv(argvp, SubprocessFlags.STDERR_SILENCE | SubprocessFlags.STDOUT_SILENCE);
+		yield subprocess.communicate_utf8_async(null, null, null, null);
+		FileUtils.get_contents(name_used, out output);
+		FileUtils.remove(name_used);
+		return parse_full_package(output);
+	}
+
+
+
+	public static ListSupraOptions parse_full_package(string json) {
 		group_lores = new HashTable<string, SupravimGroup?>(str_hash, str_equal);
-		var options_list = new List<SupravimOption?>();
+		var options_list = new ListSupraOptions();
 
 		string groups_content = get_raw_block(json, "groups");
 		parse_groups_to_map(groups_content);
@@ -65,7 +122,6 @@ public class SupraParser {
 		return options_list;
 	}
 
-	// Helper pour isoler le contenu entre les {} d'une clé spécifique
 	private static string get_raw_block(string json, string key) {
 		string search = @"\"$key\":";
 		int pos = json.index_of(search);

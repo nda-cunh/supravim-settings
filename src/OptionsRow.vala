@@ -14,7 +14,6 @@ public class RowOptions : Adw.ActionRow {
 	public RowOptions (OptionsONode node) {
 		this.node = node;
 		
-		// 1. Configuration du bouton Reset
 		this._reset_defaults = new Gtk.Button.from_icon_name ("view-refresh-symbolic") {
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
@@ -28,10 +27,9 @@ public class RowOptions : Adw.ActionRow {
 			this.reset_to_default();
 		});
 
-		base.title = Markup.escape_text (node.name); // Utilise display_name pour l'UI
+		base.title = Markup.escape_text (node.display_name); 
 		base.subtitle = Markup.escape_text (node.lore);
 
-		// 2. Initialisation selon le type
 		if (node.type_value == "number") {
 			_spin = new Gtk.SpinButton.with_range (0, 1000, 1) {
 				halign = Gtk.Align.CENTER,
@@ -123,5 +121,9 @@ public class RowOptions : Adw.ActionRow {
 		}
 		
 		check_default();
+	}
+
+	public unowned string get_node_name () {
+		return node.name;
 	}
 }

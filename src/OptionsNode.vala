@@ -33,6 +33,16 @@ public class OptionsONode : ONode {
 			return option.default_value;
 		}
 	}
+
+	public unowned string display_name {
+		get {
+			var index = option.id.last_index_of_char('/');
+			if (index == -1) {
+				return option.id;
+			}
+			return option.id.offset(index + 1);
+		}
+	}
 }
 
 public class GroupONode : ONode {

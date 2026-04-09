@@ -1,6 +1,5 @@
 public class ThemeGrid : Gtk.Grid {
 	public signal void onThemeChange (string theme);
-	string actual_theme;
 	private ThemeButton [] tab_button;
 
 	construct {
@@ -8,6 +7,15 @@ public class ThemeGrid : Gtk.Grid {
 		valign = Gtk.Align.CENTER;
 		hexpand = true;
 
+	}
+
+	public void change_theme (string theme) {
+		foreach (unowned var d in tab_button) {
+			if (theme == d.name)
+				d.set_active (true);
+			else
+				d.set_active (false);
+		}
 	}
 
 	public ThemeGrid () {
@@ -32,12 +40,8 @@ public class ThemeGrid : Gtk.Grid {
 "iceberg-light",
 "catppuccin_latte"
 };
-		actual_theme = get_actual_theme ();
 		foreach (unowned var i in tab_theme) {
 			var tmp = new ThemeButton (i);
-			if (i == actual_theme)
-				tmp.active = true;
-
 
 			tmp.toggled.connect (()=> {
 				if (tmp.active == false)
@@ -55,29 +59,6 @@ public class ThemeGrid : Gtk.Grid {
 			tab_button += tmp;
 		}
 		fill_grid ();
-	}
-
-	private string get_actual_theme () {
-		try {
-			unowned var HOME = Environment.get_home_dir ();
-			const string search = "g:sp_theme = \"";
-			string result;
-			int index;
-			string vimrc;
-
-			FileUtils.get_contents (@"$HOME/.vimrc", out vimrc);
-			index = vimrc.index_of(search);
-			if (index == -1)
-				throw new FileError.FAILED("");
-			result = vimrc[index + search.length: vimrc.index_of_char('"', index + search.length)];
-			if (vimrc.index_of("""set background=light""") != -1)
-				result = result + "-light";
-
-			return result;
-		} catch (Error e) {
-			warning (e.message);
-			return "onedark";
-		}
 	}
 
 	private void fill_grid () {

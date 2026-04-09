@@ -152,13 +152,5 @@ The plugin will be downloaded and installed automatically."""
 
 			base.present();
 		}
-
-		private void append_cancel_button () {
-			var cancel_button = new Gtk.Button.with_label("Cancel") {
-				css_classes = {"button_popup"},
-			};
-			cancel_button.clicked.connect (() => base.close());
-			box_main.append(cancel_button);
-		}
 	}
 }

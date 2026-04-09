@@ -5,6 +5,16 @@ template $OptionsPage: Gtk.Box {
 	orientation: vertical;
 	spacing: 5;
 
+	Gtk.SearchBar search_bar {
+		// Permet d'afficher la barre par défaut
+		search-mode-enabled: true;
+
+		child: Gtk.SearchEntry search_entry {
+			placeholder-text: 'Rechercher une option...';
+			// search-changed => $search();
+		};
+	}
+
 	Adw.PreferencesPage  {
 		Adw.PreferencesGroup options_group {
 			styles ['PreferencesGroup']

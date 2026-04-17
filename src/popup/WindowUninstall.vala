@@ -1,4 +1,4 @@
-public class WindowUninstall: DialogPopup {
+public class WindowUninstall : DialogPopup {
 
 	public WindowUninstall (Gtk.Window mainWindow) {
 		base (mainWindow, "Uninstall", "Are you sure you want to uninstall Supravim?");

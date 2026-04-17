@@ -1,31 +1,14 @@
+srcs = files(
+  'main.vala',
+  'Window.vala'
+)
 
-srcs = [
-  files(
-    'main.vala',
-  'Color.vala',
-  'DialogPopup.vala',
-  'HomePage.vala',
-  'Options.vala',
-  'OptionsNode.vala',
-  'OptionsRow.vala',
-  'PluginExternalRow.vala',
-  'PluginsDownloadWindow.vala',
-  'PluginsPage.vala',
-  'PluginsRow.vala',
-  'SupraParser.vala',
-  'ThemeButton.vala',
-  'ThemeGrid.vala',
-  'ThemeInit.vala',
-  'Themes.vala',
-  'WikiPage.vala',
-  'Window.vala',
-  'WindowClearCache.vala',
-  'WindowUninstall.vala',
-  'WindowUpdate.vala',
-  'DataColor.vala',
-  'Utils.vala'
-  ),
-]
+subdir('homepage')
+subdir('options')
+subdir('plugins')
+subdir('popup')
+subdir('wiki')
+subdir('utils')
 
 deps = [
   dependency('gtk4'),
@@ -38,4 +21,5 @@ executable('supravim-gui',
   asresources,
   c_args: '-w',
   dependencies : [deps],
-  install : true)
+  install : true
+)

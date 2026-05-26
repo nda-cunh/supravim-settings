@@ -24,7 +24,7 @@ public class ListSupraOptions {
 	private List<SupravimOption?> options;
 
 	public ListSupraOptions () {
-		options = new List<SupravimOption>();
+		options = new List<SupravimOption?>();
 	}
 
 	public void append (SupravimOption opt) {

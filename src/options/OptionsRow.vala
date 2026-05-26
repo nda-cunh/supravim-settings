@@ -20,7 +20,7 @@ public class RowOptions : Adw.ActionRow {
 			tooltip_text = "Reset to default",
 			cursor = new Gdk.Cursor.from_name ("pointer", null)
 		};
-		this._reset_defaults.get_style_context().add_class("flat");
+		this._reset_defaults.add_css_class("flat");
 
 		this._reset_defaults.clicked.connect(() => {
 			print("onResetOption: %s\n", node.name);

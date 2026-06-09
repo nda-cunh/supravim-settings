@@ -23,6 +23,7 @@ executable('supravim-gui',
   srcs,
   asresources,
   c_args: '-w',
-  dependencies : [deps],
-  install : true
+  vala_args: supravim_vala_args,
+  dependencies: [deps, supravim_dep],
+  install: true
 )

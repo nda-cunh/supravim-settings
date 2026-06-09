@@ -30,9 +30,16 @@ public class ThemePage : Adw.PreferencesGroup {
 		init_default_theme.begin ();
 	}
 
-	private async void init_default_theme() throws Error {
-		var lst = yield SupraParser.async_get_from_vim();
-		var value = lst.get_from_name("theme");
-		theme_grid.change_theme(value.value);
+	private async void init_default_theme () throws Error {
+		ListSupraOptions? lst = null;
+		new Thread<void> (null, () => {
+			try { lst = ListSupraOptions.from_vim (); } catch (Error e) { warning (e.message); }
+			Idle.add (init_default_theme.callback);
+		});
+		yield;
+		if (lst == null) return;
+		var value = lst.get_from_name ("theme");
+		if (value != null)
+			theme_grid.change_theme (value.value);
 	}
 }

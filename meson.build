@@ -48,4 +48,14 @@ install_data(info_file, install_dir: '.')
 install_data(files('data/supravim.desktop'), install_dir: get_option('datadir') / 'applications')
 meson.add_install_script('suprapack_build.sh')
 
+supravim_dep = dependency('supravim',
+  fallback: ['supravim', 'libsupravim_dep'],
+)
+
+supravim_vala_args = ['--pkg=supravim']
+if supravim_dep.type_name() == 'internal'
+  supravim_sp = subproject('supravim')
+  supravim_vala_args += ['--vapidir', supravim_sp.get_variable('libsupravim_vapi_dir')]
+endif
+
 subdir('src')

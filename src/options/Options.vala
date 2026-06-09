@@ -123,7 +123,7 @@ public class OptionsPage :  Gtk.Box {
 	private async void parse_status () {
 		new Thread<void>(null, () => {
 			try {
-				var options = SupraParser.get_from_vim ();
+				var options = ListSupraOptions.from_vim ();
 				options.sort ((a, b) => {
 					return (a.id > b.id) ? 1 : -1;
 				});

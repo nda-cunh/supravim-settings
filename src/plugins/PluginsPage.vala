@@ -43,33 +43,17 @@ public class PluginsPage : Gtk.Box {
 		}
 	}
 
-	private async void load_external() throws Error {
-		foreach (unowned var row in external_rows) {
+	private async void load_external () throws Error {
+		foreach (unowned var row in external_rows)
 			external_group.remove (row);
-		}
-		// MatchInfo match_info;
-		MatchInfo match_info;
-		string output;
-		yield Utils.run_async_command("supravim --list-plugin", out output);
-		output = Utils.remove_color(output);
-		var lines = output.split("\n");
-		foreach (unowned var line in lines) {
-			bool installed = false;
-			if (line.has_prefix ("[installed] ")) {
-				installed = true;
-				line = line.offset(12);
-			}
-			if (/(?P<name>[\S]+)\s+(?P<status>[\S]+)/.match(line, 0, out match_info)) {
-				var name = match_info.fetch_named("name");
-				var status = match_info.fetch_named("status");
-				var row = new RowPluginExternal(name, status);
-				row.refresh.connect(() => {
-					print ("Refresh external plugins\n");
-					load_external.begin();
-				});
-				external_rows.append(row);
-				external_group.add (row);
-			}
+		external_rows = new List<RowPluginExternal> ();
+
+		var plugins = Plugin.get_all ();
+		foreach (var entry in plugins) {
+			var row = new RowPluginExternal (entry.name, entry.enabled ? "Enable" : "Disable");
+			row.refresh.connect (() => load_external.begin ());
+			external_rows.append (row);
+			external_group.add (row);
 		}
 	}
 	private List<RowPluginExternal> external_rows = new List<RowPluginExternal>();
@@ -102,34 +86,28 @@ public class PluginsPage : Gtk.Box {
 		/**
 		  * Methods
 		  */
-		private void adding_plugin() {
-			var regex = /https?:\/\/(www\.)?(github\.com|gitlab\.com)\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\/)?/; 
-			if (!regex.match(url_entry.text)) {
-				var error_dialog = new DialogPopup (this.get_root() as Gtk.Window,
+		private void adding_plugin () {
+			var regex = /https?:\/\/(www\.)?(github\.com|gitlab\.com)\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\/)?/;
+			if (!regex.match (url_entry.text)) {
+				var error_dialog = new DialogPopup (this.get_root () as Gtk.Window,
 					"Invalid URL",
 					"The URL provided is not a valid GitHub or GitLab repository URL."
 				);
-				error_dialog.add_cancel_button();
+				error_dialog.add_cancel_button ();
 				error_dialog.present ();
 				return;
 			}
-			else {
-				string errput;
-				var url_pl = url_entry.text.strip();
-				if (Utils.command_line("supravim --add-plugin " + url_pl, null, out errput) != 0) {
-					errput = Utils.remove_color(errput);
-					var error_dialog = new DialogPopup (this.get_root() as Gtk.Window,
-						"Error Adding Plugin",
-						errput
-					);
-					error_dialog.add_cancel_button();
-					error_dialog.present ();
-					return;
-				}
-				else {
-					this.close();
-					this.refresh();
-				}
+			try {
+				Plugin.add (url_entry.text.strip ());
+				this.close ();
+				this.refresh ();
+			} catch (Error e) {
+				var error_dialog = new DialogPopup (this.get_root () as Gtk.Window,
+					"Error Adding Plugin",
+					Utils.remove_color (e.message)
+				);
+				error_dialog.add_cancel_button ();
+				error_dialog.present ();
 			}
 		}
 		

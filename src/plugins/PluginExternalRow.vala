@@ -22,11 +22,14 @@ public class RowPluginExternal : Adw.ActionRow {
 
 	// Callbacks
 	[GtkCallback]
-	public bool toggle_plugin_status (bool state) { 
-		if (state) {
-			Utils.command_line (@"supravim --enable-plugin $pl_name");
-		} else {
-			Utils.command_line (@"supravim --disable-plugin $pl_name");
+	public bool toggle_plugin_status (bool state) {
+		try {
+			if (state)
+				Plugin.enable (pl_name);
+			else
+				Plugin.disable (pl_name);
+		} catch (Error e) {
+			warning (e.message);
 		}
 		return false;
 	}
@@ -53,9 +56,9 @@ public class RowPluginExternal : Adw.ActionRow {
 			};
 
 			uninstall_button.clicked.connect (() => {
-				Utils.command_line (@"supravim --remove-plugin $name");
-				refresh();
-				base.close();
+				try { Plugin.remove (name); } catch (Error e) { warning (e.message); }
+				refresh ();
+				base.close ();
 			});
 
 			box_buttons.append(uninstall_button);

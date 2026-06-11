@@ -22,6 +22,7 @@ public class Wiki : Gtk.Box {
 		markdown = new MarkDown() {
 			hexpand = true,
 			vexpand = true,
+			halign = Align.CENTER,
 			margin_start = 10,
 			margin_end = 10,
 			margin_top = 10,

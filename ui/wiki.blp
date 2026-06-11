@@ -35,9 +35,31 @@ template $Wiki: Gtk.Box{
 		Separator {
 			orientation: horizontal;
 		}
-		Box {
+		Overlay {
+			hexpand: true;
+			vexpand: true;
+
+			ScrolledWindow {
+				hexpand: true;
+				vexpand: true;
+				margin-start: 20;
+				Viewport {
+					child: Box {
+						orientation: vertical;
+
+						Box markdown_box {
+
+						}
+					};
+				}
+			}
+
+			[overlay]
 			Box box_revealer {
+				halign: start;
+				valign: fill;
 				orientation: vertical;
+				styles ["background"]
 
 				Box {
 					orientation: horizontal;
@@ -46,7 +68,7 @@ template $Wiki: Gtk.Box{
 					}
 					Revealer revealer {
 						reveal-child: bind motion.contains-pointer;
-						transition-type: slide_right; 
+						transition-type: slide_right;
 						child: Box sidebar {
 							orientation: vertical;
 						};
@@ -58,24 +80,9 @@ template $Wiki: Gtk.Box{
 						margin-start: 5;
 						margin-end: 5;
 						icon-name: "go-next-symbolic";
-						vexpand : true;
-					}
-				}
-			}
-			Separator {
-				orientation: vertical;
-			}
-			Box {
-				orientation: vertical;
-				ScrolledWindow {
-					Viewport {
-						child: Box {
-							orientation: vertical;
-
-							Box markdown_box {
-
-							}
-						};
+						vexpand: true;
+						margin-top: 8;
+						margin-bottom: 8;
 					}
 				}
 			}

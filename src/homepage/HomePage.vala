@@ -22,7 +22,7 @@ public class HomePage : Gtk.Box {
 
 	// Callbacks for the buttons
 	[GtkCallback]
-	public void update() {
+	public void update () {
 		var tmp = new WindowUpdate(parent_window);
 		tmp.close_request.connect(() =>  {
 			test_if_update_available.begin();
@@ -31,12 +31,12 @@ public class HomePage : Gtk.Box {
 	}
 
 	[GtkCallback]
-	public void clear_cache() {
+	public void clear_cache () {
 		new WindowClearCache(parent_window);
 	}
 
 	[GtkCallback]
-	public void uninstall() {
+	public void uninstall () {
 		new WindowUninstall(parent_window);
 	}
 

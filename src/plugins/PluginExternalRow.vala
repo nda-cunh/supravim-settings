@@ -25,9 +25,9 @@ public class RowPluginExternal : Adw.ActionRow {
 	public bool toggle_plugin_status (bool state) {
 		try {
 			if (state)
-				Plugin.enable (pl_name);
+				Supravim.Plugin.enable (pl_name);
 			else
-				Plugin.disable (pl_name);
+				Supravim.Plugin.disable (pl_name);
 		} catch (Error e) {
 			warning (e.message);
 		}
@@ -56,7 +56,11 @@ public class RowPluginExternal : Adw.ActionRow {
 			};
 
 			uninstall_button.clicked.connect (() => {
-				try { Plugin.remove (name); } catch (Error e) { warning (e.message); }
+				try {
+					Supravim.Plugin.remove (name);
+				} catch (Error e) {
+					warning (e.message);
+				}
 				refresh ();
 				base.close ();
 			});

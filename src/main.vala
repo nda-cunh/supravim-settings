@@ -35,7 +35,7 @@ class Application : Adw.Application {
 	}
 
 	public static void main(string []args) {
-		SupravimLib.init ();
+		Supravim.init ();
 		set_print_handler((msg) => {
 			stdout.puts(msg);
 			stdout.flush();

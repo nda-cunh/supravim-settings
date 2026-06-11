@@ -1,4 +1,5 @@
 // SupravimOption, SupravimGroup and SupraParser come from libsupravim
+using Supravim;
 
 public class ListSupraOptions {
 	private List<SupravimOption?> options;

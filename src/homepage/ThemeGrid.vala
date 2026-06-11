@@ -20,27 +20,9 @@ public class ThemeGrid : Gtk.Grid {
 
 	public ThemeGrid () {
 		tab_button = {};
-		const string [] tab_theme = {
-"atom",
-"dracula",
-"gruvbox",
-"iceberg",
-"pablo",
-"kyotonight",
-"molokai",
-"onedark",
-"tokyonight",
-"tokyostorm",
-"rosepine",
-"rosepine_moon",
-"catppuccin_frappe",
-"catppuccin_macchiato",
-"catppuccin_mocha",
-"rosepine_dawn-light",
-"iceberg-light",
-"catppuccin_latte"
-};
-		foreach (unowned var i in tab_theme) {
+		var keys = tab_themes.get_keys ();
+		keys.sort (strcmp);
+		foreach (unowned var i in keys) {
 			var tmp = new ThemeButton (i);
 
 			tmp.toggled.connect (()=> {

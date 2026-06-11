@@ -48,7 +48,7 @@ public class PluginsPage : Gtk.Box {
 			external_group.remove (row);
 		external_rows = new List<RowPluginExternal> ();
 
-		var plugins = Plugin.get_all ();
+		var plugins = Supravim.Plugin.get_all ();
 		foreach (var entry in plugins) {
 			var row = new RowPluginExternal (entry.name, entry.enabled ? "Enable" : "Disable");
 			row.refresh.connect (() => load_external.begin ());
@@ -98,7 +98,7 @@ public class PluginsPage : Gtk.Box {
 				return;
 			}
 			try {
-				Plugin.add (url_entry.text.strip ());
+				Supravim.Plugin.add (url_entry.text.strip ());
 				this.close ();
 				this.refresh ();
 			} catch (Error e) {

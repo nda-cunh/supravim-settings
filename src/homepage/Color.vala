@@ -203,4 +203,5 @@ public class Color : Gtk.Box {
 	public DataColor format {get;set;}
 	public DataColor text {get;set;}
 	public DataColor integer {get;set;}
+	public bool is_light {get;set; default = false;}
 }

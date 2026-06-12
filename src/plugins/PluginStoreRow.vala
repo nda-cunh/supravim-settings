@@ -88,6 +88,15 @@ public class PluginStoreRow : Adw.ActionRow {
 		refresh_button ();
 	}
 
+	/**
+	 * Override the displayed description (used to show the one suprapack
+	 * provides for its own packages instead of the catalog fallback).
+	 */
+	public void set_description (string description) {
+		if (description != "")
+			base.subtitle = "by %s — %s".printf (entry.author, description);
+	}
+
 	private void refresh_button () {
 		if (installed) {
 			action_image.icon_name = "user-trash-symbolic";

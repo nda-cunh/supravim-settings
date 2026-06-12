@@ -148,7 +148,7 @@ public class PluginsPage : Gtk.Box {
 		// --- Git plugins (libsupravim) ---
 		var git_plugins = Supravim.Plugin.get_all ();
 		foreach (var entry in git_plugins) {
-			var row = new RowPluginExternal (entry.name, entry.enabled ? "Enable" : "Disable", entry.url);
+			var row = new RowPluginExternal (entry);
 			row.refresh.connect (() => refresh.begin ());
 			external_rows.append (row);
 			external_group.add (row);
@@ -156,6 +156,8 @@ public class PluginsPage : Gtk.Box {
 
 		// --- Suprapack packages ---
 		var sp_installed = new GenericArray<string> ();
+		// Descriptions provided by suprapack itself (package name -> lore).
+		var sp_lore = new HashTable<string, string> (str_hash, str_equal);
 		MatchInfo match_info;
 		string output;
 		yield Utils.run_async_command ("suprapack search_supravim_plugin", out output);
@@ -171,6 +173,9 @@ public class PluginsPage : Gtk.Box {
 				var lore = match_info.fetch_named ("lore");
 				if (line.has_suffix ("[installed]"))
 					installed = true;
+
+				if (lore != null && lore != "")
+					sp_lore.insert (name, lore);
 
 				if (installed) {
 					sp_installed.add (name);
@@ -189,6 +194,10 @@ public class PluginsPage : Gtk.Box {
 				for (uint i = 0; i < sp_installed.length; i++)
 					if (sp_installed[i] == row.suprapack) { inst = true; break; }
 				row.set_installed (inst, row.suprapack);
+				// Prefer the description suprapack provides over the catalog one.
+				var lore = sp_lore.lookup (row.suprapack);
+				if (lore != null)
+					row.set_description (lore);
 			}
 			else {
 				string? name = null;

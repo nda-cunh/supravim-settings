@@ -36,8 +36,18 @@ template $RowPluginExternal: Adw.ActionRow {
 			state-set => $toggle_plugin_status();
 		}
 
-		Button {
+		Button pin_button {
+			valign: center;
+			Image {
+				icon-name: 'view-pin-symbolic';
+			}
+			clicked => $toggle_pin();
+		}
+
+		Button update_button {
+			valign: center;
 			tooltip-text: "Update this plugin";
+			visible: false;
 			Image {
 				icon-name: 'view-refresh-symbolic';
 			}

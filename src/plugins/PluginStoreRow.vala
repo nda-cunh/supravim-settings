@@ -1,7 +1,9 @@
 /**
- * A row in the "Plugin Store". It shows a catalog plugin (name, author,
- * description and category) and lets the user install it from its Git URL
- * with one click, or remove it again if it is already installed.
+ * A row in the unified "Plugin Store". It shows a catalog plugin and installs
+ * it with one click using the right backend, transparently:
+ *   - suprapack package  -> `suprapack install plugin-<name>` (with progress)
+ *   - git repository     -> Supravim.Plugin.add (url)
+ * Clicking the row body opens the plugin's repository page when known.
  */
 public class PluginStoreRow : Adw.ActionRow {
 
@@ -13,6 +15,12 @@ public class PluginStoreRow : Adw.ActionRow {
 	public string search_text;
 	// Repository URL, exposed so the page can match it against installed plugins.
 	public string url { get { return entry.url; } }
+	// Store category, exposed for the category filter.
+	public string category { get { return entry.category; } }
+	// True when this plugin is installed through suprapack rather than git.
+	public bool is_suprapack { get { return entry.suprapack != ""; } }
+	// suprapack package name (without the "plugin-" prefix), empty for git plugins.
+	public string suprapack { get { return entry.suprapack; } }
 
 	private CatalogEntry entry;
 	private bool installed = false;
@@ -26,10 +34,16 @@ public class PluginStoreRow : Adw.ActionRow {
 
 		base.title = entry.name;
 		base.subtitle = "by %s — %s".printf (entry.author, entry.description);
-		base.tooltip_text = entry.url;
 
-		search_text = "%s %s %s %s".printf (
-			entry.name, entry.author, entry.description, entry.category).down ();
+		// Clicking the row body opens the repository page (when we have a URL).
+		if (entry.url != "") {
+			base.tooltip_text = "Open %s".printf (entry.url);
+			base.activatable = true;
+			base.activated.connect (open_url);
+		}
+
+		search_text = "%s %s %s %s %s".printf (
+			entry.name, entry.author, entry.description, entry.category, entry.suprapack).down ();
 
 		var badge = new Gtk.Label (entry.category) {
 			valign = Gtk.Align.CENTER,
@@ -46,11 +60,17 @@ public class PluginStoreRow : Adw.ActionRow {
 		action_button.set_cursor_from_name ("pointer");
 		action_button.clicked.connect (on_action);
 
-		var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12) {
+		var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8) {
 			valign = Gtk.Align.CENTER,
 			margin_end = 10
 		};
 		box.append (badge);
+		if (is_suprapack) {
+			box.append (new Gtk.Label ("suprapack") {
+				valign = Gtk.Align.CENTER,
+				css_classes = {"plugin-suprapack"}
+			});
+		}
 		box.append (action_button);
 		base.add_suffix (box);
 
@@ -58,8 +78,9 @@ public class PluginStoreRow : Adw.ActionRow {
 	}
 
 	/**
-	 * Update the install/remove state of the row. When installed, the
-	 * plugin name is needed so it can be removed through libsupravim.
+	 * Update the install/remove state of the row. For git plugins, `name` is
+	 * the installed plugin name needed to remove it through libsupravim;
+	 * suprapack plugins use their package name directly.
 	 */
 	public void set_installed (bool value, string? name) {
 		installed = value;
@@ -80,7 +101,36 @@ public class PluginStoreRow : Adw.ActionRow {
 		}
 	}
 
+	// Open the plugin's repository page in the default browser.
+	private void open_url () {
+		try {
+			AppInfo.launch_default_for_uri (entry.url, null);
+		} catch (Error e) {
+			warning ("Could not open %s: %s", entry.url, e.message);
+		}
+	}
+
 	private void on_action () {
+		if (is_suprapack)
+			install_suprapack ();
+		else
+			install_git ();
+	}
+
+	// suprapack backend: run the package manager with a progress window.
+	private void install_suprapack () {
+		var window = base.get_root () as Gtk.Window;
+		var popup = new PluginsDownloadWindow (window);
+		var action = installed ? "uninstall" : "install";
+		var command = @"suprapack $action 'plugin-$(entry.suprapack)' --yes --simple-print";
+		popup.execute.begin (command, (obj, res) => {
+			popup.close ();
+			plugin_changed ();
+		});
+	}
+
+	// git backend: clone / remove through libsupravim.
+	private void install_git () {
 		var window = base.get_root () as Gtk.Window;
 		try {
 			if (installed && installed_name != null)

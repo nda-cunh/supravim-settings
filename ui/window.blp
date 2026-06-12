@@ -51,11 +51,7 @@ template $MainWindow: Adw.ApplicationWindow {
 				name: 'plugins';
 				title: 'Plugins';
 				icon-name: 'insert-object-symbolic';
-				child: ScrolledWindow {
-					Viewport {
-						$PluginsPage plugins_page { }
-					}
-				};
+				child: $PluginsPage plugins_page { };
 			}
 			
 

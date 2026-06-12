@@ -5,35 +5,38 @@ public class PluginsPage : Gtk.Box {
 	[GtkChild]
 	public unowned Gtk.SearchEntry search_entry;
 	[GtkChild]
+	public unowned Gtk.DropDown category_dropdown;
+	// Discover (one unified catalog)
+	[GtkChild]
 	public unowned Adw.PreferencesGroup store_group;
+	// Installed
 	[GtkChild]
 	public unowned Adw.PreferencesGroup external_group;
 	[GtkChild]
-	public unowned Adw.PreferencesGroup plugins_group;
+	public unowned Adw.PreferencesGroup suprapack_installed_group;
 
 	private List<PluginStoreRow> store_rows = new List<PluginStoreRow> ();
 	private List<RowPluginExternal> external_rows = new List<RowPluginExternal> ();
+	private List<PluginRow> suprapack_installed_rows = new List<PluginRow> ();
+
+	// Category names, index aligned with the dropdown model (index 0 = "All").
+	private string[] categories = {};
 
 	construct {
 		build_store ();
-		load_external.begin ();
-		load_plugins.begin ();
+		refresh.begin ();
 	}
 
-	/**
-	  * Open the "add a plugin from a Git URL" dialog.
-	  */
+	/* ----------------------------- Callbacks ----------------------------- */
+
 	[GtkCallback]
 	public void on_add_plugin () {
 		var parent = this.get_root () as Gtk.Window;
 		var dialog = new WindowAddPlugin (parent);
-		dialog.refresh.connect (() => load_external.begin ());
+		dialog.refresh.connect (() => refresh.begin ());
 		dialog.present ();
 	}
 
-	/**
-	  * Update every installed plugin at once.
-	  */
 	[GtkCallback]
 	public void on_update_all () {
 		try {
@@ -46,78 +49,117 @@ public class PluginsPage : Gtk.Box {
 			dialog.add_cancel_button ();
 			dialog.present ();
 		}
-		load_external.begin ();
+		refresh.begin ();
 	}
 
-	/**
-	  * Filter the store rows as the user types in the search entry.
-	  */
 	[GtkCallback]
 	public void on_search_changed () {
-		var query = search_entry.text.strip ().down ();
-		foreach (unowned var row in store_rows)
-			row.visible = (query == "" || row.search_text.contains (query));
+		apply_filter ();
 	}
 
-	/**
-	  * Build the store once from the embedded catalog. Rows are kept around
-	  * so the search filter and the installed-state can update them in place.
-	  */
+	[GtkCallback]
+	public void on_category_changed () {
+		apply_filter ();
+	}
+
+	/* ------------------------------ Filtering ---------------------------- */
+
+	private string? selected_category () {
+		var sel = category_dropdown.selected;
+		if (sel == 0 || sel >= categories.length)
+			return null; // "All categories"
+		return categories[sel];
+	}
+
+	private void apply_filter () {
+		var query = search_entry.text.strip ().down ();
+		var category = selected_category ();
+
+		uint visible = 0;
+		foreach (unowned var row in store_rows) {
+			bool match_cat = (category == null || row.category == category);
+			bool match_query = (query == "" || row.search_text.contains (query));
+			row.visible = match_cat && match_query;
+			if (row.visible)
+				visible++;
+		}
+
+		// Live count in the store header.
+		if (query == "" && category == null)
+			store_group.description = "%u plugins available — install in one click".printf (store_rows.length ());
+		else if (visible == 1)
+			store_group.description = "1 plugin found";
+		else
+			store_group.description = "%u plugins found".printf (visible);
+	}
+
+	/* -------------------------------- Store ------------------------------ */
+
 	private void build_store () {
-		foreach (unowned var entry in PluginCatalog.load ()) {
+		var entries = PluginCatalog.load ();
+
+		// Collect the distinct categories for the dropdown filter.
+		var found = new GenericArray<string> ();
+		foreach (unowned var entry in entries) {
+			bool seen = false;
+			for (uint i = 0; i < found.length; i++)
+				if (found[i] == entry.category) { seen = true; break; }
+			if (!seen)
+				found.add (entry.category);
+		}
+		found.sort ((a, b) => strcmp (a, b));
+
+		categories = new string[found.length + 1];
+		categories[0] = "All categories";
+		var model = new Gtk.StringList (null);
+		model.append ("All categories");
+		for (uint i = 0; i < found.length; i++) {
+			categories[i + 1] = found[i];
+			model.append (found[i]);
+		}
+		category_dropdown.model = model;
+
+		foreach (unowned var entry in entries) {
 			var row = new PluginStoreRow (entry);
-			row.plugin_changed.connect (() => load_external.begin ());
+			row.plugin_changed.connect (() => refresh.begin ());
 			store_rows.append (row);
 			store_group.add (row);
 		}
+
+		apply_filter ();
 	}
 
-	/**
-	  * Mark every store row as installed/not-installed by matching its URL
-	  * against the list of installed external plugins.
-	  */
-	private void refresh_store_state (List<Supravim.Plugin.PluginEntry> installed) {
-		foreach (unowned var row in store_rows) {
-			string? name = null;
-			foreach (unowned var plugin in installed) {
-				if (PluginCatalog.same_repo (plugin.url, row.url)) {
-					name = plugin.name;
-					break;
-				}
-			}
-			row.set_installed (name != null, name);
-		}
-	}
+	/* ------------------------------ Refresh ------------------------------ */
 
 	/**
-	  * Load the plugins installed from Git repositories and refresh the
-	  * store state accordingly.
+	  * Single source of truth: gather the installed state from both backends
+	  * (libsupravim git plugins + suprapack packages), update every store row
+	  * and rebuild the "Installed" view.
 	  */
-	private async void load_external () throws Error {
+	private async void refresh () throws Error {
+		// Reset the installed view.
 		foreach (unowned var row in external_rows)
 			external_group.remove (row);
+		foreach (unowned var row in suprapack_installed_rows)
+			suprapack_installed_group.remove (row);
 		external_rows = new List<RowPluginExternal> ();
+		suprapack_installed_rows = new List<PluginRow> ();
 
-		var plugins = Supravim.Plugin.get_all ();
-		foreach (var entry in plugins) {
-			var row = new RowPluginExternal (entry.name, entry.enabled ? "Enable" : "Disable");
-			row.refresh.connect (() => load_external.begin ());
+		// --- Git plugins (libsupravim) ---
+		var git_plugins = Supravim.Plugin.get_all ();
+		foreach (var entry in git_plugins) {
+			var row = new RowPluginExternal (entry.name, entry.enabled ? "Enable" : "Disable", entry.url);
+			row.refresh.connect (() => refresh.begin ());
 			external_rows.append (row);
 			external_group.add (row);
 		}
 
-		refresh_store_state (plugins);
-	}
-
-	/**
-	  * Load the official plugins available through Suprapack.
-	  */
-	private async void load_plugins () throws Error {
+		// --- Suprapack packages ---
+		var sp_installed = new GenericArray<string> ();
 		MatchInfo match_info;
 		string output;
 		yield Utils.run_async_command ("suprapack search_supravim_plugin", out output);
-		var lines = output.split ("\n");
-		foreach (unowned var line in lines) {
+		foreach (unowned var line in output.split ("\n")) {
 			bool installed = false;
 			if (line.has_prefix ("[installed] ")) {
 				installed = true;
@@ -129,9 +171,38 @@ public class PluginsPage : Gtk.Box {
 				var lore = match_info.fetch_named ("lore");
 				if (line.has_suffix ("[installed]"))
 					installed = true;
-				plugins_group.add (new PluginRow (name, version, lore, installed));
+
+				if (installed) {
+					sp_installed.add (name);
+					var irow = new PluginRow (name, version, lore, true);
+					irow.plugin_changed.connect (() => refresh.begin ());
+					suprapack_installed_rows.append (irow);
+					suprapack_installed_group.add (irow);
+				}
 			}
 		}
+
+		// --- Update the unified store rows from both backends ---
+		foreach (unowned var row in store_rows) {
+			if (row.is_suprapack) {
+				bool inst = false;
+				for (uint i = 0; i < sp_installed.length; i++)
+					if (sp_installed[i] == row.suprapack) { inst = true; break; }
+				row.set_installed (inst, row.suprapack);
+			}
+			else {
+				string? name = null;
+				foreach (unowned var plugin in git_plugins) {
+					if (PluginCatalog.same_repo (plugin.url, row.url)) {
+						name = plugin.name;
+						break;
+					}
+				}
+				row.set_installed (name != null, name);
+			}
+		}
+
+		apply_filter ();
 	}
 
 	/**

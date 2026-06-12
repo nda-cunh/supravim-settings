@@ -5,7 +5,8 @@ public class CatalogEntry : Object {
 	public string name;
 	public string author;
 	public string category;
-	public string url;
+	public string url;          // git repository (empty for suprapack-only entries)
+	public string suprapack;    // suprapack package name (empty for git-only entries)
 	public string description;
 }
 
@@ -42,9 +43,10 @@ namespace PluginCatalog {
 				entry.author      = member (obj, "author", "");
 				entry.category    = member (obj, "category", "Misc");
 				entry.url         = member (obj, "url", "");
+				entry.suprapack   = member (obj, "suprapack", "");
 				entry.description = member (obj, "description", "");
 
-				if (entry.url != "")
+				if (entry.url != "" || entry.suprapack != "")
 					entries.append (entry);
 			}
 		}

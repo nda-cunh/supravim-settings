@@ -1,9 +1,15 @@
 public class PluginRow : Adw.ActionRow {
+	// Emitted after an install / uninstall completes so the page can reload.
+	public signal void plugin_changed ();
+	// Lowercased haystack used by the search filter.
+	public string search_text;
+
 	public PluginRow (owned string name, owned string version, owned string lore, bool installed) {
 		this._name = name;
-		this._version = version; 
+		this._version = version;
 		base.title = _name;
 		this._installed = installed;
+		this.search_text = (name + " " + lore).down ();
 
 		init_object ();
 
@@ -28,6 +34,7 @@ public class PluginRow : Adw.ActionRow {
 				if (popup.execute.end(res) == 0)
 					_installed = false;
 				refresh_css ();
+				plugin_changed ();
 			});
 		}
 		else {
@@ -36,6 +43,7 @@ public class PluginRow : Adw.ActionRow {
 				if (popup.execute.end(res) == 0)
 					_installed = true;
 				refresh_css ();
+				plugin_changed ();
 			});
 		}
 	}

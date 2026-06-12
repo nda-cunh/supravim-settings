@@ -2,6 +2,7 @@
 public class RowPluginExternal : Adw.ActionRow {
 	// Private Members
 	private string pl_name;
+	private string pl_url;
 	[GtkChild]
 	public unowned Gtk.Switch status;
 
@@ -9,8 +10,9 @@ public class RowPluginExternal : Adw.ActionRow {
 	public signal void refresh();
 
 	// Constructor
-	public RowPluginExternal (string name, string status) {
+	public RowPluginExternal (string name, string status, string url = "") {
 		this.pl_name = name;
+		this.pl_url = url;
 		base.title = name;
 		base.subtitle = "External Plugin";
 
@@ -18,6 +20,19 @@ public class RowPluginExternal : Adw.ActionRow {
 			this.status.set_active (true);
 		else
 			this.status.set_active (false);
+
+		// Clicking the row (not its buttons) opens the repository page.
+		if (url != "") {
+			base.tooltip_text = "Open %s".printf (url);
+			base.activatable = true;
+			base.activated.connect (() => {
+				try {
+					AppInfo.launch_default_for_uri (pl_url, null);
+				} catch (Error e) {
+					warning ("Could not open %s: %s", pl_url, e.message);
+				}
+			});
+		}
 	}
 
 	// Callbacks

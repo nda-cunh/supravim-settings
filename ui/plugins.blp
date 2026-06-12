@@ -4,57 +4,100 @@ using Adw 1;
 
 template $PluginsPage: Gtk.Box {
 	orientation: vertical;
-	spacing: 5;
 
-	// Search bar + "add from URL" button
-	Box {
-		margin-start: 30;
-		margin-end: 30;
-		margin-top: 20;
-		spacing: 10;
-
-		SearchEntry search_entry {
-			hexpand: true;
-			placeholder-text: "Search the plugin store…";
-			search-changed => $on_search_changed();
-		}
-
-		Button btn_add_plugin {
-			icon-name: 'list-add-symbolic';
-			tooltip-text: "Add a plugin from a GitHub / GitLab URL";
-			width-request: 42;
-			styles ['suggested-action']
-			clicked => $on_add_plugin();
-		}
+	// Segmented switcher: Discover / Installed
+	Adw.ViewSwitcher {
+		policy: wide;
+		stack: inner_stack;
+		halign: center;
+		margin-top: 14;
+		margin-bottom: 4;
 	}
 
-	Adw.PreferencesPage  {
-		Adw.PreferencesGroup store_group {
-			styles ['PreferencesGroup']
-			title: 'Plugin Store';
-			description: 'Browse and install popular Vim plugins in one click';
-		}
+	Adw.ViewStack inner_stack {
+		vexpand: true;
 
-		Adw.PreferencesGroup external_group {
-			styles ['PreferencesGroup']
-			title: 'Installed Plugins';
-			description: 'Plugins installed from Git repositories — update, toggle or remove them';
-			header-suffix: Gtk.Button btn_update_all {
-				valign: center;
-				tooltip-text: "Update all installed plugins";
-				clicked => $on_update_all();
+		// ---------------- Discover ----------------
+		Adw.ViewStackPage {
+			name: 'discover';
+			title: 'Discover';
+			icon-name: 'system-search-symbolic';
+			child: Box {
+				orientation: vertical;
 
-				Adw.ButtonContent {
-					icon-name: 'view-refresh-symbolic';
-					label: "Update all";
+				// Fixed toolbar: search + category filter + add by URL
+				Box {
+					margin-start: 30;
+					margin-end: 30;
+					margin-top: 12;
+					margin-bottom: 4;
+					spacing: 10;
+
+					SearchEntry search_entry {
+						hexpand: true;
+						placeholder-text: "Search plugins…";
+						search-changed => $on_search_changed();
+					}
+
+					DropDown category_dropdown {
+						tooltip-text: "Filter by category";
+						notify::selected => $on_category_changed();
+					}
+
+					Button btn_add_plugin {
+						icon-name: 'list-add-symbolic';
+						tooltip-text: "Add a plugin from a GitHub / GitLab URL";
+						styles ['suggested-action']
+						clicked => $on_add_plugin();
+					}
+				}
+
+				ScrolledWindow {
+					vexpand: true;
+
+					Adw.PreferencesPage {
+						Adw.PreferencesGroup store_group {
+							styles ['PreferencesGroup']
+							title: 'Plugin Store';
+							description: 'Curated Vim plugins — install in one click';
+						}
+					}
 				}
 			};
 		}
 
-		Adw.PreferencesGroup plugins_group {
-			styles ['PreferencesGroup']
-			title: 'Suprapack Plugins';
-			description: 'Official Supravim plugins available through Suprapack';
+		// ---------------- Installed ----------------
+		Adw.ViewStackPage {
+			name: 'installed';
+			title: 'Installed';
+			icon-name: 'object-select-symbolic';
+			child: ScrolledWindow {
+				vexpand: true;
+
+				Adw.PreferencesPage {
+					Adw.PreferencesGroup external_group {
+						styles ['PreferencesGroup']
+						title: 'Git Plugins';
+						description: 'Plugins installed from Git repositories — update, toggle or remove them';
+						header-suffix: Gtk.Button btn_update_all {
+							valign: center;
+							tooltip-text: "Update all Git plugins";
+							clicked => $on_update_all();
+
+							Adw.ButtonContent {
+								icon-name: 'view-refresh-symbolic';
+								label: "Update all";
+							}
+						};
+					}
+
+					Adw.PreferencesGroup suprapack_installed_group {
+						styles ['PreferencesGroup']
+						title: 'Suprapack Plugins';
+						description: 'Official plugins currently installed';
+					}
+				}
+			};
 		}
 	}
 }

@@ -3,23 +3,38 @@ using Adw 1;
 
 template $OptionsPage: Gtk.Box {
 	orientation: vertical;
-	spacing: 5;
 
-	Gtk.SearchBar search_bar {
-		// Permet d'afficher la barre par défaut
-		search-mode-enabled: true;
+	Box {
+		margin-start: 30;
+		margin-end: 30;
+		margin-top: 14;
+		margin-bottom: 4;
+		spacing: 10;
 
-		child: Gtk.SearchEntry search_entry {
-			placeholder-text: 'Search for an option...';
-			// search-changed => $search();
-		};
+		SearchEntry search_entry {
+			hexpand: true;
+			placeholder-text: "Search options…";
+			search-changed => $on_search_changed();
+		}
+
+		DropDown type_dropdown {
+			tooltip-text: "Filter by type";
+			model: StringList {
+				strings ["All types", "Boolean", "Number", "String"]
+			};
+			notify::selected => $on_type_changed();
+		}
 	}
 
-	Adw.PreferencesPage  {
-		Adw.PreferencesGroup options_group {
-			styles ['PreferencesGroup']
-			title: 'General Options';
-			description: 'Enable and disable some general options !';
+	ScrolledWindow {
+		vexpand: true;
+
+		Adw.PreferencesPage {
+			Adw.PreferencesGroup options_group {
+				styles ['PreferencesGroup']
+				title: 'Options';
+				description: 'Configure Supravim behaviour';
+			}
 		}
 	}
 }

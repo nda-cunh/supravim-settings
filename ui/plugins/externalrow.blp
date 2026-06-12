@@ -30,10 +30,18 @@ Adw.Window uninstall_window {
 template $RowPluginExternal: Adw.ActionRow {
 	[suffix]
 	Box {
-		Switch status { 
+		Switch status {
 			valign: center;
 			margin-end: 10;
 			state-set => $toggle_plugin_status();
+		}
+
+		Button {
+			tooltip-text: "Update this plugin";
+			Image {
+				icon-name: 'view-refresh-symbolic';
+			}
+			clicked => $update_plugin();
 		}
 
 		Button {

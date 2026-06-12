@@ -6,22 +6,55 @@ template $PluginsPage: Gtk.Box {
 	orientation: vertical;
 	spacing: 5;
 
+	// Search bar + "add from URL" button
+	Box {
+		margin-start: 30;
+		margin-end: 30;
+		margin-top: 20;
+		spacing: 10;
+
+		SearchEntry search_entry {
+			hexpand: true;
+			placeholder-text: "Search the plugin store…";
+			search-changed => $on_search_changed();
+		}
+
+		Button btn_add_plugin {
+			icon-name: 'list-add-symbolic';
+			tooltip-text: "Add a plugin from a GitHub / GitLab URL";
+			width-request: 42;
+			styles ['suggested-action']
+			clicked => $on_add_plugin();
+		}
+	}
+
 	Adw.PreferencesPage  {
+		Adw.PreferencesGroup store_group {
+			styles ['PreferencesGroup']
+			title: 'Plugin Store';
+			description: 'Browse and install popular Vim plugins in one click';
+		}
+
 		Adw.PreferencesGroup external_group {
 			styles ['PreferencesGroup']
-			title: 'External Plugins';
-			description: 'Install external plugins from git repositories';
-			header-suffix: Gtk.Button btn_add_plugin {
-				icon-name: 'list-add-symbolic';
-				width-request: 42;
-				height-request: 42;
+			title: 'Installed Plugins';
+			description: 'Plugins installed from Git repositories — update, toggle or remove them';
+			header-suffix: Gtk.Button btn_update_all {
+				valign: center;
+				tooltip-text: "Update all installed plugins";
+				clicked => $on_update_all();
+
+				Adw.ButtonContent {
+					icon-name: 'view-refresh-symbolic';
+					label: "Update all";
+				}
 			};
 		}
 
 		Adw.PreferencesGroup plugins_group {
 			styles ['PreferencesGroup']
 			title: 'Suprapack Plugins';
-			description: 'You can install some plugins for supravim :)';
+			description: 'Official Supravim plugins available through Suprapack';
 		}
-	}	
+	}
 }

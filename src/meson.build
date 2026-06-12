@@ -16,6 +16,7 @@ deps = [
   dependency('gtk4'),
   dependency('libadwaita-1'),
   dependency('gtk4-markdown'),
+  dependency('yyjson', static: true),
   cc.find_library('m'),
 ]
 
@@ -23,7 +24,7 @@ executable('supravim-gui',
   srcs,
   asresources,
   c_args: '-w',
-  vala_args: supravim_vala_args,
+  vala_args: supravim_vala_args + ['--pkg=yyjson'],
   dependencies: [deps, supravim_dep],
   install: true
 )

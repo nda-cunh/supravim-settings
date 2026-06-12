@@ -35,6 +35,19 @@ public class RowPluginExternal : Adw.ActionRow {
 	}
 
 	[GtkCallback]
+	public void update_plugin () {
+		try {
+			Supravim.Plugin.update (pl_name);
+		} catch (Error e) {
+			var dialog = new DialogPopup (this.get_root () as Gtk.Window,
+				"Error Updating Plugin",
+				Utils.remove_color (e.message));
+			dialog.add_cancel_button ();
+			dialog.present ();
+		}
+	}
+
+	[GtkCallback]
 	public void show_uninstall_window() {
 		var parent = this.get_root() as Gtk.Window;
 		var dialog = new WindowRemovePlugin (parent, pl_name);

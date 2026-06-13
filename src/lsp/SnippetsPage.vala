@@ -60,7 +60,8 @@ public class SnippetsPage : Gtk.Box {
 		var dialog = new AddSnippetFiletypeDialog (parent, user_snip_dir);
 		dialog.saved.connect ((ft, path) => {
 			refresh ();
-			var editor = new SnippetEditorDialog (get_root () as Gtk.Window, ft, path);
+			var editor = new SnippetItemEditDialog (
+				get_root () as Gtk.Window, "", "", "", "", path, ft);
 			editor.saved.connect (() => refresh ());
 			editor.present ();
 		});
@@ -108,6 +109,50 @@ public class SnippetsPage : Gtk.Box {
 		} catch {}
 	}
 
+	/* ---- Delete one snippet from its JSON file ---- */
+
+	private void delete_snippet (string path, string name) {
+		string content;
+		try {
+			FileUtils.get_contents (path, out content);
+		} catch { return; }
+
+		var doc = YYJson.Doc.read (content, content.length);
+		if (doc == null) return;
+		unowned YYJson.Value root = doc.get_root ();
+		if (root == null || root.get_type () != YYJson.Type.OBJ) return;
+
+		var sb = new StringBuilder ("{\n");
+		bool first = true;
+
+		YYJson.ObjIter iter;
+		if (YYJson.ObjIter.init (root, out iter)) {
+			unowned YYJson.Value? key;
+			while ((key = iter.next ()) != null) {
+				string sname = key.get_str () ?? "";
+				if (sname == name) continue;
+				unowned YYJson.Value? val = YYJson.ObjIter.get_val (key);
+				if (val == null) continue;
+
+				if (!first) sb.append (",\n");
+				first = false;
+
+				string e_desc   = SnippetItemEditDialog.json_obj_str (val, "description");
+				string e_prefix = SnippetItemEditDialog.json_build_prefix (val);
+				string e_body   = SnippetItemEditDialog.json_build_body (val);
+				SnippetItemEditDialog.append_snippet_json (sb, sname, e_prefix, e_desc, e_body);
+			}
+		}
+
+		sb.append ("\n}\n");
+
+		try {
+			FileUtils.set_contents (path, sb.str);
+		} catch { return; }
+
+		refresh ();
+	}
+
 	/* ---- Build one ExpanderRow per filetype ---- */
 
 	private FiletypeData build_expander (string filetype, string path,
@@ -140,22 +185,40 @@ public class SnippetsPage : Gtk.Box {
 				row.add_suffix (badge);
 			}
 
-			// ">" arrow to hint the row is clickable
-			row.add_suffix (new Gtk.Image () {
-				icon_name = "go-next-symbolic",
-				halign    = Gtk.Align.CENTER,
-				valign    = Gtk.Align.CENTER,
-			});
-
-			// Open body preview on click
 			var cap_name     = s.name;
+			var cap_prefix   = s.prefix;
+			var cap_desc     = s.description;
 			var cap_body     = s.body;
 			var cap_filetype = filetype;
+			var cap_path     = path;
+
+			if (!is_system) {
+				var del_btn = new Gtk.Button () {
+					icon_name    = "user-trash-symbolic",
+					tooltip_text = "Delete this snippet",
+					halign       = Gtk.Align.CENTER,
+					valign       = Gtk.Align.CENTER,
+					cursor       = new Gdk.Cursor.from_name ("pointer", null),
+				};
+				del_btn.add_css_class ("flat");
+				del_btn.add_css_class ("destructive-action");
+				del_btn.clicked.connect (() => delete_snippet (cap_path, cap_name));
+				row.add_suffix (del_btn);
+			}
+
 			row.activated.connect (() => {
-				var popup = new SnippetDetailDialog (
-					get_root () as Gtk.Window,
-					cap_name, cap_filetype, cap_body, is_system);
-				popup.present ();
+				if (is_system) {
+					var popup = new SnippetDetailDialog (
+						get_root () as Gtk.Window,
+						cap_name, cap_filetype, cap_body, true);
+					popup.present ();
+				} else {
+					var popup = new SnippetItemEditDialog (
+						get_root () as Gtk.Window,
+						cap_name, cap_prefix, cap_desc, cap_body, cap_path);
+					popup.saved.connect (() => refresh ());
+					popup.present ();
+				}
 			});
 
 			expander.add_row (row);
@@ -177,6 +240,22 @@ public class SnippetsPage : Gtk.Box {
 		} else {
 			var cap_ft   = filetype;
 			var cap_path = path;
+
+			var add_btn = new Gtk.Button () {
+				icon_name    = "list-add-symbolic",
+				tooltip_text = "Add a snippet",
+				halign       = Gtk.Align.CENTER,
+				valign       = Gtk.Align.CENTER,
+				cursor       = new Gdk.Cursor.from_name ("pointer", null),
+			};
+			add_btn.add_css_class ("flat");
+			add_btn.clicked.connect (() => {
+				var dialog = new SnippetItemEditDialog (
+					get_root () as Gtk.Window, "", "", "", "", cap_path, cap_ft);
+				dialog.saved.connect (() => refresh ());
+				dialog.present ();
+			});
+			expander.add_action (add_btn);
 
 			var edit_btn = new Gtk.Button () {
 				icon_name    = "document-edit-symbolic",
@@ -312,6 +391,270 @@ public class SnippetsPage : Gtk.Box {
 		public SnippetData (Adw.ActionRow r, string name, string desc, string prefix) {
 			row        = r;
 			search_key = (name + " " + desc + " " + prefix).down ();
+		}
+	}
+
+	/* ================================================================== */
+	/*  Dialog: edit a single snippet (name, prefix, desc, body)           */
+	/* ================================================================== */
+
+	public class SnippetItemEditDialog : DialogPopup {
+		public signal void saved ();
+
+		private Gtk.Entry  name_entry;
+		private Gtk.Entry  prefix_entry;
+		private Gtk.Entry  desc_entry;
+		private Gtk.TextView body_view;
+		private string       file_path;
+		private string       original_name;
+
+		public SnippetItemEditDialog (Gtk.Window parent,
+		                              string name, string prefix,
+		                              string description, string body,
+		                              string path, string filetype = "") {
+			base (parent, name == "" ? "New Snippet" : "Edit Snippet",
+			      filetype != "" ? filetype : null);
+			file_path     = path;
+			original_name = name;
+
+			set_default_size (620, 540);
+
+			name_entry = new Gtk.Entry () {
+				placeholder_text = "Snippet name",
+				hexpand          = true,
+				text             = name,
+			};
+			prefix_entry = new Gtk.Entry () {
+				placeholder_text = "Prefix (e.g. fn, for, if)",
+				hexpand          = true,
+				text             = prefix,
+			};
+			desc_entry = new Gtk.Entry () {
+				placeholder_text = "Description",
+				hexpand          = true,
+				text             = description,
+			};
+
+			var fields = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+
+			var lbl_name = new Gtk.Label ("Name") {
+				halign = Gtk.Align.START, width_chars = 12, xalign = 0.0f,
+			};
+			lbl_name.add_css_class ("dim-label");
+			var row_name = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8);
+			row_name.append (lbl_name);
+			row_name.append (name_entry);
+			fields.append (row_name);
+
+			var lbl_prefix = new Gtk.Label ("Prefix") {
+				halign = Gtk.Align.START, width_chars = 12, xalign = 0.0f,
+			};
+			lbl_prefix.add_css_class ("dim-label");
+			var row_prefix = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8);
+			row_prefix.append (lbl_prefix);
+			row_prefix.append (prefix_entry);
+			fields.append (row_prefix);
+
+			var lbl_desc = new Gtk.Label ("Description") {
+				halign = Gtk.Align.START, width_chars = 12, xalign = 0.0f,
+			};
+			lbl_desc.add_css_class ("dim-label");
+			var row_desc = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8);
+			row_desc.append (lbl_desc);
+			row_desc.append (desc_entry);
+			fields.append (row_desc);
+
+			base.box_main.append (fields);
+
+			var body_label = new Gtk.Label ("Body") {
+				halign        = Gtk.Align.START,
+				margin_top    = 4,
+				margin_bottom = 2,
+			};
+			body_label.add_css_class ("heading");
+			base.box_main.append (body_label);
+
+			var scrolled = new Gtk.ScrolledWindow () {
+				vexpand        = true,
+				hexpand        = true,
+				height_request = 220,
+			};
+			body_view = new Gtk.TextView () {
+				monospace     = true,
+				left_margin   = 10,
+				right_margin  = 10,
+				top_margin    = 8,
+				bottom_margin = 8,
+				wrap_mode     = Gtk.WrapMode.NONE,
+			};
+			body_view.buffer.set_text (body, -1);
+			scrolled.set_child (body_view);
+			base.box_main.append (scrolled);
+
+			var save_btn = new Gtk.Button.with_label ("Save") {
+				css_classes = {"suggested-action", "button_popup"},
+			};
+			save_btn.clicked.connect (() => do_save ());
+			base.box_buttons.append (save_btn);
+			add_cancel_button ();
+		}
+
+		private void do_save () {
+			var new_name   = name_entry.text.strip ();
+			var new_prefix = prefix_entry.text.strip ();
+			var new_desc   = desc_entry.text.strip ();
+
+			Gtk.TextIter start, end;
+			body_view.buffer.get_bounds (out start, out end);
+			var new_body = body_view.buffer.get_text (start, end, false);
+
+			if (new_name == "") {
+				set_subtitle_label ("Name cannot be empty.");
+				return;
+			}
+
+			string content;
+			try {
+				FileUtils.get_contents (file_path, out content);
+			} catch {
+				set_subtitle_label ("Could not read file.");
+				return;
+			}
+
+			var doc = YYJson.Doc.read (content, content.length);
+			if (doc == null) {
+				set_subtitle_label ("Invalid JSON in file.");
+				return;
+			}
+
+			unowned YYJson.Value root = doc.get_root ();
+			if (root == null || root.get_type () != YYJson.Type.OBJ) {
+				set_subtitle_label ("Unexpected JSON structure.");
+				return;
+			}
+
+			var sb = new StringBuilder ("{\n");
+			bool first = true;
+
+			YYJson.ObjIter iter;
+			if (YYJson.ObjIter.init (root, out iter)) {
+				unowned YYJson.Value? key;
+				while ((key = iter.next ()) != null) {
+					string sname = key.get_str () ?? "";
+					unowned YYJson.Value? val = YYJson.ObjIter.get_val (key);
+					if (val == null) continue;
+
+					if (!first) sb.append (",\n");
+					first = false;
+
+					if (original_name != "" && sname == original_name) {
+						append_snippet_json (sb, new_name, new_prefix, new_desc, new_body);
+					} else {
+						string e_desc   = json_obj_str (val, "description");
+						string e_prefix = json_build_prefix (val);
+						string e_body   = json_build_body (val);
+						append_snippet_json (sb, sname, e_prefix, e_desc, e_body);
+					}
+				}
+			}
+
+			// New snippet (original_name == "") → append at end
+			if (original_name == "") {
+				if (!first) sb.append (",\n");
+				append_snippet_json (sb, new_name, new_prefix, new_desc, new_body);
+			}
+
+			sb.append ("\n}\n");
+
+			try {
+				FileUtils.set_contents (file_path, sb.str);
+				saved ();
+				close ();
+			} catch (Error err) {
+				set_subtitle_label ("Error saving: " + err.message);
+			}
+		}
+
+		internal static string json_escape (string s) {
+			var sb = new StringBuilder ();
+			unichar c;
+			int i = 0;
+			while (s.get_next_char (ref i, out c)) {
+				switch (c) {
+				case '"':  sb.append ("\\\""); break;
+				case '\\': sb.append ("\\\\"); break;
+				case '\n': sb.append ("\\n");  break;
+				case '\r': sb.append ("\\r");  break;
+				case '\t': sb.append ("\\t");  break;
+				default:   sb.append_unichar (c); break;
+				}
+			}
+			return sb.str;
+		}
+
+		internal static void append_snippet_json (StringBuilder sb,
+		                                         string name, string prefix,
+		                                         string description, string body) {
+			sb.append ("  \"%s\": {\n".printf (json_escape (name)));
+			sb.append ("    \"description\": \"%s\",\n".printf (json_escape (description)));
+			if (prefix == "") {
+				sb.append ("    \"prefix\": \"\",\n");
+			} else if (prefix.contains (",")) {
+				var parts = prefix.split (",");
+				sb.append ("    \"prefix\": [");
+				bool f = true;
+				foreach (unowned string p in parts) {
+					if (!f) sb.append (", ");
+					sb.append ("\"%s\"".printf (json_escape (p.strip ())));
+					f = false;
+				}
+				sb.append ("],\n");
+			} else {
+				sb.append ("    \"prefix\": \"%s\",\n".printf (json_escape (prefix)));
+			}
+			var lines = body.split ("\n");
+			sb.append ("    \"body\": [\n");
+			for (int li = 0; li < lines.length; li++) {
+				sb.append ("      \"%s\"".printf (json_escape (lines[li])));
+				if (li < lines.length - 1) sb.append (",");
+				sb.append ("\n");
+			}
+			sb.append ("    ]\n");
+			sb.append ("  }");
+		}
+
+		internal static string json_obj_str (YYJson.Value obj, string key) {
+			unowned YYJson.Value? v = obj.obj_get (key);
+			if (v == null) return "";
+			return v.get_str () ?? "";
+		}
+
+		internal static string json_build_prefix (YYJson.Value snippet_obj) {
+			unowned YYJson.Value? pv = snippet_obj.obj_get ("prefix");
+			if (pv == null) return "";
+			if (pv.get_type () == YYJson.Type.STR)
+				return pv.get_str () ?? "";
+			if (pv.get_type () != YYJson.Type.ARR) return "";
+			var parts = new GenericArray<string> ();
+			for (size_t i = 0; i < pv.arr_size (); i++) {
+				unowned YYJson.Value? p = pv.arr_get (i);
+				if (p != null) parts.add (p.get_str () ?? "");
+			}
+			return string.joinv (", ", parts.data);
+		}
+
+		internal static string json_build_body (YYJson.Value snippet_obj) {
+			unowned YYJson.Value? bv = snippet_obj.obj_get ("body");
+			if (bv == null) return "";
+			if (bv.get_type () == YYJson.Type.STR)
+				return bv.get_str () ?? "";
+			if (bv.get_type () != YYJson.Type.ARR) return "";
+			var lines = new GenericArray<string> ();
+			for (size_t i = 0; i < bv.arr_size (); i++) {
+				unowned YYJson.Value? l = bv.arr_get (i);
+				if (l != null) lines.add (l.get_str () ?? "");
+			}
+			return string.joinv ("\n", lines.data);
 		}
 	}
 

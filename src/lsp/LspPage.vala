@@ -89,8 +89,6 @@ public class LspPage : Gtk.Box {
 		private Gtk.Entry name_entry;
 		private Gtk.Entry cmd_entry;
 		private Gtk.Entry ft_entry;
-		private Gtk.Entry test_entry;
-		private Gtk.Entry hint_entry;
 		private string    save_dir;
 
 		public AddLspDialog (Gtk.Window parent, string dir) {
@@ -102,14 +100,10 @@ public class LspPage : Gtk.Box {
 			name_entry = make_entry ("e.g. my-lsp");
 			cmd_entry  = make_entry ("e.g. my-lsp-server");
 			ft_entry   = make_entry ("e.g. python,go");
-			test_entry = make_entry ("e.g. my-lsp-server --version  (optional)");
-			hint_entry = make_entry ("e.g. suprapack add my-lsp --yes  (optional)");
 
 			base.box_main.append (make_row ("Name",         name_entry));
 			base.box_main.append (make_row ("Command",      cmd_entry));
 			base.box_main.append (make_row ("Filetypes",    ft_entry));
-			base.box_main.append (make_row ("Test command", test_entry));
-			base.box_main.append (make_row ("Install hint", hint_entry));
 
 			var save_btn = new Gtk.Button.with_label ("Save") {
 				css_classes = {"suggested-action", "button_popup"},
@@ -155,8 +149,8 @@ public class LspPage : Gtk.Box {
 			e.name         = nm;
 			e.command      = cm;
 			e.allowed      = ft;
-			e.test_command = test_entry.text.strip ();
-			e.command_help = hint_entry.text.strip ();
+			e.test_command = "";
+			e.command_help = "";
 			e.is_system    = false;
 			e.file_path    = save_dir + "/" + nm + ".json";
 			try {

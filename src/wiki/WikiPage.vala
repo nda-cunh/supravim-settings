@@ -29,7 +29,6 @@ public class Wiki : Gtk.Box {
 		};
 		markdown.activate_link.connect (click_link);
 		markdown_box.append(markdown);
-		markdown.path_dir = basename;
 		try {
 			load_sidebar();
 		}

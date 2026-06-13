@@ -16,6 +16,10 @@ public class MainWindow : Adw.ApplicationWindow {
 	[GtkChild]
 	public unowned OptionsPage options_page;
 	[GtkChild]
+	public unowned LspPage lsp_page;
+	[GtkChild]
+	public unowned SnippetsPage snippets_page;
+	[GtkChild]
 	public unowned HomePage home_page;
 	[GtkChild]
 	public unowned PluginsPage plugins_page;

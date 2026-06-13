@@ -1,0 +1,43 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $LspPage: Gtk.Box {
+	orientation: vertical;
+
+	Box {
+		margin-start: 30;
+		margin-end: 30;
+		margin-top: 12;
+		margin-bottom: 4;
+		spacing: 10;
+
+		SearchEntry lsp_search {
+			hexpand: true;
+			placeholder-text: "Search language servers…";
+			search-changed => $on_lsp_search_changed();
+		}
+
+		Button {
+			icon-name: 'list-add-symbolic';
+			tooltip-text: "Add a custom LSP";
+			styles ['suggested-action']
+			clicked => $on_add_lsp();
+		}
+	}
+
+	ScrolledWindow {
+		vexpand: true;
+
+		Adw.PreferencesPage {
+			Adw.PreferencesGroup user_lsp_group {
+				title: 'User LSPs';
+				description: 'Custom language servers — ~/.config/supravim/lsp.d/';
+			}
+
+			Adw.PreferencesGroup system_lsp_group {
+				title: 'System LSPs';
+				description: 'Built-in language servers (read-only)';
+			}
+		}
+	}
+}

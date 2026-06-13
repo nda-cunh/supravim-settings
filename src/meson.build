@@ -8,6 +8,7 @@ subdir('options')
 subdir('plugins')
 subdir('popup')
 subdir('wiki')
+subdir('lsp')
 subdir('utils')
 
 cc = meson.get_compiler('c')
@@ -15,7 +16,7 @@ cc = meson.get_compiler('c')
 deps = [
   dependency('gtk4'),
   dependency('libadwaita-1'),
-  dependency('gtk4-markdown'),
+  dependency('gtk4-markdown', static: true),
   dependency('yyjson', static: true),
   cc.find_library('m'),
 ]

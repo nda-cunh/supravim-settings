@@ -55,6 +55,23 @@ template $MainWindow: Adw.ApplicationWindow {
 			}
 			
 
+			// LSP Page
+			Adw.ViewStackPage {
+				name: 'lsp';
+				icon-name: 'utilities-terminal-symbolic';
+				title: 'LSP';
+				child: $LspPage lsp_page { };
+			}
+
+			// Snippets Page
+			Adw.ViewStackPage {
+				name: 'snippets';
+				icon-name: 'document-edit-symbolic';
+				title: 'Snippets';
+				child: $SnippetsPage snippets_page { };
+			}
+
+
 			// Wiki Page
 			Adw.ViewStackPage wiki_page{
 				name: 'wiki';

@@ -1,0 +1,46 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $SnippetsPage: Gtk.Box {
+	orientation: vertical;
+
+	Box {
+		margin-start: 30;
+		margin-end: 30;
+		margin-top: 12;
+		margin-bottom: 4;
+		spacing: 10;
+
+		SearchEntry snippets_search {
+			hexpand: true;
+			placeholder-text: "Search snippets…";
+			search-changed => $on_search_changed();
+		}
+	}
+
+	ScrolledWindow {
+		vexpand: true;
+
+		Adw.PreferencesPage {
+			Adw.PreferencesGroup user_snippets_group {
+				title: 'User Snippets';
+				description: 'Custom snippets per filetype — ~/.config/supravim/snippets/';
+				header-suffix: Button {
+					valign: center;
+					tooltip-text: "Add snippets for a new filetype";
+					clicked => $on_add_snippet();
+
+					Adw.ButtonContent {
+						icon-name: 'list-add-symbolic';
+						label: "New filetype";
+					}
+				};
+			}
+
+			Adw.PreferencesGroup system_snippets_group {
+				title: 'System Snippets';
+				description: 'Built-in snippets (read-only)';
+			}
+		}
+	}
+}

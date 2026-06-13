@@ -1,5 +1,5 @@
 project('supravim-gui', ['c', 'vala'],
-  version : '1.21',
+  version : '1.22',
   default_options : ['warning_level=0', 'optimization=2'])
 
 add_project_arguments('--enable-experimental', language: 'vala')
@@ -18,6 +18,8 @@ srcs_blueprint = files(
   'ui/wiki.blp',
   'ui/options.blp',
   'ui/plugins.blp',
+  'ui/lsp.blp',
+  'ui/snippets.blp',
   'ui/theme.blp',
   'ui/homepage.blp',
   'ui/DialogPopup.blp',

@@ -13,7 +13,16 @@ public class LspPage : Gtk.Box {
 	private static string system_lsp_dir =
 		Environment.get_home_dir () + "/.local/share/supravim/lsp.d";
 
+	private bool loaded = false;
+
 	construct {
+	}
+
+	/** Build the page content the first time it becomes visible. */
+	public void ensure_loaded () {
+		if (loaded)
+			return;
+		loaded = true;
 		refresh ();
 	}
 

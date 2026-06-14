@@ -14,7 +14,16 @@ public class SnippetsPage : Gtk.Box {
 	private static string system_snip_dir =
 		Environment.get_home_dir () + "/.local/share/supravim/data/snippets";
 
+	private bool loaded = false;
+
 	construct {
+	}
+
+	/** Build the page content the first time it becomes visible. */
+	public void ensure_loaded () {
+		if (loaded)
+			return;
+		loaded = true;
 		refresh ();
 	}
 

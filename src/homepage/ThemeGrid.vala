@@ -28,7 +28,6 @@ public class ThemeGrid : Gtk.Grid {
 			tmp.toggled.connect (()=> {
 				if (tmp.active == false)
 					return;
-				print("%s\n", tmp.name);
 				onThemeChange(tmp.name);
 				foreach (unowned var d in tab_button) {
 					if (tmp.name != d.name) {

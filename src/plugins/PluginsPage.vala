@@ -22,9 +22,17 @@ public class PluginsPage : Gtk.Box {
 	// Category names, index aligned with the dropdown model (index 0 = "All").
 	private string[] categories = {};
 
+	private bool loaded = false;
+
 	construct {
-		build_store ();
-		refresh.begin ();
+	}
+
+	/** Build the catalog and installed-state the first time the page shows. */
+	public void ensure_loaded () {
+		if (loaded)
+			return;
+		loaded = true;
+		build_store.begin ();
 	}
 
 	/* ----------------------------- Callbacks ----------------------------- */
@@ -95,7 +103,9 @@ public class PluginsPage : Gtk.Box {
 
 	/* -------------------------------- Store ------------------------------ */
 
-	private void build_store () {
+	private const uint STORE_BATCH = 12;
+
+	private async void build_store () {
 		var entries = PluginCatalog.load ();
 
 		// Collect the distinct categories for the dropdown filter.
@@ -119,14 +129,27 @@ public class PluginsPage : Gtk.Box {
 		}
 		category_dropdown.model = model;
 
+		uint n = 0;
 		foreach (unowned var entry in entries) {
 			var row = new PluginStoreRow (entry);
 			row.plugin_changed.connect (() => refresh.begin ());
 			store_rows.append (row);
 			store_group.add (row);
+
+			if (++n % STORE_BATCH == 0) {
+				apply_filter ();
+				Idle.add (build_store.callback);
+				yield;
+			}
 		}
 
 		apply_filter ();
+
+		try {
+			yield refresh ();
+		} catch (Error e) {
+			warning ("Failed to refresh plugins: %s", e.message);
+		}
 	}
 
 	/* ------------------------------ Refresh ------------------------------ */

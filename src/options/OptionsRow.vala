@@ -33,11 +33,14 @@ public class RowOptions : Adw.ActionRow {
 			};
 			_spin.value = double.parse (node.value);
 			_spin.value_changed.connect ((v) => {
-				try {
-					Supravim.Options.update_value (node.name, ((int) v.value).to_string ());
-					Supravim.Cfg.save_config ();
-				} catch (Error e) {
-					warning ("option update: %s", e.message);
+				if (from_supravim) {
+					print ("onChangeOption: [%s] <%d>\n", node.name, (int) v.value);
+				} else {
+					try {
+						Supravim.Options.update_value (node.name, ((int) v.value).to_string ());
+					} catch (Error e) {
+						warning ("option update: %s", e.message);
+					}
 				}
 				sync_reset_visibility ();
 			});
@@ -53,12 +56,15 @@ public class RowOptions : Adw.ActionRow {
 			_entry.changed.connect ((v) => {
 				if (debounce_id != 0) Source.remove (debounce_id);
 				debounce_id = GLib.Timeout.add (300, () => {
-					try {
-						var text = v.text.replace ("'", "\\'");
-						Supravim.Options.update_value (node.name, text);
-						Supravim.Cfg.save_config ();
-					} catch (Error e) {
-						warning ("option update: %s", e.message);
+					var text = v.text.replace ("'", "\\'");
+					if (from_supravim) {
+						print ("onChangeOption: [%s] <%s>\n", node.name, text);
+					} else {
+						try {
+							Supravim.Options.update_value (node.name, text);
+						} catch (Error e) {
+							warning ("option update: %s", e.message);
+						}
 					}
 					sync_reset_visibility ();
 					debounce_id = 0;
@@ -76,14 +82,17 @@ public class RowOptions : Adw.ActionRow {
 			_switch.active = (node.value == "true");
 			_switch.state_set.connect ((v) => {
 				_switch.active = v;
-				try {
-					if (v)
-						Supravim.Options.enable (node.name);
-					else
-						Supravim.Options.disable (node.name);
-					Supravim.Cfg.save_config ();
-				} catch (Error e) {
-					warning ("option toggle: %s", e.message);
+				if (from_supravim) {
+					print ("onChangeOption: [%s] <%s>\n", node.name, v.to_string ());
+				} else {
+					try {
+						if (v)
+							Supravim.Options.enable (node.name);
+						else
+							Supravim.Options.disable (node.name);
+					} catch (Error e) {
+						warning ("option toggle: %s", e.message);
+					}
 				}
 				sync_reset_visibility ();
 				return false;
@@ -118,11 +127,14 @@ public class RowOptions : Adw.ActionRow {
 
 	private void reset_to_default () {
 		string def = node.default_value;
-		try {
-			Supravim.Options.reset_value (node.name);
-			Supravim.Cfg.save_config ();
-		} catch (Error e) {
-			warning ("option reset: %s", e.message);
+		if (from_supravim) {
+			print ("onResetOption: %s\n", node.name);
+		} else {
+			try {
+				Supravim.Options.reset_value (node.name);
+			} catch (Error e) {
+				warning ("option reset: %s", e.message);
+			}
 		}
 
 		if (node.type_value == "bool")

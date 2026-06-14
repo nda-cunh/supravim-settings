@@ -1,4 +1,12 @@
 /**
+ * True when the GUI was launched from within VIM (via the `--from-supravim` flag).
+ * In that case option/theme changes are streamed to VIM through stdout prints and
+ * VIM takes care of persisting them. Otherwise (launched from the GNOME menu or the
+ * command line directly) we apply the changes ourselves through the libsupravim API.
+ */
+bool from_supravim = false;
+
+/**
   * Main entry point of the application
   */
 class Application : Adw.Application {
@@ -40,7 +48,18 @@ class Application : Adw.Application {
 			stdout.puts(msg);
 			stdout.flush();
 		});
+
+		// Strip our custom flag before handing the args to GApplication, which
+		// would otherwise reject the unknown option.
+		string[] filtered = {};
+		foreach (unowned string arg in args) {
+			if (arg == "--from-supravim")
+				from_supravim = true;
+			else
+				filtered += arg;
+		}
+
 		pull_updates();
-		new Application().run(args);
+		new Application().run(filtered);
 	}
 }

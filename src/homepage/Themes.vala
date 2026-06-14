@@ -11,18 +11,14 @@ public class ThemePage : Adw.PreferencesGroup {
 		init_themes();
 		theme_grid = new ThemeGrid();
 		theme_grid.onThemeChange.connect ((theme)=> {
-			try {
-				if (theme.index_of_char ('-') == -1){
-					print("onChangeOption: [theme] <%s>\n", theme);
-
+			if (from_supravim) {
+				print("onChangeOption: [theme] <%s>\n", theme);
+			} else {
+				try {
+					Supravim.Theme.change (theme);
+				} catch (Error e) {
+					warning (e.message);
 				}
-				else {
-					var named_theme = theme[0:theme.index_of_char('-')];
-					print("onChangeOption: [theme] <%s>\n", theme);
-
-				}
-			}catch (Error e) {
-				printerr(e.message);
 			}
 		});
 

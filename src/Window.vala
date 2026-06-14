@@ -9,6 +9,7 @@ public class MainWindow : Adw.ApplicationWindow {
 
 		home_page.parent_window = this;
 		base.set_cursor_from_name ("default");
+		base.set_icon_name("supravim");
 		wiki_box.append(new Wiki(Environment.get_home_dir() + "/.local/share/supravim-gui/"));
 	}
 

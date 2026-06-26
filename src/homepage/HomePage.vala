@@ -40,6 +40,84 @@ public class HomePage : Gtk.Box {
 		new WindowUninstall(parent_window);
 	}
 
+	/*
+	 * Export the whole SupraVim configuration into a .supravim archive
+	 * chosen by the user through a save dialog.
+	 */
+	[GtkCallback]
+	public void export_config () {
+		var chooser = new Gtk.FileChooserNative (
+			"Export SupraVim config", parent_window,
+			Gtk.FileChooserAction.SAVE, "Export", "Cancel"
+		);
+		chooser.set_current_name ("config.supravim");
+
+		var filter = new Gtk.FileFilter ();
+		filter.set_filter_name ("SupraVim config (*.supravim)");
+		filter.add_pattern ("*.supravim");
+		chooser.add_filter (filter);
+
+		chooser.response.connect ((id) => {
+			if (id == Gtk.ResponseType.ACCEPT) {
+				var file = chooser.get_file ();
+				if (file != null)
+					run_config_command.begin (@"supravim --save '$(file.get_path ())'", "Config exported");
+			}
+			chooser.destroy ();
+		});
+		chooser.show ();
+	}
+
+	/*
+	 * Import a SupraVim configuration from a .supravim archive
+	 * chosen by the user through an open dialog.
+	 */
+	[GtkCallback]
+	public void import_config () {
+		var chooser = new Gtk.FileChooserNative (
+			"Import SupraVim config", parent_window,
+			Gtk.FileChooserAction.OPEN, "Import", "Cancel"
+		);
+
+		var filter = new Gtk.FileFilter ();
+		filter.set_filter_name ("SupraVim config (*.supravim)");
+		filter.add_pattern ("*.supravim");
+		chooser.add_filter (filter);
+
+		chooser.response.connect ((id) => {
+			if (id == Gtk.ResponseType.ACCEPT) {
+				var file = chooser.get_file ();
+				if (file != null)
+					run_config_command.begin (@"supravim --load '$(file.get_path ())'", "Config imported (restart Vim to apply)");
+			}
+			chooser.destroy ();
+		});
+		chooser.show ();
+	}
+
+	/*
+	 * Run a supravim config command and report the result in a popup.
+	 */
+	private async void run_config_command (string command, string success_msg) {
+		string output, errput;
+		int status = yield Utils.run_async_command (command, out output, out errput);
+
+		var popup = new DialogPopup (parent_window, "SupraVim config");
+		if (status == 0) {
+			popup.set_subtitle_label (success_msg);
+		} else {
+			string detail = Utils.remove_color ((errput ?? "").strip ());
+			popup.set_subtitle_label (detail == "" ? "Operation failed" : detail);
+		}
+		var ok_button = new Gtk.Button.with_label ("Ok") {
+			css_classes = {"button_popup"},
+		};
+		ok_button.clicked.connect (() => popup.close ());
+		popup.box_buttons.append (ok_button);
+
+		popup.present ();
+	}
+
 
 	/*
 	 * Check if an update is available for Supravim using suprapack.

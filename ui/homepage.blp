@@ -44,6 +44,24 @@ template $HomePage: Box {
 			}
 
 			Box {
+				spacing: 5;
+
+				Button {
+					label: 'Export config';
+					name: 'export_supravim';
+					hexpand: true;
+					clicked => $export_config();
+				}
+
+				Button {
+					label: 'Import config';
+					name: 'import_supravim';
+					hexpand: true;
+					clicked => $import_config();
+				}
+			}
+
+			Box {
 				Button {
 					label: 'Clear cache';
 					name: 'cache_supravim';

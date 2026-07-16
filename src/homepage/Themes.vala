@@ -6,11 +6,14 @@ public class ThemePage : Adw.PreferencesGroup {
 	private unowned Gtk.Box box;
 
 	private ThemeGrid theme_grid;
+	private bool suppress_apply = false;
 
 	construct {
 		init_themes();
 		theme_grid = new ThemeGrid();
 		theme_grid.onThemeChange.connect ((theme)=> {
+			if (suppress_apply)
+				return;
 			if (from_supravim) {
 				print("onChangeOption: [theme] <%s>\n", theme);
 			} else {
@@ -40,7 +43,10 @@ public class ThemePage : Adw.PreferencesGroup {
 		if (lst == null)
 			return;
 		var value = lst.get_from_name ("theme");
-		if (value != null)
+		if (value != null) {
+			suppress_apply = true;
 			theme_grid.change_theme (value.value);
+			suppress_apply = false;
+		}
 	}
 }

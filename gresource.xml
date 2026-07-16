@@ -8,6 +8,7 @@
 		<file preprocess="xml-stripblanks">ui/homepage.ui</file>
 		<file preprocess="xml-stripblanks">ui/plugins.ui</file>
 		<file preprocess="xml-stripblanks">ui/lsp.ui</file>
+		<file preprocess="xml-stripblanks">ui/stats.ui</file>
 		<file preprocess="xml-stripblanks">ui/snippets.ui</file>
 		<file preprocess="xml-stripblanks">ui/DialogPopup.ui</file>
 		<file preprocess="xml-stripblanks">ui/plugins/externalrow.ui</file>

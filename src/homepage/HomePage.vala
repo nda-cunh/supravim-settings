@@ -6,18 +6,29 @@
 [GtkTemplate (ui = "/ui/homepage.ui")]
 public class HomePage : Gtk.Box {
 
+	// Number of clicks on the logo needed to unlock the magic popup.
+	private const int MAGIC_CLICKS = 5;
+
+	private int logo_clicks = 0;
+	private uint logo_reset_id = 0;
+	private uint logo_bounce_id = 0;
+
 	construct {
 		test_if_update_available.begin();
+		init_logo_easter_egg ();
 	}
 
 	public unowned Adw.ApplicationWindow parent_window;
 
 	// GtkChildren
 	[GtkChild]
-	public unowned ThemePage theme_page; 
+	public unowned ThemePage theme_page;
 
 	[GtkChild]
 	public unowned Gtk.Button update_button;
+
+	[GtkChild]
+	public unowned Gtk.Picture logo_picture;
 
 
 	// Callbacks for the buttons
@@ -61,7 +72,7 @@ public class HomePage : Gtk.Box {
 			if (id == Gtk.ResponseType.ACCEPT) {
 				var file = chooser.get_file ();
 				if (file != null)
-					run_config_command.begin (@"supravim --save '$(file.get_path ())'", "Config exported");
+					run_config_command.begin (@"supravim --save '$(file.get_path ())'", "Config exported", "exportateur");
 			}
 			chooser.destroy ();
 		});
@@ -98,13 +109,15 @@ public class HomePage : Gtk.Box {
 	/*
 	 * Run a supravim config command and report the result in a popup.
 	 */
-	private async void run_config_command (string command, string success_msg) {
+	private async void run_config_command (string command, string success_msg, string? ach_on_success = null) {
 		string output, errput;
 		int status = yield Utils.run_async_command (command, out output, out errput);
 
 		var popup = new DialogPopup (parent_window, "SupraVim config");
 		if (status == 0) {
 			popup.set_subtitle_label (success_msg);
+			if (ach_on_success != null)
+				MainWindow.toast_ach (ach_on_success);
 		} else {
 			string detail = Utils.remove_color ((errput ?? "").strip ());
 			popup.set_subtitle_label (detail == "" ? "Operation failed" : detail);
@@ -118,6 +131,53 @@ public class HomePage : Gtk.Box {
 		popup.present ();
 	}
 
+
+	/* ------------------------------------------------------------------ */
+	/*  Easter egg: click the logo, get some magic                         */
+	/* ------------------------------------------------------------------ */
+
+	private void init_logo_easter_egg () {
+		logo_picture.cursor = new Gdk.Cursor.from_name ("pointer", null);
+
+		var gesture = new Gtk.GestureClick ();
+		gesture.pressed.connect (() => on_logo_clicked ());
+		logo_picture.add_controller (gesture);
+	}
+
+	private void on_logo_clicked () {
+		bounce_logo ();
+
+		logo_clicks++;
+		if (logo_clicks >= MAGIC_CLICKS) {
+			logo_clicks = 0;
+			if (logo_reset_id != 0) {
+				Source.remove (logo_reset_id);
+				logo_reset_id = 0;
+			}
+			new MagicPopup (parent_window).present ();
+			return;
+		}
+
+		// Only a quick burst of clicks unlocks the popup.
+		if (logo_reset_id != 0)
+			Source.remove (logo_reset_id);
+		logo_reset_id = GLib.Timeout.add (1500, () => {
+			logo_clicks = 0;
+			logo_reset_id = 0;
+			return false;
+		});
+	}
+
+	private void bounce_logo () {
+		logo_picture.add_css_class ("logo_bounce");
+		if (logo_bounce_id != 0)
+			Source.remove (logo_bounce_id);
+		logo_bounce_id = GLib.Timeout.add (120, () => {
+			logo_picture.remove_css_class ("logo_bounce");
+			logo_bounce_id = 0;
+			return false;
+		});
+	}
 
 	/*
 	 * Check if an update is available for Supravim using suprapack.

@@ -108,3 +108,77 @@
 	background-color: alpha(@accent_color, 0.20);
 	color: @accent_color;
 }
+
+.supravim_logo {
+	transition: transform 120ms ease-out;
+}
+
+.supravim_logo.logo_bounce {
+	transform: scale(0.92) rotate(-4deg);
+}
+
+.magic_emoji {
+	font-size: 34px;
+}
+
+.magic_button {
+	padding: 10px 18px;
+	border-radius: 12px;
+}
+
+.stat-tile,
+.stat-card {
+	background-color: alpha(@window_fg_color, 0.05);
+	border-radius: 14px;
+}
+
+.stat-tile {
+	padding: 12px 16px;
+}
+
+.stat-card {
+	padding: 16px 18px;
+}
+
+.stat-emoji {
+	font-size: 20px;
+}
+
+.stat-value {
+	font-size: 22px;
+	font-weight: 800;
+}
+
+.stat-caption {
+	font-size: 12px;
+	opacity: 0.6;
+}
+
+.section-title {
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.hm-cell {
+	border-radius: 3px;
+}
+
+.hm-b0 { background-color: alpha(@window_fg_color, 0.10); }
+.hm-b1 { background-color: #9be9a8; }
+.hm-b2 { background-color: #40c463; }
+.hm-b3 { background-color: #30a14e; }
+.hm-b4 { background-color: #216e39; }
+
+.ach-icon {
+	font-size: 22px;
+	margin-end: 4px;
+}
+
+.ach-locked {
+	opacity: 0.45;
+}
+
+.ach-unlocked-badge {
+	color: #2ec27e;
+	font-weight: 700;
+}

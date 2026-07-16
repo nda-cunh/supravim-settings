@@ -1,5 +1,28 @@
 namespace Utils {
 
+	public void ach_metric (string name, int64 count = 1) {
+		string dir = Path.build_filename (Environment.get_user_config_dir (), "supravim");
+		if (!FileUtils.test (dir, FileTest.IS_DIR))
+			return;
+		try {
+			var stream = File.new_for_path (Path.build_filename (dir, "achievements.inbox"))
+				.append_to (FileCreateFlags.NONE);
+			stream.write ("M %s %lld\n".printf (name, count).data);
+			stream.close ();
+		} catch (Error e) {
+			warning (e.message);
+		}
+	}
+
+	public void ach_plugin_install (string reference) {
+		ach_metric ("plugin_install");
+		MainWindow.toast_ach ("collectionneur");
+		if (reference.down ().contains ("tpope")) {
+			ach_metric ("tpope_install");
+			MainWindow.toast_ach ("je_te_connais");
+		}
+	}
+
 	public int command_line (string command, out string output = null, out string errput = null) {
 		int wait_status = -1;
 		try {

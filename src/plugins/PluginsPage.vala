@@ -268,6 +268,7 @@ public class PluginsPage : Gtk.Box {
 			}
 			try {
 				Supravim.Plugin.add (url_entry.text.strip ());
+				Utils.ach_plugin_install (url_entry.text.strip ());
 				this.close ();
 				this.refresh ();
 			} catch (Error e) {

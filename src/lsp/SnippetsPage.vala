@@ -71,7 +71,11 @@ public class SnippetsPage : Gtk.Box {
 			refresh ();
 			var editor = new SnippetItemEditDialog (
 				get_root () as Gtk.Window, "", "", "", "", path, ft);
-			editor.saved.connect (() => refresh ());
+			editor.saved.connect (() => {
+				refresh ();
+				Utils.ach_metric ("snippet_create");
+				MainWindow.toast_ach ("snippeteur");
+			});
 			editor.present ();
 		});
 		dialog.present ();

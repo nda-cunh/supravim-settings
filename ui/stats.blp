@@ -1,0 +1,25 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $StatsPage: Gtk.Box {
+	orientation: vertical;
+
+	ScrolledWindow {
+		vexpand: true;
+		hexpand: true;
+
+		Adw.Clamp {
+			maximum-size: 920;
+			tightening-threshold: 700;
+
+			child: Box content_box {
+				orientation: vertical;
+				spacing: 18;
+				margin-start: 20;
+				margin-end: 20;
+				margin-top: 20;
+				margin-bottom: 24;
+			};
+		}
+	}
+}

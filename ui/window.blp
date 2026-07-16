@@ -8,7 +8,8 @@ template $MainWindow: Adw.ApplicationWindow {
 	width-request: 700;
 	title: "──  SupraVim  ──";
 
-	content: Box {
+	content: Adw.ToastOverlay toast_overlay {
+	child: Box {
 		orientation: vertical;
 
 		Adw.HeaderBar { }
@@ -63,6 +64,14 @@ template $MainWindow: Adw.ApplicationWindow {
 				child: $LspPage lsp_page { };
 			}
 
+			// Stats & Achievements Page
+			Adw.ViewStackPage {
+				name: 'stats';
+				icon-name: 'starred-symbolic';
+				title: 'Stats';
+				child: $StatsPage stats_page { };
+			}
+
 			// Snippets Page
 			Adw.ViewStackPage {
 				name: 'snippets';
@@ -89,5 +98,6 @@ template $MainWindow: Adw.ApplicationWindow {
 			stack: viewstack;
 			reveal: true;
 		}
+	};
 	};
 }

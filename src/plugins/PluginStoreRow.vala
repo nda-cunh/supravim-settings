@@ -131,9 +131,12 @@ public class PluginStoreRow : Adw.ActionRow {
 		var window = base.get_root () as Gtk.Window;
 		var popup = new PluginsDownloadWindow (window);
 		var action = installed ? "uninstall" : "install";
+		bool installing = !installed;
 		var command = @"suprapack $action 'plugin-$(entry.suprapack)' --yes --simple-print";
 		popup.execute.begin (command, (obj, res) => {
 			popup.close ();
+			if (installing)
+				Utils.ach_plugin_install (entry.suprapack);
 			plugin_changed ();
 		});
 	}
@@ -141,6 +144,7 @@ public class PluginStoreRow : Adw.ActionRow {
 	// git backend: clone / remove through libsupravim.
 	private void install_git () {
 		var window = base.get_root () as Gtk.Window;
+		bool installing = !installed;
 		try {
 			if (installed && installed_name != null)
 				Supravim.Plugin.remove (installed_name);
@@ -155,6 +159,8 @@ public class PluginStoreRow : Adw.ActionRow {
 			dialog.present ();
 			return;
 		}
+		if (installing)
+			Utils.ach_plugin_install (entry.url);
 		plugin_changed ();
 	}
 }

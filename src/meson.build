@@ -9,6 +9,7 @@ subdir('plugins')
 subdir('popup')
 subdir('wiki')
 subdir('lsp')
+subdir('stats')
 subdir('utils')
 
 cc = meson.get_compiler('c')

@@ -52,8 +52,68 @@ public class StatsPage : Gtk.Box {
 	private void build_ui () {
 		content_box.append (build_tiles ());
 		content_box.append (build_heatmap ());
+		var langs = build_breakdown ("⌨️  Temps par langage", "lang:");
+		if (langs != null)
+			content_box.append (langs);
+		var projs = build_breakdown ("📁  Temps par projet", "proj:");
+		if (projs != null)
+			content_box.append (projs);
 		content_box.append (build_notify_toggle ());
 		build_achievements ();
+	}
+
+	private Gtk.Widget? build_breakdown (string title, string prefix) {
+		var bd = state.breakdown (prefix);
+		if (bd.size () == 0)
+			return null;
+
+		var names = new GenericArray<string> ();
+		bd.foreach ((k, v) => names.add (k));
+		names.sort_with_data ((a, b) => {
+			int64 va = bd[a] ?? 0;
+			int64 vb = bd[b] ?? 0;
+			return vb > va ? 1 : (vb < va ? -1 : 0);
+		});
+
+		int64 max = bd[names[0]] ?? 0;
+		if (max <= 0)
+			return null;
+
+		var card = new Gtk.Box (Gtk.Orientation.VERTICAL, 10);
+		card.add_css_class ("stat-card");
+		var head = new Gtk.Label (title) { xalign = 0f };
+		head.add_css_class ("section-title");
+		card.append (head);
+
+		int shown = int.min (8, (int) names.length);
+		for (int i = 0; i < shown; i++) {
+			int64 secs = bd[names[i]] ?? 0;
+			card.append (make_bar_row (names[i], secs, max));
+		}
+		return card;
+	}
+
+	private Gtk.Widget make_bar_row (string name, int64 secs, int64 max) {
+		var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
+
+		var label = new Gtk.Label (name) { xalign = 0f, width_request = 110 };
+		label.add_css_class ("stat-caption");
+		label.ellipsize = Pango.EllipsizeMode.END;
+
+		var bar = new Gtk.ProgressBar () {
+			fraction = (double) secs / (double) max,
+			hexpand  = true,
+			valign   = Gtk.Align.CENTER,
+		};
+		bar.add_css_class ("stat-bar");
+
+		var dur = new Gtk.Label (fmt_duration (secs)) { xalign = 1f, width_request = 70 };
+		dur.add_css_class ("stat-bar-dur");
+
+		row.append (label);
+		row.append (bar);
+		row.append (dur);
+		return row;
 	}
 
 	public static bool notify_enabled () {

@@ -5,192 +5,108 @@ public class StatsPage : Gtk.Box {
 
 	private bool loaded = false;
 
-	private HashTable<string, int64?> counters      = new HashTable<string, int64?> (str_hash, str_equal);
-	private HashTable<string, int64?> active_by_day  = new HashTable<string, int64?> (str_hash, str_equal);
-	private HashTable<string, int64?> lines_by_day   = new HashTable<string, int64?> (str_hash, str_equal);
-	private HashTable<string, string> unlocked       = new HashTable<string, string> (str_hash, str_equal);
+	private unowned Gtk.ScrolledWindow? heatmap_scroller = null;
+	private uint heatmap_scroll_timeout = 0;
 
-	private int64 streak        = 0;
-	private int64 best_streak   = 0;
-	private int64 distinct_days = 0;
-	private int64 total_active  = 0;
+	private Supravim.Ach.State state;
+	private Supravim.Ach.Defs  defs;
 
-	private GenericArray<Def> defs = new GenericArray<Def> ();
+	public void scroll_heatmap_to_end () {
+		if (heatmap_scroller == null)
+			return;
 
-	private class Def {
-		public string id;
-		public string cat;
-		public string icon;
-		public string title;
-		public string desc;
-		public bool hidden;
-	}
-
-	private const string[] CAT_ORDER = {
-		"onboarding", "motions", "volume", "humour", "ecosystem", "prestige"
-	};
-
-	private static string cat_label (string cat) {
-		switch (cat) {
-		case "onboarding": return "🐣  Débutant";
-		case "motions":    return "⚔️  Motions & voie du Vim";
-		case "volume":     return "✍️  Volume & endurance";
-		case "humour":     return "😅  Auto-dérision";
-		case "ecosystem":  return "🎮  Écosystème SupraVim";
-		case "prestige":   return "🏆  Prestige";
-		default:           return cat;
-		}
+		if (heatmap_scroll_timeout != 0)
+			Source.remove (heatmap_scroll_timeout);
+		heatmap_scroll_timeout = Timeout.add (250, () => {
+			heatmap_scroll_timeout = 0;
+			if (heatmap_scroller != null)
+				heatmap_scroller.hadjustment.value = heatmap_scroller.hadjustment.upper;
+			return Source.REMOVE;
+		});
 	}
 
 	public void ensure_loaded () {
 		if (loaded)
 			return;
 		loaded = true;
-		load_state ();
-		load_defs ();
+		load ();
 		build_ui ();
 	}
 
 	public void refresh () {
-		counters.remove_all ();
-		active_by_day.remove_all ();
-		lines_by_day.remove_all ();
-		unlocked.remove_all ();
-		streak = best_streak = distinct_days = total_active = 0;
-		defs = new GenericArray<Def> ();
 		var child = content_box.get_first_child ();
 		while (child != null) {
 			var next = child.get_next_sibling ();
 			content_box.remove (child);
 			child = next;
 		}
-		load_state ();
-		load_defs ();
+		load ();
 		build_ui ();
 	}
 
-	private int64 get_counter (string k) { return counters[k] ?? 0; }
-
-	private void load_state () {
-		string path = Path.build_filename (
-			Environment.get_user_config_dir (), "supravim", "achievements.json");
-		if (!FileUtils.test (path, FileTest.EXISTS))
-			return;
-		string data;
-		try { FileUtils.get_contents (path, out data); }
-		catch (Error e) { return; }
-
-		var doc = YYJson.Doc.read (data, data.length);
-		if (doc == null)
-			return;
-		unowned var root = doc.get_root ();
-
-		read_int_map (root.obj_get ("counters"), counters);
-		read_str_map (root.obj_get ("unlocked"), unlocked);
-
-		unowned var hist = root.obj_get ("history");
-		if (hist != null) {
-			YYJson.ObjIter it;
-			if (YYJson.ObjIter.init (hist, out it)) {
-				unowned YYJson.Value? key;
-				while ((key = it.next ()) != null) {
-					unowned var bucket = YYJson.ObjIter.get_val (key);
-					if (bucket == null) continue;
-					unowned var act = bucket.obj_get ("active_sec");
-					unowned var lin = bucket.obj_get ("lines");
-					int64 a = act != null ? (int64) act.get_int () : 0;
-					active_by_day[key.get_str ()] = a;
-					total_active += a;
-					if (lin != null)
-						lines_by_day[key.get_str ()] = (int64) lin.get_int ();
-				}
-			}
-		}
-
-		unowned var meta = root.obj_get ("meta");
-		if (meta != null) {
-			unowned var s = meta.obj_get ("streak");
-			unowned var b = meta.obj_get ("best_streak");
-			unowned var d = meta.obj_get ("distinct_days");
-			if (s != null) streak        = s.get_int ();
-			if (b != null) best_streak   = b.get_int ();
-			if (d != null) distinct_days = d.get_int ();
-		}
-	}
-
-	private void read_int_map (YYJson.Value? obj, HashTable<string, int64?> dest) {
-		if (obj == null) return;
-		YYJson.ObjIter it;
-		if (!YYJson.ObjIter.init (obj, out it)) return;
-		unowned YYJson.Value? key;
-		while ((key = it.next ()) != null) {
-			unowned var v = YYJson.ObjIter.get_val (key);
-			if (v != null) dest[key.get_str ()] = (int64) v.get_int ();
-		}
-	}
-
-	private void read_str_map (YYJson.Value? obj, HashTable<string, string> dest) {
-		if (obj == null) return;
-		YYJson.ObjIter it;
-		if (!YYJson.ObjIter.init (obj, out it)) return;
-		unowned YYJson.Value? key;
-		while ((key = it.next ()) != null) {
-			unowned var v = YYJson.ObjIter.get_val (key);
-			if (v != null) dest[key.get_str ()] = v.get_str ();
-		}
-	}
-
-	private void load_defs () {
-		string? path = find_defs_file ();
-		if (path == null)
-			return;
-		string data;
-		try { FileUtils.get_contents (path, out data); }
-		catch (Error e) { return; }
-
-		var doc = YYJson.Doc.read (data, data.length);
-		if (doc == null)
-			return;
-		unowned var arr = doc.get_root ().obj_get ("achievements");
-		if (arr == null)
-			return;
-
-		for (size_t i = 0; i < arr.arr_size (); i++) {
-			unowned var e = arr.arr_get (i);
-			unowned var id_v = e.obj_get ("id");
-			if (id_v == null) continue;
-			var d = new Def ();
-			d.id    = id_v.get_str ();
-			d.cat   = str_field (e, "cat");
-			d.icon  = str_field (e, "icon");
-			d.title = str_field (e, "title");
-			d.desc  = str_field (e, "desc");
-			unowned var h = e.obj_get ("hidden");
-			d.hidden = h != null && h.get_bool ();
-			defs.add (d);
-		}
-	}
-
-	private static string str_field (YYJson.Value e, string key) {
-		unowned var v = e.obj_get (key);
-		return v != null ? v.get_str () : "";
-	}
-
-	private static string? find_defs_file () {
-		string user = Path.build_filename (
-			Environment.get_user_data_dir (), "supravim", "achievements.json");
-		if (FileUtils.test (user, FileTest.EXISTS)) return user;
-		foreach (unowned string sys in Environment.get_system_data_dirs ()) {
-			string p = Path.build_filename (sys, "supravim", "achievements.json");
-			if (FileUtils.test (p, FileTest.EXISTS)) return p;
-		}
-		return null;
+	private void load () {
+		state = new Supravim.Ach.State ();
+		defs  = new Supravim.Ach.Defs ();
 	}
 
 	private void build_ui () {
 		content_box.append (build_tiles ());
 		content_box.append (build_heatmap ());
+		content_box.append (build_notify_toggle ());
 		build_achievements ();
+	}
+
+	public static bool notify_enabled () {
+		string path = Path.build_filename (
+			Environment.get_user_config_dir (), "supravim", "state.json");
+		string data;
+		try { FileUtils.get_contents (path, out data); }
+		catch (Error e) { return true; }
+		var doc = YYJson.Doc.read (data, data.length);
+		if (doc == null)
+			return true;
+		unowned var opts = doc.get_root ().obj_get ("options");
+		if (opts == null)
+			return true;
+		unowned var v = opts.obj_get ("achievement_notify");
+		return v == null || v.get_bool ();
+	}
+
+	private Gtk.Widget build_notify_toggle () {
+		var group = new Adw.PreferencesGroup ();
+		var sw = new Gtk.Switch () {
+			halign = Gtk.Align.CENTER,
+			valign = Gtk.Align.CENTER,
+			active = notify_enabled (),
+		};
+		var row = new Adw.ActionRow () {
+			title       = "Notifications de succès",
+			subtitle    = "Afficher une notification quand un succès est débloqué",
+			activatable_widget = sw,
+		};
+		row.add_suffix (sw);
+		sw.notify["active"].connect (() => {
+			string v = sw.active ? "true" : "false";
+			if (from_supravim) {
+				print ("onChangeOption: [achievement_notify] <%s>\n", v);
+			} else {
+				try {
+					Supravim.Options.update_value ("achievement_notify", v);
+				} catch (Error e) {
+					warning ("option update: %s", e.message);
+				}
+			}
+		});
+		group.add (row);
+		return group;
+	}
+
+	private int unlocked_count () {
+		int n = 0;
+		foreach (unowned Supravim.Ach.Def d in defs.list.data)
+			if (state.is_unlocked (d.id))
+				n++;
+		return n;
 	}
 
 	private Gtk.Widget build_tiles () {
@@ -203,19 +119,15 @@ public class StatsPage : Gtk.Box {
 			max_children_per_line = 4,
 		};
 
-		int unlocked_count = 0;
-		for (int i = 0; i < (int) defs.length; i++)
-			if (defs.data[i].id in unlocked)
-				unlocked_count++;
-
-		flow.append (make_tile ("🏆", @"$(unlocked_count) / $((int) defs.length)", "Succès débloqués"));
-		flow.append (make_tile ("⏱️", fmt_duration (total_active), "Temps de code"));
-		flow.append (make_tile ("🔥", @"$(streak) j", "Streak"));
-		flow.append (make_tile ("📅", @"$(distinct_days) j", "Jours actifs"));
-		flow.append (make_tile ("📈", @"$(best_streak) j", "Meilleur streak"));
-		flow.append (make_tile ("📏", fmt_int (get_counter ("lines")), "Lignes écrites"));
-		flow.append (make_tile ("📝", fmt_int (get_counter ("words")), "Mots écrits"));
-		flow.append (make_tile ("🔤", fmt_int (get_counter ("chars")), "Caractères"));
+		int total = (int) defs.list.length;
+		flow.append (make_tile ("🏆", @"$(unlocked_count ()) / $(total)", "Succès débloqués"));
+		flow.append (make_tile ("⏱️", fmt_duration (state.total_of ("active_sec")), "Temps de code"));
+		flow.append (make_tile ("🔥", @"$(state.streak) j", "Streak"));
+		flow.append (make_tile ("📅", @"$(state.distinct_days) j", "Jours actifs"));
+		flow.append (make_tile ("📈", @"$(state.best_streak) j", "Meilleur streak"));
+		flow.append (make_tile ("📏", fmt_int (state.counter ("lines")), "Lignes écrites"));
+		flow.append (make_tile ("📝", fmt_int (state.counter ("words")), "Mots écrits"));
+		flow.append (make_tile ("🔤", fmt_int (state.counter ("chars")), "Caractères"));
 		return flow;
 	}
 
@@ -267,7 +179,7 @@ public class StatsPage : Gtk.Box {
 			int col = d / 7;
 			int row = d % 7;
 			string ds = day.format ("%Y-%m-%d");
-			int64 secs = active_by_day[ds] ?? 0;
+			int64 secs = state.day_value (ds, "active_sec");
 
 			var cell = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
 				width_request  = 13,
@@ -276,7 +188,7 @@ public class StatsPage : Gtk.Box {
 			cell.add_css_class ("hm-cell");
 			cell.add_css_class ("hm-b" + bucket_of (secs).to_string ());
 			int64 mins = secs / 60;
-			int64 lines = lines_by_day[ds] ?? 0;
+			int64 lines = state.day_value (ds, "lines");
 			cell.tooltip_text = mins > 0
 				? @"$(ds) — $(mins) min de code, $(lines) lignes"
 				: @"$(ds) — aucune activité";
@@ -288,15 +200,7 @@ public class StatsPage : Gtk.Box {
 			vscrollbar_policy = Gtk.PolicyType.NEVER,
 			child             = grid,
 		};
-
-		unowned var hadj = scroller.hadjustment;
-		ulong id = 0;
-		id = hadj.changed.connect (() => {
-			if (hadj.upper > hadj.page_size) {
-				hadj.value = hadj.upper - hadj.page_size;
-				hadj.disconnect (id);
-			}
-		});
+		heatmap_scroller = scroller;
 
 		card.append (scroller);
 		card.append (build_legend ());
@@ -327,34 +231,38 @@ public class StatsPage : Gtk.Box {
 		return 4;
 	}
 
+	private static string cat_title (Supravim.Ach.Category c) {
+		return c.icon == "" ? c.label : c.icon + "  " + c.label;
+	}
+
 	private void build_achievements () {
-		foreach (unowned string cat in CAT_ORDER) {
+		foreach (unowned Supravim.Ach.Category c in defs.categories.data) {
 			int total = 0;
 			int got   = 0;
-			for (int i = 0; i < (int) defs.length; i++) {
-				if (defs.data[i].cat != cat) continue;
+			foreach (unowned Supravim.Ach.Def d in defs.list.data) {
+				if (d.cat != c.id)
+					continue;
 				total++;
-				if (defs.data[i].id in unlocked) got++;
+				if (state.is_unlocked (d.id))
+					got++;
 			}
 			if (total == 0)
 				continue;
 
 			var group = new Adw.PreferencesGroup () {
-				title       = cat_label (cat),
+				title       = cat_title (c),
 				description = @"$(got) / $(total) débloqués",
 			};
 
-			for (int i = 0; i < (int) defs.length; i++) {
-				unowned var d = defs.data[i];
-				if (d.cat != cat) continue;
-				group.add (make_ach_row (d));
-			}
+			foreach (unowned Supravim.Ach.Def d in defs.list.data)
+				if (d.cat == c.id)
+					group.add (make_ach_row (d));
 			content_box.append (group);
 		}
 	}
 
-	private Gtk.Widget make_ach_row (Def d) {
-		bool is_unlocked = d.id in unlocked;
+	private Gtk.Widget make_ach_row (Supravim.Ach.Def d) {
+		bool is_unlocked = state.is_unlocked (d.id);
 		bool masked = d.hidden && !is_unlocked;
 
 		var row = new Adw.ActionRow () {
@@ -367,7 +275,7 @@ public class StatsPage : Gtk.Box {
 		row.add_prefix (icon);
 
 		if (is_unlocked) {
-			var badge = new Gtk.Label ("✓ " + unlocked[d.id]) { valign = Gtk.Align.CENTER };
+			var badge = new Gtk.Label ("✓ " + state.unlocked_at (d.id)) { valign = Gtk.Align.CENTER };
 			badge.add_css_class ("ach-unlocked-badge");
 			row.add_suffix (badge);
 		} else {

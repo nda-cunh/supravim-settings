@@ -50,16 +50,33 @@ public class StatsPage : Gtk.Box {
 	}
 
 	private void build_ui () {
-		content_box.append (build_tiles ());
-		content_box.append (build_heatmap ());
+		var stack = new Adw.ViewStack ();
+
+		var activity = new Gtk.Box (Gtk.Orientation.VERTICAL, 18);
+		activity.append (build_tiles ());
+		activity.append (build_heatmap ());
 		var langs = build_breakdown ("⌨️  Temps par langage", "lang:");
 		if (langs != null)
-			content_box.append (langs);
+			activity.append (langs);
 		var projs = build_breakdown ("📁  Temps par projet", "proj:");
 		if (projs != null)
-			content_box.append (projs);
-		content_box.append (build_notify_toggle ());
-		build_achievements ();
+			activity.append (projs);
+
+		var achievements = new Gtk.Box (Gtk.Orientation.VERTICAL, 18);
+		build_achievements (achievements);
+		achievements.append (build_notify_toggle ());
+
+		stack.add_titled (activity, "activity", "Activité").icon_name = "starred-symbolic";
+		stack.add_titled (achievements, "achievements", "Succès").icon_name = "emblem-favorite-symbolic";
+
+		var switcher = new Adw.ViewSwitcher () {
+			stack  = stack,
+			policy = Adw.ViewSwitcherPolicy.WIDE,
+			halign = Gtk.Align.CENTER,
+		};
+
+		content_box.append (switcher);
+		content_box.append (stack);
 	}
 
 	private Gtk.Widget? build_breakdown (string title, string prefix) {
@@ -295,7 +312,7 @@ public class StatsPage : Gtk.Box {
 		return c.icon == "" ? c.label : c.icon + "  " + c.label;
 	}
 
-	private void build_achievements () {
+	private void build_achievements (Gtk.Box container) {
 		foreach (unowned Supravim.Ach.Category c in defs.categories.data) {
 			int total = 0;
 			int got   = 0;
@@ -317,7 +334,7 @@ public class StatsPage : Gtk.Box {
 			foreach (unowned Supravim.Ach.Def d in defs.list.data)
 				if (d.cat == c.id)
 					group.add (make_ach_row (d));
-			content_box.append (group);
+			container.append (group);
 		}
 	}
 

@@ -309,7 +309,8 @@ public class StatsPage : Gtk.Box {
 	}
 
 	private static string cat_title (Supravim.Ach.Category c) {
-		return c.icon == "" ? c.label : c.icon + "  " + c.label;
+		string label = Markup.escape_text (c.label);
+		return c.icon == "" ? label : c.icon + "  " + label;
 	}
 
 	private void build_achievements (Gtk.Box container) {

@@ -61,6 +61,8 @@ public class MainWindow : Adw.ApplicationWindow {
 		if (id in ach_unlocked)
 			return;
 		ach_unlocked[id] = true;
+		if (!StatsPage.notify_enabled ())
+			return;
 		string? info = ach_titles[id];
 		string label;
 		if (info != null) {
@@ -150,6 +152,7 @@ public class MainWindow : Adw.ApplicationWindow {
 			break;
 		case "stats":
 			stats_page.ensure_loaded ();
+			stats_page.scroll_heatmap_to_end ();
 			break;
 		case "snippets":
 			snippets_page.ensure_loaded ();

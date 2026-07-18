@@ -64,7 +64,7 @@ public class StatsPage : Gtk.Box {
 
 		var achievements = new Gtk.Box (Gtk.Orientation.VERTICAL, 18);
 		build_achievements (achievements);
-		achievements.append (build_notify_toggle ());
+		achievements.prepend (build_notify_toggle ());
 
 		stack.add_titled (activity, "activity", "Activité").icon_name = "starred-symbolic";
 		stack.add_titled (achievements, "achievements", "Succès").icon_name = "emblem-favorite-symbolic";

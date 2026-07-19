@@ -1,7 +1,7 @@
 public class WindowClearCache : DialogPopup {
 
 	public WindowClearCache (Gtk.Window mainWindow) {
-		base (mainWindow, "ClearCache", _("Are you sure you want to clear vim undo cache?"));
+		base (mainWindow, _("Clear cache"), _("Are you sure you want to clear vim undo cache?"));
 
 		base.add_cancel_button();
 

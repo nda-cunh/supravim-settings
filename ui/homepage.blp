@@ -39,7 +39,7 @@ template $HomePage: Box {
 				vexpand: false;
 			}
 			Button update_button {
-				label: 'Update';
+				label: _("Update");
 				name: 'update_supravim';
 				clicked => $update();
 			}
@@ -48,14 +48,14 @@ template $HomePage: Box {
 				spacing: 5;
 
 				Button {
-					label: 'Export config';
+					label: _("Export config");
 					name: 'export_supravim';
 					hexpand: true;
 					clicked => $export_config();
 				}
 
 				Button {
-					label: 'Import config';
+					label: _("Import config");
 					name: 'import_supravim';
 					hexpand: true;
 					clicked => $import_config();
@@ -64,7 +64,7 @@ template $HomePage: Box {
 
 			Box {
 				Button {
-					label: 'Clear cache';
+					label: _("Clear cache");
 					name: 'cache_supravim';
 					hexpand: true;
 					clicked => $clear_cache();

@@ -62,6 +62,7 @@ class Application : Adw.Application {
 		Intl.textdomain (Config.GETTEXT_PACKAGE);
 
 		Supravim.init ();
+		Intl.textdomain (Config.GETTEXT_PACKAGE);
 		set_print_handler((msg) => {
 			stdout.puts(msg);
 			stdout.flush();

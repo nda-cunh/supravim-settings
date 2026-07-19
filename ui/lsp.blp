@@ -30,13 +30,13 @@ template $LspPage: Gtk.Box {
 
 		Adw.PreferencesPage {
 			Adw.PreferencesGroup user_lsp_group {
-				title: 'User LSPs';
-				description: 'Custom language servers — ~/.config/supravim/lsp.d/';
+				title: _("User LSPs");
+				description: _("Custom language servers — ~/.config/supravim/lsp.d/");
 			}
 
 			Adw.PreferencesGroup system_lsp_group {
-				title: 'System LSPs';
-				description: 'Built-in language servers (read-only)';
+				title: _("System LSPs");
+				description: _("Built-in language servers (read-only)");
 			}
 		}
 	}

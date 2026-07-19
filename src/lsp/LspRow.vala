@@ -126,12 +126,12 @@ public class LspRow : Adw.ActionRow {
 		status_label.remove_css_class ("dim-label");
 		if (status == 0) {
 			status_label.add_css_class ("success");
-			status_label.label = "Installed";
+			status_label.label = _("Installed");
 		} else {
 			status_label.add_css_class ("error");
 			status_label.label = _("Not found");
 			if (_entry.command_help != null && _entry.command_help != "")
-				this.tooltip_text = "Install: " + _entry.command_help;
+				this.tooltip_text = _("Install: ") + _entry.command_help;
 		}
 	}
 }

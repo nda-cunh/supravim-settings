@@ -94,11 +94,11 @@ public class PluginsPage : Gtk.Box {
 
 		// Live count in the store header.
 		if (query == "" && category == null)
-			store_group.description = "%u plugins available — install in one click".printf (store_rows.length ());
+			store_group.description = _("%u plugins available — install in one click").printf (store_rows.length ());
 		else if (visible == 1)
-			store_group.description = "1 plugin found";
+			store_group.description = _("1 plugin found");
 		else
-			store_group.description = "%u plugins found".printf (visible);
+			store_group.description = _("%u plugins found").printf (visible);
 	}
 
 	/* -------------------------------- Store ------------------------------ */
@@ -284,8 +284,7 @@ public class PluginsPage : Gtk.Box {
 		public WindowAddPlugin (Gtk.Window mainWindow) {
 			base (mainWindow,
 				_("Add an url github/gitlab"),
-"""To add an external plugin, please provide the URL to the plugin repository.
-The plugin will be downloaded and installed automatically."""
+				_("To add an external plugin, please provide the URL to the plugin repository.\nThe plugin will be downloaded and installed automatically.")
 			);
 			url_entry.placeholder_text = "https://github.com/tpope/vim-fugitive";
 

@@ -20,7 +20,7 @@ template $PluginsPage: Gtk.Box {
 		// ---------------- Discover ----------------
 		Adw.ViewStackPage {
 			name: 'discover';
-			title: 'Discover';
+			title: _("Discover");
 			icon-name: 'system-search-symbolic';
 			child: Box {
 				orientation: vertical;
@@ -58,8 +58,8 @@ template $PluginsPage: Gtk.Box {
 					Adw.PreferencesPage {
 						Adw.PreferencesGroup store_group {
 							styles ['PreferencesGroup']
-							title: 'Plugin Store';
-							description: 'Curated Vim plugins — install in one click';
+							title: _("Plugin Store");
+							description: _("Curated Vim plugins — install in one click");
 						}
 					}
 				}
@@ -69,7 +69,7 @@ template $PluginsPage: Gtk.Box {
 		// ---------------- Installed ----------------
 		Adw.ViewStackPage {
 			name: 'installed';
-			title: 'Installed';
+			title: _("Installed");
 			icon-name: 'object-select-symbolic';
 			child: ScrolledWindow {
 				vexpand: true;
@@ -77,8 +77,8 @@ template $PluginsPage: Gtk.Box {
 				Adw.PreferencesPage {
 					Adw.PreferencesGroup external_group {
 						styles ['PreferencesGroup']
-						title: 'Git Plugins';
-						description: 'Plugins installed from Git repositories — update, toggle or remove them';
+						title: _("Git Plugins");
+						description: _("Plugins installed from Git repositories — update, toggle or remove them");
 						header-suffix: Gtk.Button btn_update_all {
 							valign: center;
 							tooltip-text: _("Update all Git plugins");
@@ -93,8 +93,8 @@ template $PluginsPage: Gtk.Box {
 
 					Adw.PreferencesGroup suprapack_installed_group {
 						styles ['PreferencesGroup']
-						title: 'Suprapack Plugins';
-						description: 'Official plugins currently installed';
+						title: _("Suprapack Plugins");
+						description: _("Official plugins currently installed");
 					}
 				}
 			};

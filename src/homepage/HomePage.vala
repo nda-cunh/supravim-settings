@@ -59,7 +59,7 @@ public class HomePage : Gtk.Box {
 	public void export_config () {
 		var chooser = new Gtk.FileChooserNative (
 			_("Export SupraVim config"), parent_window,
-			Gtk.FileChooserAction.SAVE, "Export", "Cancel"
+			Gtk.FileChooserAction.SAVE, _("Export"), _("Cancel")
 		);
 		chooser.set_current_name ("config.supravim");
 
@@ -87,7 +87,7 @@ public class HomePage : Gtk.Box {
 	public void import_config () {
 		var chooser = new Gtk.FileChooserNative (
 			_("Import SupraVim config"), parent_window,
-			Gtk.FileChooserAction.OPEN, "Import", "Cancel"
+			Gtk.FileChooserAction.OPEN, _("Import"), _("Cancel")
 		);
 
 		var filter = new Gtk.FileFilter ();
@@ -122,7 +122,7 @@ public class HomePage : Gtk.Box {
 			string detail = Utils.remove_color ((errput ?? "").strip ());
 			popup.set_subtitle_label (detail == "" ? _("Operation failed") : detail);
 		}
-		var ok_button = new Gtk.Button.with_label ("Ok") {
+		var ok_button = new Gtk.Button.with_label (_("Ok")) {
 			css_classes = {"button_popup"},
 		};
 		ok_button.clicked.connect (() => popup.close ());

@@ -174,8 +174,8 @@ public class SnippetsPage : Gtk.Box {
 		var expander = new Adw.ExpanderRow () {
 			title    = Markup.escape_text (filetype),
 			subtitle = (snippets.length == 1)
-			           ? "1 snippet"
-			           : "%u snippets".printf (snippets.length),
+			           ? _("1 snippet")
+			           : _("%u snippets").printf (snippets.length),
 		};
 
 		var fd = new FiletypeData (expander, filetype);
@@ -208,7 +208,7 @@ public class SnippetsPage : Gtk.Box {
 			if (!is_system) {
 				var del_btn = new Gtk.Button () {
 					icon_name    = "user-trash-symbolic",
-					tooltip_text = "Delete this snippet",
+					tooltip_text = _("Delete this snippet"),
 					halign       = Gtk.Align.CENTER,
 					valign       = Gtk.Align.CENTER,
 					cursor       = new Gdk.Cursor.from_name ("pointer", null),
@@ -244,7 +244,7 @@ public class SnippetsPage : Gtk.Box {
 		if (is_system) {
 			var lock_icon = new Gtk.Image () {
 				icon_name    = "changes-prevent-symbolic",
-				tooltip_text = "System snippets — read-only",
+				tooltip_text = _("System snippets — read-only"),
 				halign       = Gtk.Align.CENTER,
 				valign       = Gtk.Align.CENTER,
 			};
@@ -256,7 +256,7 @@ public class SnippetsPage : Gtk.Box {
 
 			var add_btn = new Gtk.Button () {
 				icon_name    = "list-add-symbolic",
-				tooltip_text = "Add a snippet",
+				tooltip_text = _("Add a snippet"),
 				halign       = Gtk.Align.CENTER,
 				valign       = Gtk.Align.CENTER,
 				cursor       = new Gdk.Cursor.from_name ("pointer", null),
@@ -272,7 +272,7 @@ public class SnippetsPage : Gtk.Box {
 
 			var edit_btn = new Gtk.Button () {
 				icon_name    = "document-edit-symbolic",
-				tooltip_text = "Edit snippets file",
+				tooltip_text = _("Edit snippets file"),
 				halign       = Gtk.Align.CENTER,
 				valign       = Gtk.Align.CENTER,
 				cursor       = new Gdk.Cursor.from_name ("pointer", null),
@@ -288,7 +288,7 @@ public class SnippetsPage : Gtk.Box {
 
 			var del_btn = new Gtk.Button () {
 				icon_name    = "user-trash-symbolic",
-				tooltip_text = "Delete these snippets",
+				tooltip_text = _("Delete these snippets"),
 				halign       = Gtk.Align.CENTER,
 				valign       = Gtk.Align.CENTER,
 				cursor       = new Gdk.Cursor.from_name ("pointer", null),
@@ -425,7 +425,7 @@ public class SnippetsPage : Gtk.Box {
 		                              string name, string prefix,
 		                              string description, string body,
 		                              string path, string filetype = "") {
-			base (parent, name == "" ? "New Snippet" : "Edit Snippet",
+			base (parent, name == "" ? _("New Snippet") : _("Edit Snippet"),
 			      filetype != "" ? filetype : null);
 			file_path     = path;
 			original_name = name;
@@ -433,24 +433,24 @@ public class SnippetsPage : Gtk.Box {
 			set_default_size (620, 540);
 
 			name_entry = new Gtk.Entry () {
-				placeholder_text = "Snippet name",
+				placeholder_text = _("Snippet name"),
 				hexpand          = true,
 				text             = name,
 			};
 			prefix_entry = new Gtk.Entry () {
-				placeholder_text = "Prefix (e.g. fn, for, if)",
+				placeholder_text = _("Prefix (e.g. fn, for, if)"),
 				hexpand          = true,
 				text             = prefix,
 			};
 			desc_entry = new Gtk.Entry () {
-				placeholder_text = "Description",
+				placeholder_text = _("Description"),
 				hexpand          = true,
 				text             = description,
 			};
 
 			var fields = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
 
-			var lbl_name = new Gtk.Label ("Name") {
+			var lbl_name = new Gtk.Label (_("Name")) {
 				halign = Gtk.Align.START, width_chars = 12, xalign = 0.0f,
 			};
 			lbl_name.add_css_class ("dim-label");
@@ -459,7 +459,7 @@ public class SnippetsPage : Gtk.Box {
 			row_name.append (name_entry);
 			fields.append (row_name);
 
-			var lbl_prefix = new Gtk.Label ("Prefix") {
+			var lbl_prefix = new Gtk.Label (_("Prefix")) {
 				halign = Gtk.Align.START, width_chars = 12, xalign = 0.0f,
 			};
 			lbl_prefix.add_css_class ("dim-label");
@@ -468,7 +468,7 @@ public class SnippetsPage : Gtk.Box {
 			row_prefix.append (prefix_entry);
 			fields.append (row_prefix);
 
-			var lbl_desc = new Gtk.Label ("Description") {
+			var lbl_desc = new Gtk.Label (_("Description")) {
 				halign = Gtk.Align.START, width_chars = 12, xalign = 0.0f,
 			};
 			lbl_desc.add_css_class ("dim-label");
@@ -479,7 +479,7 @@ public class SnippetsPage : Gtk.Box {
 
 			base.box_main.append (fields);
 
-			var body_label = new Gtk.Label ("Body") {
+			var body_label = new Gtk.Label (_("Body")) {
 				halign        = Gtk.Align.START,
 				margin_top    = 4,
 				margin_bottom = 2,
@@ -504,7 +504,7 @@ public class SnippetsPage : Gtk.Box {
 			scrolled.set_child (body_view);
 			base.box_main.append (scrolled);
 
-			var save_btn = new Gtk.Button.with_label ("Save") {
+			var save_btn = new Gtk.Button.with_label (_("Save")) {
 				css_classes = {"suggested-action", "button_popup"},
 			};
 			save_btn.clicked.connect (() => do_save ());
@@ -522,7 +522,7 @@ public class SnippetsPage : Gtk.Box {
 			var new_body = body_view.buffer.get_text (start, end, false);
 
 			if (new_name == "") {
-				set_subtitle_label ("Name cannot be empty.");
+				set_subtitle_label (_("Name cannot be empty."));
 				return;
 			}
 
@@ -530,19 +530,19 @@ public class SnippetsPage : Gtk.Box {
 			try {
 				FileUtils.get_contents (file_path, out content);
 			} catch {
-				set_subtitle_label ("Could not read file.");
+				set_subtitle_label (_("Could not read file."));
 				return;
 			}
 
 			var doc = YYJson.Doc.read (content, content.length);
 			if (doc == null) {
-				set_subtitle_label ("Invalid JSON in file.");
+				set_subtitle_label (_("Invalid JSON in file."));
 				return;
 			}
 
 			unowned YYJson.Value root = doc.get_root ();
 			if (root == null || root.get_type () != YYJson.Type.OBJ) {
-				set_subtitle_label ("Unexpected JSON structure.");
+				set_subtitle_label (_("Unexpected JSON structure."));
 				return;
 			}
 
@@ -584,7 +584,7 @@ public class SnippetsPage : Gtk.Box {
 				saved ();
 				close ();
 			} catch (Error err) {
-				set_subtitle_label ("Error saving: " + err.message);
+				set_subtitle_label (_("Error saving: ") + err.message);
 			}
 		}
 
@@ -678,7 +678,7 @@ public class SnippetsPage : Gtk.Box {
 	public class SnippetDetailDialog : DialogPopup {
 		public SnippetDetailDialog (Gtk.Window parent, string name,
 		                            string filetype, string body, bool is_system) {
-			base (parent, name, filetype + (is_system ? "  •  read-only" : ""));
+			base (parent, name, filetype + (is_system ? _("  •  read-only") : ""));
 
 			set_default_size (600, 420);
 
@@ -697,7 +697,7 @@ public class SnippetsPage : Gtk.Box {
 				bottom_margin  = 10,
 				wrap_mode      = Gtk.WrapMode.NONE,
 			};
-			text_view.buffer.set_text (body != "" ? body : "(empty body)", -1);
+			text_view.buffer.set_text (body != "" ? body : _("(empty body)"), -1);
 			scrolled.set_child (text_view);
 			base.box_main.append (scrolled);
 
@@ -716,18 +716,18 @@ public class SnippetsPage : Gtk.Box {
 		private string    save_dir;
 
 		public AddSnippetFiletypeDialog (Gtk.Window parent, string dir) {
-			base (parent, "New Snippet File",
-				"Enter the filetype name (e.g. python, go, rust)");
+			base (parent, _("New Snippet File"),
+				_("Enter the filetype name (e.g. python, go, rust)"));
 			save_dir = dir;
 
 			ft_entry = new Gtk.Entry () {
-				placeholder_text = "python",
+				placeholder_text = _("python"),
 				hexpand          = true,
 			};
 			base.box_main.append (ft_entry);
 			ft_entry.activate.connect (() => do_save ());
 
-			var create_btn = new Gtk.Button.with_label ("Create") {
+			var create_btn = new Gtk.Button.with_label (_("Create")) {
 				css_classes = {"suggested-action", "button_popup"},
 			};
 			create_btn.clicked.connect (() => do_save ());
@@ -748,7 +748,7 @@ public class SnippetsPage : Gtk.Box {
 				saved (ft, path);
 				close ();
 			} catch (Error err) {
-				set_subtitle_label ("Error: " + err.message);
+				set_subtitle_label (_("Error: ") + err.message);
 			}
 		}
 	}
@@ -764,7 +764,7 @@ public class SnippetsPage : Gtk.Box {
 		private string       file_path;
 
 		public SnippetEditorDialog (Gtk.Window parent, string filetype, string path) {
-			base (parent, "Edit — " + filetype, null);
+			base (parent, _("Edit — ") + filetype, null);
 			file_path = path;
 
 			set_default_size (720, 560);
@@ -793,7 +793,7 @@ public class SnippetsPage : Gtk.Box {
 				text_view.buffer.set_text ("{\n}\n", -1);
 			}
 
-			var save_btn = new Gtk.Button.with_label ("Save") {
+			var save_btn = new Gtk.Button.with_label (_("Save")) {
 				css_classes = {"suggested-action", "button_popup"},
 			};
 			save_btn.clicked.connect (() => do_save ());
@@ -807,7 +807,7 @@ public class SnippetsPage : Gtk.Box {
 			var content = text_view.buffer.get_text (start, end, false);
 			var doc = YYJson.Doc.read (content, content.length);
 			if (doc == null) {
-				set_subtitle_label ("Invalid JSON — please check your syntax.");
+				set_subtitle_label (_("Invalid JSON — please check your syntax."));
 				return;
 			}
 			try {
@@ -815,7 +815,7 @@ public class SnippetsPage : Gtk.Box {
 				saved ();
 				close ();
 			} catch (Error err) {
-				set_subtitle_label ("Error saving: " + err.message);
+				set_subtitle_label (_("Error saving: ") + err.message);
 			}
 		}
 	}

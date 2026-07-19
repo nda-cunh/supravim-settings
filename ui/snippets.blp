@@ -23,8 +23,8 @@ template $SnippetsPage: Gtk.Box {
 
 		Adw.PreferencesPage {
 			Adw.PreferencesGroup user_snippets_group {
-				title: 'User Snippets';
-				description: 'Custom snippets per filetype — ~/.config/supravim/snippets/';
+				title: _("User Snippets");
+				description: _("Custom snippets per filetype — ~/.config/supravim/snippets/");
 				header-suffix: Button {
 					valign: center;
 					tooltip-text: _("Add snippets for a new filetype");
@@ -38,8 +38,8 @@ template $SnippetsPage: Gtk.Box {
 			}
 
 			Adw.PreferencesGroup system_snippets_group {
-				title: 'System Snippets';
-				description: 'Built-in snippets (read-only)';
+				title: _("System Snippets");
+				description: _("Built-in snippets (read-only)");
 			}
 		}
 	}

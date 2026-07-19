@@ -20,7 +20,7 @@ template $OptionsPage: Gtk.Box {
 		DropDown type_dropdown {
 			tooltip-text: _("Filter by type");
 			model: StringList {
-				strings ["All types", "Boolean", "Number", "String"]
+				strings [_("All types"), _("Boolean"), _("Number"), _("String")]
 			};
 			notify::selected => $on_type_changed();
 		}
@@ -32,8 +32,8 @@ template $OptionsPage: Gtk.Box {
 		Adw.PreferencesPage {
 			Adw.PreferencesGroup options_group {
 				styles ['PreferencesGroup']
-				title: 'Options';
-				description: 'Configure Supravim behaviour';
+				title: _("Options");
+				description: _("Configure Supravim behaviour");
 			}
 		}
 	}

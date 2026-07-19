@@ -33,7 +33,7 @@ public class RowPluginExternal : Adw.ActionRow {
 		update_pin_button ();
 
 		// Clicking the row body opens the configuration popup.
-		base.tooltip_text = "Configure this plugin";
+		base.tooltip_text = _("Configure this plugin");
 		base.activatable = true;
 		base.activated.connect (open_config);
 
@@ -56,7 +56,7 @@ public class RowPluginExternal : Adw.ActionRow {
 
 	private void update_subtitle () {
 		if (is_pinned ())
-			base.subtitle = "📌 Pinned to %s".printf (pinned);
+			base.subtitle = _("📌 Pinned to %s").printf (pinned);
 		else if (update_available)
 			base.subtitle = _("Update available");
 		else if (installed_commit != null && installed_commit != "")
@@ -181,7 +181,7 @@ public class RowPluginExternal : Adw.ActionRow {
 			// --- Repository: open the page in the browser. ---
 			if (url != "") {
 				var repo_row = new Adw.ActionRow () {
-					title = "Repository",
+					title = _("Repository"),
 					subtitle = url,
 					activatable = true
 				};
@@ -202,7 +202,7 @@ public class RowPluginExternal : Adw.ActionRow {
 			}
 
 			// --- Enabled toggle. ---
-			var enable_row = new Adw.ActionRow () { title = "Enabled" };
+			var enable_row = new Adw.ActionRow () { title = _("Enabled") };
 			var enable_sw = new Gtk.Switch () {
 				valign = Gtk.Align.CENTER,
 				active = enabled
@@ -228,9 +228,9 @@ public class RowPluginExternal : Adw.ActionRow {
 				subtitle = is_pinned
 					? pinned
 					: ((installed_commit != null && installed_commit != "")
-						? installed_commit : "unknown")
+						? installed_commit : _("unknown"))
 			};
-			var pin_btn = new Gtk.Button.with_label (is_pinned ? "Unpin" : "Pin") {
+			var pin_btn = new Gtk.Button.with_label (is_pinned ? _("Unpin") : _("Pin")) {
 				valign = Gtk.Align.CENTER,
 				tooltip_text = is_pinned
 					? _("Follow the latest commit again")
@@ -263,7 +263,7 @@ public class RowPluginExternal : Adw.ActionRow {
 					title = _("Update available"),
 					subtitle = _("A newer commit exists on the remote")
 				};
-				var up_btn = new Gtk.Button.with_label ("Update") {
+				var up_btn = new Gtk.Button.with_label (_("Update")) {
 					valign = Gtk.Align.CENTER,
 					css_classes = {"suggested-action"}
 				};
@@ -292,7 +292,7 @@ public class RowPluginExternal : Adw.ActionRow {
 				hexpand = true,
 				css_classes = {"dialog_button"}
 			};
-			var uninstall_button = new Gtk.Button.with_label ("Uninstall") {
+			var uninstall_button = new Gtk.Button.with_label (_("Uninstall")) {
 				css_classes = {"destructive-action", "button_popup"}
 			};
 			uninstall_button.clicked.connect (() => {
@@ -304,7 +304,7 @@ public class RowPluginExternal : Adw.ActionRow {
 				this.refresh ();
 				this.close ();
 			});
-			var close_button = new Gtk.Button.with_label ("Close") {
+			var close_button = new Gtk.Button.with_label (_("Close")) {
 				css_classes = {"button_popup"}
 			};
 			close_button.clicked.connect (() => this.close ());
@@ -319,10 +319,10 @@ public class RowPluginExternal : Adw.ActionRow {
   	 */
 	public class WindowRemovePlugin : DialogPopup {
 		public WindowRemovePlugin (Gtk.Window mainWindow, string name) {
-			base (mainWindow, _("Uninstall Plugin"), @"Are you sure you want to uninstall '$name' plugin?");
+			base (mainWindow, _("Uninstall Plugin"), _("Are you sure you want to uninstall '%s' plugin?").printf (name));
 			base.add_cancel_button ();
 
-			var uninstall_button = new Gtk.Button.with_label(@"Uninstall $name") {
+			var uninstall_button = new Gtk.Button.with_label(_("Uninstall %s").printf (name)) {
 				css_classes = {"destructive-action", "button_popup"},
 			};
 

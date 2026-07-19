@@ -42,27 +42,27 @@ private class PluginsDownloadWindow : Adw.Window {
 					line.scanf("download: [%d]", out progress);
 					progress_bar.set_fraction(progress / 100.0);
 					if (state != 1)
-						label_update.set_text("Download");
+						label_update.set_text(_("Download"));
 					state = 1;
 				}
 				else if (line.has_prefix("install: [")) {
 					line.scanf("install: [%d]", out progress);
 					progress_bar.set_fraction(progress / 100.0);
 					if (state != 2)
-						label_update.set_text("Install");
+						label_update.set_text(_("Install"));
 					state = 2;
 				}
 				else if (line.has_prefix("remove: [")) {
 					line.scanf("remove: [%d]", out progress);
 					progress_bar.set_fraction(progress / 100.0);
 					if (state != 3)
-						label_update.set_text("Removing");
+						label_update.set_text(_("Removing"));
 					state = 3;
 				}
 				Idle.add(execute.callback);
 				yield;
 			}
-			label_update.set_text("Done");
+			label_update.set_text(_("Done"));
 			process.wait(null);
 			return process.get_status ();
 		}

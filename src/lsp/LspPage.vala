@@ -101,7 +101,7 @@ public class LspPage : Gtk.Box {
 		private string    save_dir;
 
 		public AddLspDialog (Gtk.Window parent, string dir) {
-			base (parent, "Add a Language Server", null);
+			base (parent, _("Add a Language Server"), null);
 			save_dir = dir;
 
 			set_default_size (520, -1);
@@ -110,11 +110,11 @@ public class LspPage : Gtk.Box {
 			cmd_entry  = make_entry ("e.g. my-lsp-server");
 			ft_entry   = make_entry ("e.g. python,go");
 
-			base.box_main.append (make_row ("Name",         name_entry));
-			base.box_main.append (make_row ("Command",      cmd_entry));
-			base.box_main.append (make_row ("Filetypes",    ft_entry));
+			base.box_main.append (make_row (_("Name"),         name_entry));
+			base.box_main.append (make_row (_("Command"),      cmd_entry));
+			base.box_main.append (make_row (_("Filetypes"),    ft_entry));
 
-			var save_btn = new Gtk.Button.with_label ("Save") {
+			var save_btn = new Gtk.Button.with_label (_("Save")) {
 				css_classes = {"suggested-action", "button_popup"},
 			};
 			save_btn.clicked.connect (() => do_save ());
@@ -151,7 +151,7 @@ public class LspPage : Gtk.Box {
 			var cm = cmd_entry.text.strip ();
 			var ft = ft_entry.text.strip ();
 			if (nm == "" || cm == "" || ft == "") {
-				set_subtitle_label ("Name, command and filetypes are required.");
+				set_subtitle_label (_("Name, command and filetypes are required."));
 				return;
 			}
 			var e          = new LspEntry ();
@@ -168,7 +168,7 @@ public class LspPage : Gtk.Box {
 				saved ();
 				close ();
 			} catch (Error err) {
-				set_subtitle_label ("Error: " + err.message);
+				set_subtitle_label (_("Error: ") + err.message);
 			}
 		}
 	}

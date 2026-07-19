@@ -1,5 +1,5 @@
 /**
- * A row in the unified _("Plugin Store"). It shows a catalog plugin and installs
+ * A row in the unified Plugin Store. It shows a catalog plugin and installs
  * it with one click using the right backend, transparently:
  *   - suprapack package  -> `suprapack install plugin-<name>` (with progress)
  *   - git repository     -> Supravim.Plugin.add (url)
@@ -33,7 +33,7 @@ public class PluginStoreRow : Adw.ActionRow {
 		this.entry = entry;
 
 		base.title = entry.name;
-		base.subtitle = "by %s — %s".printf (entry.author, entry.description);
+		base.subtitle = _("by %s — %s").printf (entry.author, entry.description);
 
 		// Clicking the row body opens the repository page (when we have a URL).
 		if (entry.url != "") {
@@ -94,7 +94,7 @@ public class PluginStoreRow : Adw.ActionRow {
 	 */
 	public void set_description (string description) {
 		if (description != "")
-			base.subtitle = "by %s — %s".printf (entry.author, description);
+			base.subtitle = _("by %s — %s").printf (entry.author, description);
 	}
 
 	private void refresh_button () {

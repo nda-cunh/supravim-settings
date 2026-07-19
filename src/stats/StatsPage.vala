@@ -55,10 +55,10 @@ public class StatsPage : Gtk.Box {
 		var activity = new Gtk.Box (Gtk.Orientation.VERTICAL, 18);
 		activity.append (build_tiles ());
 		activity.append (build_heatmap ());
-		var langs = build_breakdown ("⌨️  Temps par langage", "lang:");
+		var langs = build_breakdown (_("⌨️  Time per language"), "lang:");
 		if (langs != null)
 			activity.append (langs);
-		var projs = build_breakdown ("📁  Temps par projet", "proj:");
+		var projs = build_breakdown (_("📁  Time per project"), "proj:");
 		if (projs != null)
 			activity.append (projs);
 
@@ -198,10 +198,10 @@ public class StatsPage : Gtk.Box {
 
 		int total = (int) defs.list.length;
 		flow.append (make_tile ("🏆", @"$(unlocked_count ()) / $(total)", _("Achievements unlocked")));
-		flow.append (make_tile ("⏱️", fmt_duration (state.total_of ("active_sec")), "Temps de code"));
-		flow.append (make_tile ("🔥", @"$(state.streak) j", "Streak"));
-		flow.append (make_tile ("📅", @"$(state.distinct_days) j", "Jours actifs"));
-		flow.append (make_tile ("📈", @"$(state.best_streak) j", "Meilleur streak"));
+		flow.append (make_tile ("⏱️", fmt_duration (state.total_of ("active_sec")), _("Coding time")));
+		flow.append (make_tile ("🔥", _("%lld d").printf (state.streak), _("Streak")));
+		flow.append (make_tile ("📅", _("%lld d").printf (state.distinct_days), _("Active days")));
+		flow.append (make_tile ("📈", _("%lld d").printf (state.best_streak), _("Best streak")));
 		flow.append (make_tile ("📏", fmt_int (state.counter ("lines")), _("Lines written")));
 		flow.append (make_tile ("📝", fmt_int (state.counter ("words")), _("Words written")));
 		flow.append (make_tile ("🔤", fmt_int (state.counter ("chars")), _("Characters")));
@@ -286,7 +286,7 @@ public class StatsPage : Gtk.Box {
 
 	private Gtk.Widget build_legend () {
 		var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 5) { halign = Gtk.Align.END };
-		box.append (new Gtk.Label ("Moins") { css_classes = { "stat-caption" } });
+		box.append (new Gtk.Label (_("Less")) { css_classes = { "stat-caption" } });
 		for (int i = 0; i <= 4; i++) {
 			var c = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
 				width_request = 13, height_request = 13,
@@ -295,7 +295,7 @@ public class StatsPage : Gtk.Box {
 			c.add_css_class ("hm-b" + i.to_string ());
 			box.append (c);
 		}
-		box.append (new Gtk.Label ("Plus") { css_classes = { "stat-caption" } });
+		box.append (new Gtk.Label (_("More")) { css_classes = { "stat-caption" } });
 		return box;
 	}
 

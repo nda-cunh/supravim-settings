@@ -2,7 +2,7 @@
 public class WindowUpdate : DialogPopup {
 
 	public WindowUpdate (Gtk.Window mainWindow) {
-		base (mainWindow, "Update", "            Updating Supravim...            ");
+		base (mainWindow, _("Update"), _("            Updating Supravim...            "));
 		base.closing_btn.visible = false;
 
 		progress_bar.set_fraction(0.01);
@@ -30,27 +30,27 @@ public class WindowUpdate : DialogPopup {
 				line.scanf("download: [%d]", out progress);
 				progress_bar.set_fraction(progress / 100.0);
 				if (state != 1)
-					label_footer.set_text("Download");
+					label_footer.set_text(_("Download"));
 				state = 1;
 			}
 			else if (line.has_prefix("install: [")) {
 				line.scanf("install: [%d]", out progress);
 				progress_bar.set_fraction(progress / 100.0);
 				if (state != 2)
-					label_footer.set_text("Install");
+					label_footer.set_text(_("Install"));
 				state = 2;
 			}
 			else if (line.has_prefix("remove: [")) {
 				line.scanf("remove: [%d]", out progress);
 				progress_bar.set_fraction(progress / 100.0);
 				if (state != 3)
-					label_footer.set_text("Removing");
+					label_footer.set_text(_("Removing"));
 				state = 3;
 			}
 			Idle.add(update.callback);
 			yield;
 		}
-		label_footer.set_text("Done");
+		label_footer.set_text(_("Done"));
 	}
 }
 

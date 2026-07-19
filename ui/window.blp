@@ -22,7 +22,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			Adw.ViewStackPage {
 				name: 'general';
 				icon-name: 'go-home-symbolic';
-				title: 'General';
+				title: _("General");
 				child: ScrolledWindow {
 					Viewport {
 						vexpand: false;
@@ -38,7 +38,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			Adw.ViewStackPage {
 				name: 'options';
 				icon-name: 'emblem-system-symbolic';
-				title: 'Options';
+				title: _("Options");
 				child: ScrolledWindow {
 					Viewport {
 						$OptionsPage options_page { }
@@ -50,7 +50,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			// Plugins Page
 			Adw.ViewStackPage {
 				name: 'plugins';
-				title: 'Plugins';
+				title: _("Plugins");
 				icon-name: 'insert-object-symbolic';
 				child: $PluginsPage plugins_page { };
 			}
@@ -60,7 +60,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			Adw.ViewStackPage {
 				name: 'lsp';
 				icon-name: 'utilities-terminal-symbolic';
-				title: 'LSP';
+				title: _("LSP");
 				child: $LspPage lsp_page { };
 			}
 
@@ -68,7 +68,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			Adw.ViewStackPage {
 				name: 'stats';
 				icon-name: 'starred-symbolic';
-				title: 'Stats';
+				title: _("Stats");
 				child: $StatsPage stats_page { };
 			}
 
@@ -76,7 +76,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			Adw.ViewStackPage {
 				name: 'snippets';
 				icon-name: 'document-edit-symbolic';
-				title: 'Snippets';
+				title: _("Snippets");
 				child: $SnippetsPage snippets_page { };
 			}
 
@@ -84,7 +84,7 @@ template $MainWindow: Adw.ApplicationWindow {
 			// Wiki Page
 			Adw.ViewStackPage wiki_page{
 				name: 'wiki';
-				title: 'Wiki';
+				title: _("Wiki");
 				icon-name: 'emblem-important-symbolic';
 				child: Box wiki_box{
 					hexpand:true;

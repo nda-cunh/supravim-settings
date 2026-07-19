@@ -66,8 +66,8 @@ public class StatsPage : Gtk.Box {
 		build_achievements (achievements);
 		achievements.prepend (build_notify_toggle ());
 
-		stack.add_titled (activity, "activity", "Activité").icon_name = "starred-symbolic";
-		stack.add_titled (achievements, "achievements", "Succès").icon_name = "emblem-favorite-symbolic";
+		stack.add_titled (activity, "activity", _("Activity")).icon_name = "starred-symbolic";
+		stack.add_titled (achievements, "achievements", _("Achievements")).icon_name = "emblem-favorite-symbolic";
 
 		var switcher = new Adw.ViewSwitcher () {
 			stack  = stack,
@@ -157,8 +157,8 @@ public class StatsPage : Gtk.Box {
 			active = notify_enabled (),
 		};
 		var row = new Adw.ActionRow () {
-			title       = "Notifications de succès",
-			subtitle    = "Afficher une notification quand un succès est débloqué",
+			title       = _("Achievement notifications"),
+			subtitle    = _("Show a notification when an achievement is unlocked"),
 			activatable_widget = sw,
 		};
 		row.add_suffix (sw);
@@ -197,14 +197,14 @@ public class StatsPage : Gtk.Box {
 		};
 
 		int total = (int) defs.list.length;
-		flow.append (make_tile ("🏆", @"$(unlocked_count ()) / $(total)", "Succès débloqués"));
+		flow.append (make_tile ("🏆", @"$(unlocked_count ()) / $(total)", _("Achievements unlocked")));
 		flow.append (make_tile ("⏱️", fmt_duration (state.total_of ("active_sec")), "Temps de code"));
 		flow.append (make_tile ("🔥", @"$(state.streak) j", "Streak"));
 		flow.append (make_tile ("📅", @"$(state.distinct_days) j", "Jours actifs"));
 		flow.append (make_tile ("📈", @"$(state.best_streak) j", "Meilleur streak"));
-		flow.append (make_tile ("📏", fmt_int (state.counter ("lines")), "Lignes écrites"));
-		flow.append (make_tile ("📝", fmt_int (state.counter ("words")), "Mots écrits"));
-		flow.append (make_tile ("🔤", fmt_int (state.counter ("chars")), "Caractères"));
+		flow.append (make_tile ("📏", fmt_int (state.counter ("lines")), _("Lines written")));
+		flow.append (make_tile ("📝", fmt_int (state.counter ("words")), _("Words written")));
+		flow.append (make_tile ("🔤", fmt_int (state.counter ("chars")), _("Characters")));
 		return flow;
 	}
 
@@ -234,7 +234,7 @@ public class StatsPage : Gtk.Box {
 		var card = new Gtk.Box (Gtk.Orientation.VERTICAL, 10);
 		card.add_css_class ("stat-card");
 
-		var title = new Gtk.Label ("Activité de code — dernière année") { xalign = 0f };
+		var title = new Gtk.Label (_("Code activity — last year")) { xalign = 0f };
 		title.add_css_class ("section-title");
 		card.append (title);
 
@@ -267,8 +267,8 @@ public class StatsPage : Gtk.Box {
 			int64 mins = secs / 60;
 			int64 lines = state.day_value (ds, "lines");
 			cell.tooltip_text = mins > 0
-				? @"$(ds) — $(mins) min de code, $(lines) lignes"
-				: @"$(ds) — aucune activité";
+				? _("%s — %lld min of code, %lld lines").printf (ds, mins, lines)
+				: _("%s — no activity").printf (ds);
 			grid.attach (cell, col, row, 1, 1);
 		}
 
@@ -329,7 +329,7 @@ public class StatsPage : Gtk.Box {
 
 			var group = new Adw.PreferencesGroup () {
 				title       = cat_title (c),
-				description = @"$(got) / $(total) débloqués",
+				description = _("%d / %d unlocked").printf (got, total),
 			};
 
 			foreach (unowned Supravim.Ach.Def d in defs.list.data)
@@ -345,7 +345,7 @@ public class StatsPage : Gtk.Box {
 
 		var row = new Adw.ActionRow () {
 			title    = masked ? "???" : d.title,
-			subtitle = masked ? "Succès secret — à découvrir" : markdown_bold (d.desc),
+			subtitle = masked ? _("Secret achievement — yet to be discovered") : markdown_bold (d.desc),
 		};
 
 		var icon = new Gtk.Label (masked ? "❓" : d.icon);

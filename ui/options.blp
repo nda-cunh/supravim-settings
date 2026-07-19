@@ -13,12 +13,12 @@ template $OptionsPage: Gtk.Box {
 
 		SearchEntry search_entry {
 			hexpand: true;
-			placeholder-text: "Search options…";
+			placeholder-text: _("Search options…");
 			search-changed => $on_search_changed();
 		}
 
 		DropDown type_dropdown {
-			tooltip-text: "Filter by type";
+			tooltip-text: _("Filter by type");
 			model: StringList {
 				strings ["All types", "Boolean", "Number", "String"]
 			};

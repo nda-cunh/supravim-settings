@@ -1,11 +1,11 @@
 public class WindowClearCache : DialogPopup {
 
 	public WindowClearCache (Gtk.Window mainWindow) {
-		base (mainWindow, "ClearCache", "Are you sure you want to clear vim undo cache?");
+		base (mainWindow, "ClearCache", _("Are you sure you want to clear vim undo cache?"));
 
 		base.add_cancel_button();
 
-		var uninstall_button = new Gtk.Button.with_label("Clear cache") {
+		var uninstall_button = new Gtk.Button.with_label(_("Clear cache")) {
 			css_classes = {"destructive-action", "button_popup"},
 		};
 

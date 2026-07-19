@@ -4,7 +4,7 @@ private class PluginsDownloadWindow : Adw.Window {
 	private Gtk.Label label_update = new Gtk.Label("");
 
 	public PluginsDownloadWindow (Gtk.Window mainWindow) {
-		this.title = "Download Plugins";
+		this.title = _("Download Plugins");
 		this.set_default_size (-1, -1);
 		this.set_resizable (true);
 		this.set_modal (true);

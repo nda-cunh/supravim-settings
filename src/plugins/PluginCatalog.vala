@@ -51,7 +51,7 @@ namespace PluginCatalog {
 			}
 		}
 		catch (Error e) {
-			warning ("Failed to load plugin catalog: %s", e.message);
+			warning (_("Failed to load plugin catalog: %s"), e.message);
 		}
 		return entries;
 	}

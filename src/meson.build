@@ -1,3 +1,9 @@
+config_vala_file = configure_file(
+  input : 'Config.vala.in',
+  output : 'Config.vala',
+  configuration : conf_data,
+)
+
 srcs = files(
   'main.vala',
   'Window.vala'
@@ -24,6 +30,7 @@ deps = [
 
 executable('supravim-gui',
   srcs,
+  config_vala_file,
   asresources,
   c_args: '-w',
   vala_args: supravim_vala_args + ['--pkg=yyjson'],

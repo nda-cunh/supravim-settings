@@ -23,7 +23,7 @@ public class MagicPopup : DialogPopup {
 	};
 
 	public MagicPopup (Gtk.Window parent) {
-		base (parent, "✨ Magic Mode ✨", "You found it. Now pick your chaos.");
+		base (parent, "✨ Magic Mode ✨", _("You found it. Now pick your chaos."));
 
 		var grid = new Gtk.Grid () {
 			row_spacing = 10,
@@ -41,7 +41,7 @@ public class MagicPopup : DialogPopup {
 		box_main.reorder_child_after (grid, label_subtitle);
 
 		if (!from_supravim) {
-			label_footer.set_text ("Open the GUI from inside VIM to see the effects.");
+			label_footer.set_text (_("Open the GUI from inside VIM to see the effects."));
 			label_footer.visible = true;
 		}
 	}

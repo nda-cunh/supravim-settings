@@ -58,13 +58,13 @@ public class HomePage : Gtk.Box {
 	[GtkCallback]
 	public void export_config () {
 		var chooser = new Gtk.FileChooserNative (
-			"Export SupraVim config", parent_window,
+			_("Export SupraVim config"), parent_window,
 			Gtk.FileChooserAction.SAVE, "Export", "Cancel"
 		);
 		chooser.set_current_name ("config.supravim");
 
 		var filter = new Gtk.FileFilter ();
-		filter.set_filter_name ("SupraVim config (*.supravim)");
+		filter.set_filter_name (_("SupraVim config (*.supravim)"));
 		filter.add_pattern ("*.supravim");
 		chooser.add_filter (filter);
 
@@ -72,7 +72,7 @@ public class HomePage : Gtk.Box {
 			if (id == Gtk.ResponseType.ACCEPT) {
 				var file = chooser.get_file ();
 				if (file != null)
-					run_config_command.begin (@"supravim --save '$(file.get_path ())'", "Config exported", "exportateur");
+					run_config_command.begin (@"supravim --save '$(file.get_path ())'", _("Config exported"), "exportateur");
 			}
 			chooser.destroy ();
 		});
@@ -86,12 +86,12 @@ public class HomePage : Gtk.Box {
 	[GtkCallback]
 	public void import_config () {
 		var chooser = new Gtk.FileChooserNative (
-			"Import SupraVim config", parent_window,
+			_("Import SupraVim config"), parent_window,
 			Gtk.FileChooserAction.OPEN, "Import", "Cancel"
 		);
 
 		var filter = new Gtk.FileFilter ();
-		filter.set_filter_name ("SupraVim config (*.supravim)");
+		filter.set_filter_name (_("SupraVim config (*.supravim)"));
 		filter.add_pattern ("*.supravim");
 		chooser.add_filter (filter);
 
@@ -99,7 +99,7 @@ public class HomePage : Gtk.Box {
 			if (id == Gtk.ResponseType.ACCEPT) {
 				var file = chooser.get_file ();
 				if (file != null)
-					run_config_command.begin (@"supravim --load '$(file.get_path ())'", "Config imported (restart Vim to apply)");
+					run_config_command.begin (@"supravim --load '$(file.get_path ())'", _("Config imported (restart Vim to apply)"));
 			}
 			chooser.destroy ();
 		});
@@ -113,14 +113,14 @@ public class HomePage : Gtk.Box {
 		string output, errput;
 		int status = yield Utils.run_async_command (command, out output, out errput);
 
-		var popup = new DialogPopup (parent_window, "SupraVim config");
+		var popup = new DialogPopup (parent_window, _("SupraVim config"));
 		if (status == 0) {
 			popup.set_subtitle_label (success_msg);
 			if (ach_on_success != null)
 				MainWindow.toast_ach (ach_on_success);
 		} else {
 			string detail = Utils.remove_color ((errput ?? "").strip ());
-			popup.set_subtitle_label (detail == "" ? "Operation failed" : detail);
+			popup.set_subtitle_label (detail == "" ? _("Operation failed") : detail);
 		}
 		var ok_button = new Gtk.Button.with_label ("Ok") {
 			css_classes = {"button_popup"},
@@ -188,7 +188,7 @@ public class HomePage : Gtk.Box {
 		yield Utils.run_async_command("suprapack have_update supravim", out contents);
 
 		if (contents._strip() == "") {
-			update_button.set_label("Update (no update available)");
+			update_button.set_label(_("Update (no update available)"));
 			update_button.remove_css_class("have_update");
 		}
 		else {

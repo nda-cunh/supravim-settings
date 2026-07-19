@@ -58,20 +58,20 @@ public class RowPluginExternal : Adw.ActionRow {
 		if (is_pinned ())
 			base.subtitle = "📌 Pinned to %s".printf (pinned);
 		else if (update_available)
-			base.subtitle = "Update available";
+			base.subtitle = _("Update available");
 		else if (installed_commit != null && installed_commit != "")
-			base.subtitle = "Up to date · %s".printf (installed_commit);
+			base.subtitle = _("Up to date · %s").printf (installed_commit);
 		else
-			base.subtitle = "External Plugin";
+			base.subtitle = _("External Plugin");
 	}
 
 	private void update_pin_button () {
 		if (is_pinned ()) {
 			pin_button.add_css_class ("have_update");
-			pin_button.tooltip_text = "Unpin — follow the latest commit";
+			pin_button.tooltip_text = _("Unpin — follow the latest commit");
 		} else {
 			pin_button.remove_css_class ("have_update");
-			pin_button.tooltip_text = "Pin to the current commit";
+			pin_button.tooltip_text = _("Pin to the current commit");
 		}
 	}
 
@@ -125,7 +125,7 @@ public class RowPluginExternal : Adw.ActionRow {
 			}
 		} catch (Error e) {
 			var dialog = new DialogPopup (this.get_root () as Gtk.Window,
-				"Error Pinning Plugin",
+				_("Error Pinning Plugin"),
 				Utils.remove_color (e.message));
 			dialog.add_cancel_button ();
 			dialog.present ();
@@ -141,7 +141,7 @@ public class RowPluginExternal : Adw.ActionRow {
 			Supravim.Plugin.update (pl_name);
 		} catch (Error e) {
 			var dialog = new DialogPopup (this.get_root () as Gtk.Window,
-				"Error Updating Plugin",
+				_("Error Updating Plugin"),
 				Utils.remove_color (e.message));
 			dialog.add_cancel_button ();
 			dialog.present ();
@@ -187,13 +187,13 @@ public class RowPluginExternal : Adw.ActionRow {
 				};
 				var open_btn = new Gtk.Button.from_icon_name ("web-browser-symbolic") {
 					valign = Gtk.Align.CENTER,
-					tooltip_text = "Open in browser"
+					tooltip_text = _("Open in browser")
 				};
 				open_btn.clicked.connect (() => {
 					try {
 						AppInfo.launch_default_for_uri (url, null);
 					} catch (Error e) {
-						warning ("Could not open %s: %s", url, e.message);
+						warning (_("Could not open %s: %s"), url, e.message);
 					}
 				});
 				repo_row.add_suffix (open_btn);
@@ -224,7 +224,7 @@ public class RowPluginExternal : Adw.ActionRow {
 
 			// --- Commit / pin management. ---
 			var commit_row = new Adw.ActionRow () {
-				title = is_pinned ? "Pinned commit" : "Installed commit",
+				title = is_pinned ? _("Pinned commit") : _("Installed commit"),
 				subtitle = is_pinned
 					? pinned
 					: ((installed_commit != null && installed_commit != "")
@@ -233,8 +233,8 @@ public class RowPluginExternal : Adw.ActionRow {
 			var pin_btn = new Gtk.Button.with_label (is_pinned ? "Unpin" : "Pin") {
 				valign = Gtk.Align.CENTER,
 				tooltip_text = is_pinned
-					? "Follow the latest commit again"
-					: "Freeze this plugin on its current commit"
+					? _("Follow the latest commit again")
+					: _("Freeze this plugin on its current commit")
 			};
 			if (is_pinned)
 				pin_btn.add_css_class ("have_update");
@@ -246,7 +246,7 @@ public class RowPluginExternal : Adw.ActionRow {
 						Supravim.Plugin.pin (name);
 				} catch (Error e) {
 					var d = new DialogPopup (this.get_root () as Gtk.Window,
-						"Error Pinning Plugin", Utils.remove_color (e.message));
+						_("Error Pinning Plugin"), Utils.remove_color (e.message));
 					d.add_cancel_button ();
 					d.present ();
 					return;
@@ -260,8 +260,8 @@ public class RowPluginExternal : Adw.ActionRow {
 			// --- Update (only when a newer commit exists and not pinned). ---
 			if (update_available && !is_pinned) {
 				var up_row = new Adw.ActionRow () {
-					title = "Update available",
-					subtitle = "A newer commit exists on the remote"
+					title = _("Update available"),
+					subtitle = _("A newer commit exists on the remote")
 				};
 				var up_btn = new Gtk.Button.with_label ("Update") {
 					valign = Gtk.Align.CENTER,
@@ -272,7 +272,7 @@ public class RowPluginExternal : Adw.ActionRow {
 						Supravim.Plugin.update (name);
 					} catch (Error e) {
 						var d = new DialogPopup (this.get_root () as Gtk.Window,
-							"Error Updating Plugin", Utils.remove_color (e.message));
+							_("Error Updating Plugin"), Utils.remove_color (e.message));
 						d.add_cancel_button ();
 						d.present ();
 						return;
@@ -319,7 +319,7 @@ public class RowPluginExternal : Adw.ActionRow {
   	 */
 	public class WindowRemovePlugin : DialogPopup {
 		public WindowRemovePlugin (Gtk.Window mainWindow, string name) {
-			base (mainWindow, "Uninstall Plugin", @"Are you sure you want to uninstall '$name' plugin?");
+			base (mainWindow, _("Uninstall Plugin"), @"Are you sure you want to uninstall '$name' plugin?");
 			base.add_cancel_button ();
 
 			var uninstall_button = new Gtk.Button.with_label(@"Uninstall $name") {

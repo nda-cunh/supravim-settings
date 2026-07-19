@@ -1,0 +1,336 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR SupraVim
+# This file is distributed under the same license as the supravim-gui package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: supravim-gui 1.29\n"
+"Report-Msgid-Bugs-To: nathan.dacunha.nd@gmail.com\n"
+"POT-Creation-Date: 2026-07-19 04:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/homepage/HomePage.vala:61
+msgid "Export SupraVim config"
+msgstr ""
+
+#: src/homepage/HomePage.vala:67 src/homepage/HomePage.vala:94
+msgid "SupraVim config (*.supravim)"
+msgstr ""
+
+#: src/homepage/HomePage.vala:75
+msgid "Config exported"
+msgstr ""
+
+#: src/homepage/HomePage.vala:89
+msgid "Import SupraVim config"
+msgstr ""
+
+#: src/homepage/HomePage.vala:102
+msgid "Config imported (restart Vim to apply)"
+msgstr ""
+
+#: src/homepage/HomePage.vala:116
+msgid "SupraVim config"
+msgstr ""
+
+#: src/homepage/HomePage.vala:123
+msgid "Operation failed"
+msgstr ""
+
+#: src/homepage/HomePage.vala:191
+msgid "Update (no update available)"
+msgstr ""
+
+#: src/lsp/LspRow.vala:97
+msgid "System LSP — read-only"
+msgstr ""
+
+#: src/lsp/LspRow.vala:106
+msgid "Delete this LSP"
+msgstr ""
+
+#: src/lsp/LspRow.vala:132
+msgid "Not found"
+msgstr ""
+
+#: src/options/OptionsRow.vala:20
+msgid "Reset to default"
+msgstr ""
+
+#: src/plugins/PluginCatalog.vala:54
+#, c-format
+msgid "Failed to load plugin catalog: %s"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:61 src/plugins/PluginExternalRow.vala:263
+msgid "Update available"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:63
+#, c-format
+msgid "Up to date · %s"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:65
+msgid "External Plugin"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:71
+msgid "Unpin — follow the latest commit"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:74
+msgid "Pin to the current commit"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:128
+#: src/plugins/PluginExternalRow.vala:249
+msgid "Error Pinning Plugin"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:144
+#: src/plugins/PluginExternalRow.vala:275
+msgid "Error Updating Plugin"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:190
+msgid "Open in browser"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:196 src/plugins/PluginStoreRow.vala:118
+#, c-format
+msgid "Could not open %s: %s"
+msgstr ""
+
+#. --- Commit / pin management. ---
+#: src/plugins/PluginExternalRow.vala:227
+msgid "Pinned commit"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:227
+msgid "Installed commit"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:236
+msgid "Follow the latest commit again"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:237
+msgid "Freeze this plugin on its current commit"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:264
+msgid "A newer commit exists on the remote"
+msgstr ""
+
+#: src/plugins/PluginExternalRow.vala:322
+msgid "Uninstall Plugin"
+msgstr ""
+
+#. Clicking the row body opens the repository page (when we have a URL).
+#: src/plugins/PluginStoreRow.vala:40
+#, c-format
+msgid "Open %s"
+msgstr ""
+
+#: src/plugins/PluginStoreRow.vala:104
+msgid "Remove this plugin"
+msgstr ""
+
+#: src/plugins/PluginStoreRow.vala:109
+msgid "Install this plugin"
+msgstr ""
+
+#: src/plugins/PluginStoreRow.vala:156
+msgid "Error Removing Plugin"
+msgstr ""
+
+#: src/plugins/PluginStoreRow.vala:156
+msgid "Error Installing Plugin"
+msgstr ""
+
+#: src/plugins/PluginsDownloadWindow.vala:7
+msgid "Download Plugins"
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:55
+msgid "Error Updating Plugins"
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:123 src/plugins/PluginsPage.vala:125
+msgid "All categories"
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:151
+#, c-format
+msgid "Failed to refresh plugins: %s"
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:262
+msgid "Invalid URL"
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:263
+msgid "The URL provided is not a valid GitHub or GitLab repository URL."
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:276
+msgid "Error Adding Plugin"
+msgstr ""
+
+#: src/plugins/PluginsPage.vala:286
+msgid "Add an url github/gitlab"
+msgstr ""
+
+#: src/popup/MagicPopup.vala:26
+msgid "You found it. Now pick your chaos."
+msgstr ""
+
+#: src/popup/MagicPopup.vala:44
+msgid "Open the GUI from inside VIM to see the effects."
+msgstr ""
+
+#: src/popup/WindowClearCache.vala:4
+msgid "Are you sure you want to clear vim undo cache?"
+msgstr ""
+
+#: src/popup/WindowClearCache.vala:8
+msgid "Clear cache"
+msgstr ""
+
+#: src/stats/StatsPage.vala:69
+msgid "Activity"
+msgstr ""
+
+#: src/stats/StatsPage.vala:70
+msgid "Achievements"
+msgstr ""
+
+#: src/stats/StatsPage.vala:160
+msgid "Achievement notifications"
+msgstr ""
+
+#: src/stats/StatsPage.vala:161
+msgid "Show a notification when an achievement is unlocked"
+msgstr ""
+
+#: src/stats/StatsPage.vala:200
+msgid "Achievements unlocked"
+msgstr ""
+
+#: src/stats/StatsPage.vala:205
+msgid "Lines written"
+msgstr ""
+
+#: src/stats/StatsPage.vala:206
+msgid "Words written"
+msgstr ""
+
+#: src/stats/StatsPage.vala:207
+msgid "Characters"
+msgstr ""
+
+#: src/stats/StatsPage.vala:237
+msgid "Code activity — last year"
+msgstr ""
+
+#: src/stats/StatsPage.vala:270
+#, c-format
+msgid "%s — %lld min of code, %lld lines"
+msgstr ""
+
+#: src/stats/StatsPage.vala:271
+#, c-format
+msgid "%s — no activity"
+msgstr ""
+
+#: src/stats/StatsPage.vala:332
+#, c-format
+msgid "%d / %d unlocked"
+msgstr ""
+
+#: src/stats/StatsPage.vala:348
+msgid "Secret achievement — yet to be discovered"
+msgstr ""
+
+#: ui/DialogPopup.blp:38
+msgid "This is a dialog popup example."
+msgstr ""
+
+#: ui/DialogPopup.blp:46
+msgid ""
+"This dialog demonstrates a popup with title, subtitle, buttons, and a "
+"progress bar."
+msgstr ""
+
+#: ui/lsp.blp:16
+msgid "Search language servers…"
+msgstr ""
+
+#: ui/lsp.blp:22
+msgid "Add a custom LSP"
+msgstr ""
+
+#: ui/options.blp:16
+msgid "Search options…"
+msgstr ""
+
+#: ui/options.blp:21
+msgid "Filter by type"
+msgstr ""
+
+#: ui/plugins.blp:38
+msgid "Search plugins…"
+msgstr ""
+
+#: ui/plugins.blp:43
+msgid "Filter by category"
+msgstr ""
+
+#: ui/plugins.blp:49
+msgid "Add a plugin from a GitHub / GitLab URL"
+msgstr ""
+
+#: ui/plugins.blp:84
+msgid "Update all Git plugins"
+msgstr ""
+
+#: ui/plugins.blp:89
+msgid "Update all"
+msgstr ""
+
+#: ui/plugins/externalrow.blp:6
+msgid "Uninstall Plugins"
+msgstr ""
+
+#: ui/plugins/externalrow.blp:24
+msgid "Close"
+msgstr ""
+
+#: ui/plugins/externalrow.blp:50
+msgid "Update this plugin"
+msgstr ""
+
+#: ui/snippets.blp:16
+msgid "Search snippets…"
+msgstr ""
+
+#: ui/snippets.blp:30
+msgid "Add snippets for a new filetype"
+msgstr ""
+
+#: ui/snippets.blp:35
+msgid "New filetype"
+msgstr ""
+
+#: ui/wiki.blp:32
+msgid "Welcome to the SupraWiki"
+msgstr ""

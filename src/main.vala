@@ -42,7 +42,25 @@ class Application : Adw.Application {
 		}
 	}
 
+	private static string find_localedir () {
+		try {
+			string exe = FileUtils.read_link ("/proc/self/exe");
+			string prefix = Path.get_dirname (Path.get_dirname (exe));
+			string dir = Path.build_filename (prefix, "share", "locale");
+			if (FileUtils.test (dir, FileTest.IS_DIR))
+				return dir;
+		}
+		catch (Error e) {
+		}
+		return Config.LOCALEDIR;
+	}
+
 	public static void main(string []args) {
+		Intl.setlocale ();
+		Intl.bindtextdomain (Config.GETTEXT_PACKAGE, find_localedir ());
+		Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
+		Intl.textdomain (Config.GETTEXT_PACKAGE);
+
 		Supravim.init ();
 		set_print_handler((msg) => {
 			stdout.puts(msg);

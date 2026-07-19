@@ -17,7 +17,7 @@ public class RowOptions : Adw.ActionRow {
 		_reset_btn = new Gtk.Button.from_icon_name ("view-refresh-symbolic") {
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
-			tooltip_text = "Reset to default",
+			tooltip_text = _("Reset to default"),
 			cursor = new Gdk.Cursor.from_name ("pointer", null)
 		};
 		_reset_btn.add_css_class ("flat");

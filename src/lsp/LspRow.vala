@@ -94,7 +94,7 @@ public class LspRow : Adw.ActionRow {
 		if (entry.is_system) {
 			var lock_icon = new Gtk.Image () {
 				icon_name    = "changes-prevent-symbolic",
-				tooltip_text = "System LSP — read-only",
+				tooltip_text = _("System LSP — read-only"),
 				halign       = Gtk.Align.CENTER,
 				valign       = Gtk.Align.CENTER,
 			};
@@ -103,7 +103,7 @@ public class LspRow : Adw.ActionRow {
 		} else {
 			var del = new Gtk.Button () {
 				icon_name    = "user-trash-symbolic",
-				tooltip_text = "Delete this LSP",
+				tooltip_text = _("Delete this LSP"),
 				halign       = Gtk.Align.CENTER,
 				valign       = Gtk.Align.CENTER,
 				cursor       = new Gdk.Cursor.from_name ("pointer", null),
@@ -129,7 +129,7 @@ public class LspRow : Adw.ActionRow {
 			status_label.label = "Installed";
 		} else {
 			status_label.add_css_class ("error");
-			status_label.label = "Not found";
+			status_label.label = _("Not found");
 			if (_entry.command_help != null && _entry.command_help != "")
 				this.tooltip_text = "Install: " + _entry.command_help;
 		}

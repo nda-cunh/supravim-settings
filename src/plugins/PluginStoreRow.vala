@@ -1,5 +1,5 @@
 /**
- * A row in the unified "Plugin Store". It shows a catalog plugin and installs
+ * A row in the unified _("Plugin Store"). It shows a catalog plugin and installs
  * it with one click using the right backend, transparently:
  *   - suprapack package  -> `suprapack install plugin-<name>` (with progress)
  *   - git repository     -> Supravim.Plugin.add (url)
@@ -37,7 +37,7 @@ public class PluginStoreRow : Adw.ActionRow {
 
 		// Clicking the row body opens the repository page (when we have a URL).
 		if (entry.url != "") {
-			base.tooltip_text = "Open %s".printf (entry.url);
+			base.tooltip_text = _("Open %s").printf (entry.url);
 			base.activatable = true;
 			base.activated.connect (open_url);
 		}
@@ -101,12 +101,12 @@ public class PluginStoreRow : Adw.ActionRow {
 		if (installed) {
 			action_image.icon_name = "user-trash-symbolic";
 			action_button.set_css_classes ({"uninstall"});
-			action_button.tooltip_text = "Remove this plugin";
+			action_button.tooltip_text = _("Remove this plugin");
 		}
 		else {
 			action_image.icon_name = "list-add-symbolic";
 			action_button.set_css_classes ({"install"});
-			action_button.tooltip_text = "Install this plugin";
+			action_button.tooltip_text = _("Install this plugin");
 		}
 	}
 
@@ -115,7 +115,7 @@ public class PluginStoreRow : Adw.ActionRow {
 		try {
 			AppInfo.launch_default_for_uri (entry.url, null);
 		} catch (Error e) {
-			warning ("Could not open %s: %s", entry.url, e.message);
+			warning (_("Could not open %s: %s"), entry.url, e.message);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class PluginStoreRow : Adw.ActionRow {
 		}
 		catch (Error e) {
 			var dialog = new DialogPopup (window,
-				installed ? "Error Removing Plugin" : "Error Installing Plugin",
+				installed ? _("Error Removing Plugin") : _("Error Installing Plugin"),
 				Utils.remove_color (e.message));
 			dialog.add_cancel_button ();
 			dialog.present ();

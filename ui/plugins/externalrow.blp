@@ -3,7 +3,7 @@ using Adw 1;
 
 
 Adw.Window uninstall_window {
-	title: "Uninstall Plugins";
+	title: _("Uninstall Plugins");
 	default-width: 400;
 	default-height: 600;
 
@@ -21,7 +21,7 @@ Adw.Window uninstall_window {
 		}
 
 		Button close_button {
-			label: "Close";
+			label: _("Close");
 			halign: end;
 		}
 	}
@@ -47,7 +47,7 @@ template $RowPluginExternal: Adw.ActionRow {
 
 		Button update_button {
 			valign: center;
-			tooltip-text: "Update this plugin";
+			tooltip-text: _("Update this plugin");
 			visible: false;
 			Image {
 				icon-name: 'view-refresh-symbolic';

@@ -16,24 +16,6 @@ public class MainWindow : Adw.ApplicationWindow {
 		viewstack.notify["visible-child-name"].connect (load_visible_page);
 		load_visible_page ();
 
-		var konami_ctrl = new Gtk.EventControllerKey ();
-		konami_ctrl.set_propagation_phase (Gtk.PropagationPhase.CAPTURE);
-		konami_ctrl.key_pressed.connect ((keyval, keycode, state) => {
-			uint k = Gdk.keyval_to_lower (keyval);
-			if (k == KONAMI[konami_pos]) {
-				konami_pos++;
-				if (konami_pos >= KONAMI.length) {
-					konami_pos = 0;
-					Utils.ach_metric ("konami");
-					do_toast_ach ("konami");
-				}
-			} else {
-				konami_pos = (k == KONAMI[0]) ? 1 : 0;
-			}
-			return false;
-		});
-		((Gtk.Widget) this).add_controller (konami_ctrl);
-
 		seed_achievements ();
 		current_window = this;
 	}
@@ -50,7 +32,7 @@ public class MainWindow : Adw.ApplicationWindow {
 
 	/**
 	 * Show a toast for the achievement `id` if it is not already unlocked.
-	 * Called from GUI actions that grant an achievement (konami, wiki, …).
+	 * Called from GUI actions that grant an achievement (wiki, …).
 	 */
 	public static void toast_ach (string id) {
 		if (current_window != null)
@@ -130,13 +112,6 @@ public class MainWindow : Adw.ApplicationWindow {
 				(ic != null ? ic.get_str () : "🏆") + "\t" + (ti != null ? ti.get_str () : id_v.get_str ());
 		}
 	}
-
-	private const uint[] KONAMI = {
-		Gdk.Key.Up, Gdk.Key.Up, Gdk.Key.Down, Gdk.Key.Down,
-		Gdk.Key.Left, Gdk.Key.Right, Gdk.Key.Left, Gdk.Key.Right,
-		Gdk.Key.b, Gdk.Key.a
-	};
-	private int konami_pos = 0;
 
 	/**
 	 * Build the content of the currently visible page on first display.

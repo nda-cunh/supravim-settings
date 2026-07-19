@@ -52,7 +52,7 @@ public class PluginsPage : Gtk.Box {
 		} catch (Error e) {
 			var parent = this.get_root () as Gtk.Window;
 			var dialog = new DialogPopup (parent,
-				"Error Updating Plugins",
+				_("Error Updating Plugins"),
 				Utils.remove_color (e.message));
 			dialog.add_cancel_button ();
 			dialog.present ();
@@ -75,7 +75,7 @@ public class PluginsPage : Gtk.Box {
 	private string? selected_category () {
 		var sel = category_dropdown.selected;
 		if (sel == 0 || sel >= categories.length)
-			return null; // "All categories"
+			return null; // _("All categories")
 		return categories[sel];
 	}
 
@@ -120,9 +120,9 @@ public class PluginsPage : Gtk.Box {
 		found.sort ((a, b) => strcmp (a, b));
 
 		categories = new string[found.length + 1];
-		categories[0] = "All categories";
+		categories[0] = _("All categories");
 		var model = new Gtk.StringList (null);
-		model.append ("All categories");
+		model.append (_("All categories"));
 		for (uint i = 0; i < found.length; i++) {
 			categories[i + 1] = found[i];
 			model.append (found[i]);
@@ -148,7 +148,7 @@ public class PluginsPage : Gtk.Box {
 		try {
 			yield refresh ();
 		} catch (Error e) {
-			warning ("Failed to refresh plugins: %s", e.message);
+			warning (_("Failed to refresh plugins: %s"), e.message);
 		}
 	}
 
@@ -259,8 +259,8 @@ public class PluginsPage : Gtk.Box {
 			var regex = /https?:\/\/(www\.)?(github\.com|gitlab\.com)\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\/)?/;
 			if (!regex.match (url_entry.text)) {
 				var error_dialog = new DialogPopup (this.get_root () as Gtk.Window,
-					"Invalid URL",
-					"The URL provided is not a valid GitHub or GitLab repository URL."
+					_("Invalid URL"),
+					_("The URL provided is not a valid GitHub or GitLab repository URL.")
 				);
 				error_dialog.add_cancel_button ();
 				error_dialog.present ();
@@ -273,7 +273,7 @@ public class PluginsPage : Gtk.Box {
 				this.refresh ();
 			} catch (Error e) {
 				var error_dialog = new DialogPopup (this.get_root () as Gtk.Window,
-					"Error Adding Plugin",
+					_("Error Adding Plugin"),
 					Utils.remove_color (e.message)
 				);
 				error_dialog.add_cancel_button ();
@@ -283,7 +283,7 @@ public class PluginsPage : Gtk.Box {
 
 		public WindowAddPlugin (Gtk.Window mainWindow) {
 			base (mainWindow,
-				"Add an url github/gitlab",
+				_("Add an url github/gitlab"),
 """To add an external plugin, please provide the URL to the plugin repository.
 The plugin will be downloaded and installed automatically."""
 			);

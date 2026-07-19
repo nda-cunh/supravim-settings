@@ -13,7 +13,7 @@ template $SnippetsPage: Gtk.Box {
 
 		SearchEntry snippets_search {
 			hexpand: true;
-			placeholder-text: "Search snippets…";
+			placeholder-text: _("Search snippets…");
 			search-changed => $on_search_changed();
 		}
 	}
@@ -27,12 +27,12 @@ template $SnippetsPage: Gtk.Box {
 				description: 'Custom snippets per filetype — ~/.config/supravim/snippets/';
 				header-suffix: Button {
 					valign: center;
-					tooltip-text: "Add snippets for a new filetype";
+					tooltip-text: _("Add snippets for a new filetype");
 					clicked => $on_add_snippet();
 
 					Adw.ButtonContent {
 						icon-name: 'list-add-symbolic';
-						label: "New filetype";
+						label: _("New filetype");
 					}
 				};
 			}

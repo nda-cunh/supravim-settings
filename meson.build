@@ -8,6 +8,7 @@ add_project_arguments('--enable-experimental', language: 'vala')
 vapi_dir = meson.current_source_dir() / 'vapi'
 
 add_project_arguments(['--vapidir', vapi_dir], language: 'vala')
+add_project_arguments('-DGETTEXT_PACKAGE="' + meson.project_name() + '"', language : 'c')
 
 gnome = import('gnome')
 
@@ -45,6 +46,8 @@ asresources = gnome.compile_resources(
 # Suprapack
 conf_data = configuration_data()
 conf_data.set('version', meson.project_version())
+conf_data.set('gettext_package', meson.project_name())
+conf_data.set('localedir', get_option('prefix') / get_option('localedir'))
 info_file = configure_file(input : 'data/info.in', output : 'info', configuration : conf_data)
 
 install_data(info_file, install_dir: '.')
@@ -61,4 +64,5 @@ if supravim_dep.type_name() == 'internal'
   supravim_vala_args += ['--vapidir', supravim_sp.get_variable('libsupravim_vapi_dir')]
 endif
 
+subdir('po')
 subdir('src')

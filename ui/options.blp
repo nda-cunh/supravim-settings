@@ -20,7 +20,7 @@ template $OptionsPage: Gtk.Box {
 		DropDown type_dropdown {
 			tooltip-text: _("Filter by type");
 			model: StringList {
-				strings [_("All types"), _("Boolean"), _("Number"), _("String")]
+				strings [_("All types"), _("Boolean"), _("Number"), _("String"), _("Choice"), _("Multiple choice")]
 			};
 			notify::selected => $on_type_changed();
 		}

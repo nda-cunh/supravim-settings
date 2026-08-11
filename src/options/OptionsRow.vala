@@ -6,7 +6,12 @@ public class RowOptions : Adw.ActionRow {
 	private Gtk.SpinButton _spin;
 	private Gtk.Switch _switch;
 	private Gtk.Entry _entry;
+	private Gtk.DropDown _drop;
+	private Gtk.MenuButton _multi;
+	private GenericArray<Gtk.CheckButton> _checks;
 	private Gtk.Button _reset_btn;
+
+	private bool syncing = false;
 
 	private uint debounce_id = 0;
 	private OptionsONode node;
@@ -74,6 +79,73 @@ public class RowOptions : Adw.ActionRow {
 			base.add_suffix (_reset_btn);
 			base.add_suffix (_entry);
 		}
+		else if (node.type_value == "choice") {
+			var model = new Gtk.StringList (null);
+			foreach (unowned var c in node.choice)
+				model.append (c);
+
+			_drop = new Gtk.DropDown (model, null) {
+				halign = Gtk.Align.CENTER,
+				valign = Gtk.Align.CENTER,
+			};
+			_drop.selected = index_of_choice (node.value);
+			_drop.notify["selected"].connect (() => {
+				var text = selected_choice ();
+				if (text == null)
+					return;
+				if (from_supravim) {
+					print ("onChangeOption: [%s] <%s>\n", node.name, text);
+				} else {
+					try {
+						Supravim.Options.update_value (node.name, text);
+					} catch (Error e) {
+						warning ("option update: %s", e.message);
+					}
+				}
+				sync_reset_visibility ();
+			});
+			base.add_suffix (_reset_btn);
+			base.add_suffix (_drop);
+		}
+		else if (node.type_value == "multiple_choice") {
+			var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6) {
+				margin_top = 6, margin_bottom = 6, margin_start = 6, margin_end = 6
+			};
+			var selected = split_choices (node.value);
+			_checks = new GenericArray<Gtk.CheckButton> ();
+			foreach (unowned var c in node.choice) {
+				var check = new Gtk.CheckButton.with_label (c) {
+					active = (c in selected)
+				};
+				check.toggled.connect (() => {
+					if (syncing)
+						return;
+					var text = selected_choices ();
+					if (from_supravim) {
+						print ("onChangeOption: [%s] <%s>\n", node.name, text);
+					} else {
+						try {
+							Supravim.Options.update_value (node.name, text);
+						} catch (Error e) {
+							warning ("option update: %s", e.message);
+						}
+					}
+					update_multi_label ();
+					sync_reset_visibility ();
+				});
+				_checks.add (check);
+				box.append (check);
+			}
+
+			_multi = new Gtk.MenuButton () {
+				halign = Gtk.Align.CENTER,
+				valign = Gtk.Align.CENTER,
+				popover = new Gtk.Popover () { child = box }
+			};
+			update_multi_label ();
+			base.add_suffix (_reset_btn);
+			base.add_suffix (_multi);
+		}
 		else if (node.type_value == "bool") {
 			_switch = new Gtk.Switch () {
 				halign = Gtk.Align.CENTER,
@@ -114,6 +186,64 @@ public class RowOptions : Adw.ActionRow {
 
 	/* ------------------------------------------------------------------ */
 
+	private uint index_of_choice (string value) {
+		for (uint i = 0; i < node.choice.length; i++) {
+			if (node.choice[i] == value)
+				return i;
+		}
+		return Gtk.INVALID_LIST_POSITION;
+	}
+
+	private static string[] split_choices (string value) {
+		string[] result = {};
+		foreach (unowned var part in value.split (",")) {
+			var item = part.strip ();
+			if (item != "")
+				result += item;
+		}
+		return result;
+	}
+
+	private string selected_choices () {
+		string[] result = {};
+		for (uint i = 0; i < _checks.length; i++) {
+			if (_checks[i].active)
+				result += node.choice[i];
+		}
+		return string.joinv (",", result);
+	}
+
+	private string canonical_choices (string value) {
+		var selected = split_choices (value);
+		string[] result = {};
+		foreach (unowned var c in node.choice) {
+			if (c in selected)
+				result += c;
+		}
+		return string.joinv (",", result);
+	}
+
+	private void update_multi_label () {
+		var text = selected_choices ();
+		_multi.label = (text == "") ? _("None") : text.replace (",", ", ");
+	}
+
+	private void set_multi_selection (string value) {
+		var selected = split_choices (value);
+		syncing = true;
+		for (uint i = 0; i < _checks.length; i++)
+			_checks[i].active = (node.choice[i] in selected);
+		syncing = false;
+		update_multi_label ();
+	}
+
+	private unowned string? selected_choice () {
+		var index = _drop.selected;
+		if (index == Gtk.INVALID_LIST_POSITION || index >= node.choice.length)
+			return null;
+		return node.choice[index];
+	}
+
 	private void sync_reset_visibility () {
 		bool is_default = false;
 		if (node.type_value == "bool")
@@ -122,6 +252,10 @@ public class RowOptions : Adw.ActionRow {
 			is_default = (_entry.text == node.default_value);
 		else if (node.type_value == "number")
 			is_default = ((int) _spin.value == int.parse (node.default_value));
+		else if (node.type_value == "choice")
+			is_default = (selected_choice () == node.default_value);
+		else if (node.type_value == "multiple_choice")
+			is_default = (selected_choices () == canonical_choices (node.default_value));
 		_reset_btn.visible = !is_default;
 	}
 
@@ -143,6 +277,10 @@ public class RowOptions : Adw.ActionRow {
 			_entry.text = def;
 		else if (node.type_value == "number")
 			_spin.value = double.parse (def);
+		else if (node.type_value == "choice")
+			_drop.selected = index_of_choice (def);
+		else if (node.type_value == "multiple_choice")
+			set_multi_selection (def);
 
 		sync_reset_visibility ();
 	}

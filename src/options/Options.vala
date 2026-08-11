@@ -15,7 +15,7 @@ public class OptionsPage : Gtk.Box {
 	public GroupONode nodes_general = new GroupONode("general");
 
 	// Maps dropdown index → type string expected by RowOptions (null = all)
-	private static string?[] TYPE_FILTER = { null, "bool", "number", "string" };
+	private static string?[] TYPE_FILTER = { null, "bool", "number", "string", "choice", "multiple_choice" };
 
 	construct {
 		parse_status.begin (() => {

@@ -35,6 +35,11 @@ public class OptionsONode : ONode {
 			return option.default_value;
 		}
 	}
+	public unowned string[] choice {
+		get {
+			return option.choice;
+		}
+	}
 
 	public unowned string display_name {
 		get {

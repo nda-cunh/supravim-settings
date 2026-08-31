@@ -247,6 +247,7 @@ public class StatsPage : Gtk.Box {
 		var grid = new Gtk.Grid () {
 			row_spacing    = 3,
 			column_spacing = 3,
+			margin_bottom = 20,
 		};
 
 		for (int d = 0; d < total; d++) {

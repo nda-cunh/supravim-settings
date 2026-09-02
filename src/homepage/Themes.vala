@@ -12,6 +12,7 @@ public class ThemePage : Adw.PreferencesGroup {
 		init_themes();
 		theme_grid = new ThemeGrid();
 		theme_grid.onThemeChange.connect ((theme)=> {
+			apply_theme_css (theme);
 			if (suppress_apply)
 				return;
 			if (from_supravim) {

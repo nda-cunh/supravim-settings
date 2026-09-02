@@ -1,63 +1,204 @@
+@define-color sd_bg_deep #141b24;
+@define-color sd_bg #1a212e;
+@define-color sd_bg_alt #21283b;
+@define-color sd_bg_soft #2a324a;
+@define-color sd_border #283347;
+@define-color sd_muted #455574;
+@define-color sd_fg #93a4c3;
+@define-color sd_fg_bright #b9c4d8;
+@define-color sd_blue #41a7fc;
+@define-color sd_green #8bcd5b;
+@define-color sd_yellow #efbd5d;
+@define-color sd_orange #dd9046;
+@define-color sd_red #f65866;
+@define-color sd_purple #c75ae8;
+@define-color sd_cyan #34bfd0;
+
+@define-color sd_heat_1 #45622f;
+@define-color sd_heat_2 #5a8639;
+@define-color sd_heat_3 #70b141;
+@define-color sd_heat_4 #8bcd5b;
+
+@define-color sd_install_bg #8bcd5b;
+@define-color sd_install_bg_hover #9ed576;
+@define-color sd_install_fg #000000;
+@define-color sd_uninstall_bg #f65866;
+@define-color sd_uninstall_bg_hover #f87e89;
+@define-color sd_uninstall_fg #000000;
+
+@define-color window_bg_color @sd_bg;
+@define-color window_fg_color @sd_fg;
+@define-color view_bg_color @sd_bg;
+@define-color view_fg_color @sd_fg;
+@define-color theme_bg_color @sd_bg;
+@define-color theme_fg_color @sd_fg;
+@define-color theme_base_color @sd_bg;
+@define-color theme_text_color @sd_fg;
+
+@define-color headerbar_bg_color @sd_bg_deep;
+@define-color headerbar_fg_color @sd_fg_bright;
+@define-color headerbar_border_color @sd_border;
+@define-color headerbar_backdrop_color @sd_bg;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+
+@define-color sidebar_bg_color @sd_bg_deep;
+@define-color sidebar_fg_color @sd_fg;
+@define-color sidebar_backdrop_color @sd_bg;
+@define-color sidebar_border_color @sd_border;
+@define-color sidebar_shade_color rgba(0, 0, 0, 0.36);
+
+@define-color secondary_sidebar_bg_color @sd_bg_deep;
+@define-color secondary_sidebar_fg_color @sd_fg;
+
+@define-color card_bg_color alpha(@sd_bg_alt, 0.85);
+@define-color card_fg_color @sd_fg;
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
+
+@define-color dialog_bg_color @sd_bg_alt;
+@define-color dialog_fg_color @sd_fg;
+@define-color popover_bg_color @sd_bg_soft;
+@define-color popover_fg_color @sd_fg;
+
+@define-color borders @sd_border;
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);
+
+@define-color accent_color @sd_blue;
+@define-color accent_bg_color @sd_blue;
+@define-color accent_fg_color @sd_bg;
+
+@define-color destructive_color @sd_red;
+@define-color destructive_bg_color @sd_red;
+@define-color destructive_fg_color @sd_bg;
+
+@define-color success_color @sd_green;
+@define-color success_bg_color @sd_green;
+@define-color success_fg_color @sd_bg;
+
+@define-color warning_color @sd_yellow;
+@define-color warning_bg_color @sd_yellow;
+@define-color warning_fg_color @sd_bg;
+
+@define-color error_color @sd_red;
+@define-color error_bg_color @sd_red;
+@define-color error_fg_color @sd_bg;
+
+window,
+.background {
+	background-color: @sd_bg;
+	color: @sd_fg;
+}
+
+headerbar {
+	background-color: @sd_bg_deep;
+	color: @sd_fg_bright;
+	box-shadow: inset 0 -1px @sd_border;
+}
+
+selection,
+:selected {
+	background-color: alpha(@sd_blue, 0.35);
+	color: @sd_fg_bright;
+}
+
+row:selected,
+list > row:selected {
+	background-color: alpha(@sd_blue, 0.18);
+}
+
+entry,
+spinbutton,
+textview text {
+	background-color: @sd_bg_alt;
+	color: @sd_fg;
+	border-color: @sd_border;
+}
+
+entry:focus-within {
+	outline-color: alpha(@sd_blue, 0.6);
+	border-color: @sd_blue;
+}
+
+separator {
+	background-color: @sd_border;
+}
+
 .link * {
-	text-decoration:none;
+	text-decoration: none;
+}
+
+.link {
+	color: @sd_blue;
 }
 
 .dialog_title {
-  font-weight: bold;
-  font-size: 20px;
-  padding: 5px;
+	font-weight: bold;
+	font-size: 20px;
+	padding: 5px;
+	color: @sd_fg_bright;
 }
 
 .dialog_subtitle {
-  font-size: 14px;
-  padding: 10px;
+	font-size: 14px;
+	padding: 10px;
+	color: @sd_muted;
 }
 
 .dialog_button button {
-	border-radius:12px;
+	border-radius: 12px;
 }
-
 
 .button_popup {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+
 .destructive-action {
-	color: #ff938c;
-	background-color: #5d4446;
+	color: @sd_red;
+	background-color: alpha(@sd_red, 0.18);
+}
+
+.destructive-action:hover {
+	background-color: @sd_uninstall_bg;
+	color: @sd_uninstall_fg;
 }
 
 .have_update {
-	background-color: #deb005;
+	background-color: @sd_yellow;
+	color: @sd_bg;
 }
 
 #box_named_page {
 	margin: 10px;
-	color: @theme_fg_color;
-	font-size:15px;
+	color: @sd_fg;
+	font-size: 15px;
 }
 
 #cache_supravim {
-	color:grey;
-	margin-bottom:5px;
-	margin-top:5px;
+	color: @sd_muted;
+	margin-bottom: 5px;
+	margin-top: 5px;
 	border-bottom-right-radius: 0px;
-	border-top-right-radius	: 0px;
+	border-top-right-radius: 0px;
 }
 
 #update_supravim {
-	color: @theme_fg_color;
-	margin-bottom:5px;
-	margin-top:5px;
+	color: @sd_fg;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
 #uninstall_supravim {
-	color: @theme_fg_color;
-	background-color: #990000;
-	margin-bottom:5px;
-	margin-top:5px;
+	color: @sd_bg;
+	background-color: @sd_red;
+	margin-bottom: 5px;
+	margin-top: 5px;
 	border-bottom-left-radius: 0px;
-	border-top-left-radius	: 0px;
+	border-top-left-radius: 0px;
+}
+
+#uninstall_supravim:hover {
+	background-color: shade(@sd_red, 1.12);
 }
 
 .PreferencesGroup {
@@ -67,28 +208,27 @@
 }
 
 .uninstall {
-	background-color: #aa1111;
-	# background-color: rgba(170,17,17,0.6);
-	color:white;
+	background-color: @sd_uninstall_bg;
+	color: @sd_uninstall_fg;
 }
 
 .install {
-	background-color: #11aa11;
-	background-color: rgba(17,170,17,0.6);
-	color:white;
+	background-color: @sd_install_bg;
+	color: @sd_install_fg;
 }
 
 .uninstall:hover {
-	background-color: #711;
-	color:white;
-}
-.install:hover {
-	background-color: #171;
-	color:white;
+	background-color: @sd_uninstall_bg_hover;
+	color: @sd_uninstall_fg;
 }
 
-.themebutton{
-	background-color:rgba(0,0,0,0);
+.install:hover {
+	background-color: @sd_install_bg_hover;
+	color: @sd_install_fg;
+}
+
+.themebutton {
+	background-color: rgba(0, 0, 0, 0);
 }
 
 .plugin-category {
@@ -96,8 +236,8 @@
 	font-weight: bold;
 	padding: 2px 10px;
 	border-radius: 10px;
-	background-color: alpha(@theme_fg_color, 0.10);
-	color: alpha(@theme_fg_color, 0.75);
+	background-color: alpha(@sd_muted, 0.35);
+	color: @sd_fg_bright;
 }
 
 .plugin-suprapack {
@@ -105,8 +245,8 @@
 	font-weight: bold;
 	padding: 2px 10px;
 	border-radius: 10px;
-	background-color: alpha(@accent_color, 0.20);
-	color: @accent_color;
+	background-color: alpha(@sd_blue, 0.18);
+	color: @sd_blue;
 }
 
 .supravim_logo {
@@ -128,7 +268,8 @@
 
 .stat-tile,
 .stat-card {
-	background-color: alpha(@window_fg_color, 0.05);
+	background-color: @sd_bg_alt;
+	border: 1px solid @sd_border;
 	border-radius: 14px;
 }
 
@@ -147,49 +288,51 @@
 .stat-value {
 	font-size: 22px;
 	font-weight: 800;
+	color: @sd_fg_bright;
 }
 
 .stat-caption {
 	font-size: 12px;
-	opacity: 0.6;
+	color: @sd_muted;
 }
 
 .section-title {
 	font-size: 15px;
 	font-weight: 700;
+	color: @sd_yellow;
 }
 
 .stat-bar > trough {
 	min-height: 8px;
 	border-radius: 4px;
-	background-color: alpha(@window_fg_color, 0.10);
+	background-color: @sd_bg_soft;
 }
 
 .stat-bar > trough > progress {
 	min-height: 8px;
 	border-radius: 4px;
-	background-color: @accent_bg_color;
+	background-color: @sd_blue;
 }
 
 .stat-bar-dur {
 	font-size: 13px;
 	font-weight: 700;
-	opacity: 0.85;
+	color: @sd_fg;
 }
 
 .hm-cell {
 	border-radius: 3px;
 }
 
-.hm-b0 { background-color: alpha(@window_fg_color, 0.10); }
-.hm-b1 { background-color: #9be9a8; }
-.hm-b2 { background-color: #40c463; }
-.hm-b3 { background-color: #30a14e; }
-.hm-b4 { background-color: #216e39; }
+.hm-b0 { background-color: @sd_bg_soft; }
+.hm-b1 { background-color: @sd_heat_1; }
+.hm-b2 { background-color: @sd_heat_2; }
+.hm-b3 { background-color: @sd_heat_3; }
+.hm-b4 { background-color: @sd_heat_4; }
 
 .ach-icon {
 	font-size: 22px;
-	margin-end: 4px;
+	margin-right: 4px;
 }
 
 .ach-locked {
@@ -197,6 +340,6 @@
 }
 
 .ach-unlocked-badge {
-	color: #2ec27e;
+	color: @sd_green;
 	font-weight: 700;
 }

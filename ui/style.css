@@ -343,3 +343,7 @@ separator {
 	color: @sd_green;
 	font-weight: 700;
 }
+
+.supravim_logo {
+  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.3));
+}

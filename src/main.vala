@@ -13,16 +13,44 @@ class Application : Adw.Application {
 
 	construct {
 		application_id = "org.supravim.gui";
+		flags = ApplicationFlags.HANDLES_COMMAND_LINE;
+	}
+
+	public override void startup() {
+		base.startup();
+		pull_updates();
+	}
+
+	public override int command_line(GLib.ApplicationCommandLine command_line) {
+		foreach (unowned string arg in command_line.get_arguments()) {
+			if (arg == "--from-supravim")
+				from_supravim = true;
+		}
+
+		this.activate();
+		return 0;
 	}
 
 	public override void activate() {
+		var win = this.active_window;
+		if (win == null) {
+			foreach (var w in this.get_windows()) {
+				win = w;
+				break;
+			}
+		}
+		if (win != null) {
+			win.present();
+			return;
+		}
+
 		try {
 			Adw.StyleManager.get_default().color_scheme = Adw.ColorScheme.FORCE_DARK;
 			var provider = new Gtk.CssProvider();
 			provider.load_from_resource("/ui/style.css");
 			Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
-			var win = new MainWindow(this);
-			win.present();
+			var window = new MainWindow(this);
+			window.present();
 		} catch (Error e) {
 			printerr(e.message);
 		}
@@ -69,17 +97,6 @@ class Application : Adw.Application {
 			stdout.flush();
 		});
 
-		// Strip our custom flag before handing the args to GApplication, which
-		// would otherwise reject the unknown option.
-		string[] filtered = {};
-		foreach (unowned string arg in args) {
-			if (arg == "--from-supravim")
-				from_supravim = true;
-			else
-				filtered += arg;
-		}
-
-		pull_updates();
-		new Application().run(filtered);
+		new Application().run(args);
 	}
 }

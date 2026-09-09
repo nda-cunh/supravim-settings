@@ -1,0 +1,1 @@
+option('suprapack', type : 'boolean', value : false, description : 'generate the suprapack info file')

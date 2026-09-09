@@ -42,17 +42,7 @@ asresources = gnome.compile_resources(
     c_name: 'as'
 )
 
-
-# Suprapack
-conf_data = configuration_data()
-conf_data.set('version', meson.project_version())
-conf_data.set('gettext_package', meson.project_name())
-conf_data.set('localedir', get_option('prefix') / get_option('localedir'))
-info_file = configure_file(input : 'data/info.in', output : 'info', configuration : conf_data)
-
-install_data(info_file, install_dir: '.')
 install_data(files('data/org.supravim.gui.desktop'), install_dir: get_option('datadir') / 'applications')
-meson.add_install_script('suprapack_build.sh')
 
 supravim_dep = dependency('supravim',
   fallback: ['supravim', 'libsupravim_dep'],
@@ -64,5 +54,15 @@ if supravim_dep.type_name() == 'internal'
   supravim_vala_args += ['--vapidir', supravim_sp.get_variable('libsupravim_vapi_dir')]
 endif
 
+conf_data = configuration_data()
+conf_data.set('version', meson.project_version())
+conf_data.set('gettext_package', meson.project_name())
+conf_data.set('localedir', get_option('prefix') / get_option('localedir'))
+
 subdir('po')
 subdir('src')
+
+if get_option('suprapack')
+  info_file = configure_file(input : 'data/info.in', output : 'info', configuration : conf_data)
+  install_data(info_file, install_dir: '.')
+endif

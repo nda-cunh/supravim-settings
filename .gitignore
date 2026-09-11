@@ -1,3 +1,5 @@
 subprojects/
 !subprojects/gtk4-markdown.wrap
 !subprojects/blueprint-compiler.wrap
+!subprojects/yyjson.wrap
+!subprojects/tree-sitter.wrap

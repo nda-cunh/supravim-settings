@@ -30,32 +30,6 @@ public class MainWindow : Adw.ApplicationWindow {
 			ach_unlocked[id] = true;
 	}
 
-	/**
-	 * Show a toast for the achievement `id` if it is not already unlocked.
-	 * Called from GUI actions that grant an achievement (wiki, …).
-	 */
-	public static void toast_ach (string id) {
-		if (current_window != null)
-			current_window.do_toast_ach (id);
-	}
-
-	private void do_toast_ach (string id) {
-		if (id in ach_unlocked)
-			return;
-		ach_unlocked[id] = true;
-		if (!StatsPage.notify_enabled ())
-			return;
-		string? info = ach_titles[id];
-		string label;
-		if (info != null) {
-			var parts = info.split ("\t", 2);
-			label = "🏆 " + parts[0] + "  " + (parts.length > 1 ? parts[1] : id);
-		} else {
-			label = "🏆 " + id;
-		}
-		toast_overlay.add_toast (new Adw.Toast (label) { timeout = 4 });
-	}
-
 	private HashTable<string, bool> read_unlocked () {
 		var res = new HashTable<string, bool> (str_hash, str_equal);
 		string path = Path.build_filename (Environment.get_user_config_dir (), "supravim", "achievements.json");
@@ -134,10 +108,9 @@ public class MainWindow : Adw.ApplicationWindow {
 			break;
 		case "wiki":
 			Utils.ach_metric ("wiki_open");
-			do_toast_ach ("rtfm");
 			if (!wiki_loaded) {
 				wiki_loaded = true;
-				wiki_box.append (new Wiki (Environment.get_home_dir () + "/.local/share/supravim-gui/"));
+				wiki_box.append (new Wiki (Environment.get_home_dir () + "/.local/share/supravim-gui/wiki/"));
 			}
 			break;
 		default:

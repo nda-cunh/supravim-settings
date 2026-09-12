@@ -18,7 +18,6 @@ class Application : Adw.Application {
 
 	public override void startup() {
 		base.startup();
-		pull_updates();
 	}
 
 	public override int command_line(GLib.ApplicationCommandLine command_line) {
@@ -52,21 +51,6 @@ class Application : Adw.Application {
 			var window = new MainWindow(this);
 			window.present();
 		} catch (Error e) {
-			printerr(e.message);
-		}
-	}
-
-	/**
-	 * Pull updates from the supravim-gui git repository
-	 * it's get the latest changes of the wikis
-	 */
-	private static void pull_updates() {
-		try {
-			unowned string HOME = Environment.get_home_dir();
-			string path = HOME + "/.local/share/supravim-gui";
-			Process.spawn_async(path, {"git", "pull"}, null, SEARCH_PATH, null, null);
-		}
-		catch (Error e) {
 			printerr(e.message);
 		}
 	}

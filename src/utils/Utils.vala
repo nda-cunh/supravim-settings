@@ -16,10 +16,8 @@ namespace Utils {
 
 	public void ach_plugin_install (string reference) {
 		ach_metric ("plugin_install");
-		MainWindow.toast_ach ("collectionneur");
 		if (reference.down ().contains ("tpope")) {
 			ach_metric ("tpope_install");
-			MainWindow.toast_ach ("je_te_connais");
 		}
 	}
 

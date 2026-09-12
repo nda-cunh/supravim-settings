@@ -116,8 +116,6 @@ public class HomePage : Gtk.Box {
 		var popup = new DialogPopup (parent_window, _("SupraVim config"));
 		if (status == 0) {
 			popup.set_subtitle_label (success_msg);
-			if (ach_on_success != null)
-				MainWindow.toast_ach (ach_on_success);
 		} else {
 			string detail = Utils.remove_color ((errput ?? "").strip ());
 			popup.set_subtitle_label (detail == "" ? _("Operation failed") : detail);

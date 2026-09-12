@@ -29,13 +29,42 @@ public class Wiki : Gtk.Box {
 		};
 		markdown.activate_link.connect (click_link);
 		markdown_box.append(markdown);
+		load.begin();
+	}
+
+	private async void clone_wiki () {
+		stack.set_visible_child_name ("loading");
+		DirUtils.create_with_parents (this.basename, 0755);
+		yield Utils.run_async_command(@"git clone https://gitlab.com/nda-cunh/SupraVim.wiki.git $(this.basename) --depth 1");
+	}
+
+
+	private async void load () {
 		try {
+			if (FileUtils.test(this.basename, FileTest.IS_DIR | FileTest.EXISTS) == false) {
+				printerr ("Wiki folder not found\n");
+				throw new FileError.ACCES("Wiki folder not found");
+			}
+			else {
+				Process.spawn_async(this.basename, {"git", "pull"}, null, SEARCH_PATH, null, null);
+			}
 			load_sidebar();
+			stack.set_visible_child_name ("wiki");
 		}
 		catch (Error e) {
-			printerr ("Error: %s\n", e.message);
+			printerr ("Retry\n");
+			if (e is FileError.ACCES) {
+				yield clone_wiki();
+				load.begin();
+			}
+			else {
+				Timeout.add(1000, () => {
+					load.begin();
+					return false;
+				});
+			}
 		}
-	}
+	} 
 
 	private void change_page (string uri) throws Error {
 		markdown.clear();
@@ -115,6 +144,8 @@ public class Wiki : Gtk.Box {
 		}
 	}
 
+	[GtkChild]
+	unowned Gtk.Stack stack;
 	[GtkChild]
 	unowned EventControllerMotion motion;
 	[GtkChild]

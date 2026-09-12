@@ -3,89 +3,119 @@ using Gtk 4.0;
 template $Wiki: Gtk.Box{
 	hexpand: true;
 	vexpand: true;
-	Box {
-		orientation: vertical;
-		Box {
-			Button previous {
-				has-frame: false;
-				margin-start: 5;
-				margin-end: 5;
-				icon-name: "go-previous-symbolic";
-				clicked => $sig_previous();
-			}
-			Button next {
-				has-frame: false;
-				margin-start: 5;
-				margin-end: 5;
-				icon-name: "go-next-symbolic";
-				clicked => $sig_next();
-			}
-			Label pagename {
-				justify: center;
-				margin-end: 20;
-				margin-top: 10;
-				margin-bottom: 10;
-				halign: end;
-				valign: end;
-				hexpand: true;
-
-				label: _("Welcome to the SupraWiki");
-			}
-		}
-		Separator {
-			orientation: horizontal;
-		}
-		Overlay {
-			hexpand: true;
-			vexpand: true;
-
-			ScrolledWindow {
-				hexpand: true;
-				vexpand: true;
-				margin-start: 20;
-				Viewport {
-					child: Box {
-						orientation: vertical;
-
-						Box markdown_box {
-
-						}
-					};
-				}
-			}
-
-			[overlay]
-			Box box_revealer {
-				halign: start;
-				valign: fill;
+	Stack stack {
+		transition-type: crossfade;
+		StackPage {
+			name: "loading";
+			child: Box {
 				orientation: vertical;
-				styles ["background"]
+				halign: center;
+				valign: center;
+				Spinner {
+					hexpand: true;
+					vexpand: true;
+					spinning: true;
+					width-request: 96;
+					height-request: 96;
+				}
+				Label {
+					justify: center;
+					margin-top: 10;
+					margin-bottom: 10;
+					hexpand: true;
 
+					label: _("Loading SupraWiki...");
+				}
+			};
+		}
+
+		StackPage {
+			name: "wiki";
+			child: Box {
+				orientation: vertical;
 				Box {
-					orientation: horizontal;
-					EventControllerMotion motion {
-
+					Button previous {
+						has-frame: false;
+						margin-start: 5;
+						margin-end: 5;
+						icon-name: "go-previous-symbolic";
+						clicked => $sig_previous();
 					}
-					Revealer revealer {
-						reveal-child: bind motion.contains-pointer;
-						transition-type: slide_right;
-						child: Box sidebar {
-							orientation: vertical;
-						};
-					}
-					Separator {
-						orientation: vertical;
-					}
-					Image {
+					Button next {
+						has-frame: false;
 						margin-start: 5;
 						margin-end: 5;
 						icon-name: "go-next-symbolic";
-						vexpand: true;
-						margin-top: 8;
-						margin-bottom: 8;
+						clicked => $sig_next();
+					}
+					Label pagename {
+						justify: center;
+						margin-end: 20;
+						margin-top: 10;
+						margin-bottom: 10;
+						halign: end;
+						valign: end;
+						hexpand: true;
+
+						label: _("Welcome to the SupraWiki");
 					}
 				}
-			}
+				Separator {
+					orientation: horizontal;
+				}
+				Overlay {
+					hexpand: true;
+					vexpand: true;
+
+					ScrolledWindow {
+						hexpand: true;
+						vexpand: true;
+						margin-start: 20;
+						Viewport {
+							child: Box {
+								orientation: vertical;
+
+								Box markdown_box {
+
+								}
+							};
+						}
+					}
+
+					[overlay]
+					Box box_revealer {
+						halign: start;
+						valign: fill;
+						orientation: vertical;
+						styles ["background"]
+
+						Box {
+							orientation: horizontal;
+							EventControllerMotion motion {
+
+							}
+							Revealer revealer {
+								reveal-child: bind motion.contains-pointer;
+								transition-type: slide_right;
+								child: Box sidebar {
+									orientation: vertical;
+								};
+							}
+							Separator {
+								orientation: vertical;
+							}
+							Image {
+								margin-start: 5;
+								margin-end: 5;
+								icon-name: "go-next-symbolic";
+								vexpand: true;
+								margin-top: 8;
+								margin-bottom: 8;
+							}
+						}
+					}
+				}
+			};
 		}
 	}
 }
